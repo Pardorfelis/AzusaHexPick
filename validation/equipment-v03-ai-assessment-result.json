@@ -1,0 +1,32 @@
+{
+  "version": "0.3.0",
+  "checkedAt": "2026-10-01T11:46:59.371Z",
+  "scope": "首次真实模型响应的人工语义复核，以及同一长句修复后离线保护；不是再次付费验证模型。",
+  "initialApiResult": "equipment-v03-ai-initial-result.json",
+  "initialApiCalls": 1,
+  "initialElapsedMs": 829,
+  "initialEstimatedPeakCostCny": 0.001474,
+  "initialSemanticReview": [
+    {
+      "text": "破败打塔姆好点",
+      "outcome": "购买意图与破败标准名符合该句。"
+    },
+    {
+      "text": "梦魇伤害靠平a，直接大穿+无尽，打起来先等塔姆上了你再飞后排",
+      "outcome": "只将无尽记为首选，遗漏大穿备选，不能认定该句理解正确。"
+    }
+  ],
+  "repairedGuard": {
+    "unknownTerms": [
+      "大穿"
+    ],
+    "messages": 3,
+    "modelRequests": 0,
+    "validMessages": 0,
+    "currentRecommendations": [],
+    "unknownMentions": 3,
+    "allAssertionsPassed": true
+  },
+  "furtherPaidApiCalls": 0,
+  "additionalLiveConnections": 0
+}

@@ -1,0 +1,127 @@
+{
+  "scope": "当前应用提示词与解析链路的 3 条真实歧义表达检查，不是总体准确率评估。",
+  "checkedAt": "2026-09-30T19:11:00.932Z",
+  "apiCalls": 2,
+  "conservativePeakReserveCny": 0.03697,
+  "estimatedPeakCostCny": 0.009209,
+  "applicationAiEnabled": false,
+  "noAutomaticRetries": true,
+  "results": [
+    {
+      "model": "deepseek-flash",
+      "elapsedMs": 778,
+      "requests": 1,
+      "error": "",
+      "estimatedPeakCostCny": 0.001658,
+      "costUnknown": false,
+      "cases": [
+        {
+          "text": "对面这种万雪的出破败能加多少伤害不知道",
+          "status": "unresolved",
+          "interpretation": {
+            "current": [],
+            "later": [],
+            "alternatives": [],
+            "against": [],
+            "conditional": [],
+            "uncertain": true,
+            "pending": true,
+            "recognized": false,
+            "reason": "classified"
+          }
+        },
+        {
+          "text": "出破败也打不动无所谓的",
+          "status": "resolved",
+          "interpretation": {
+            "current": [],
+            "later": [],
+            "alternatives": [],
+            "against": [
+              "破败王者之刃"
+            ],
+            "conditional": [],
+            "uncertain": false,
+            "pending": false,
+            "recognized": true,
+            "reason": "classified"
+          }
+        },
+        {
+          "text": "最后一件可以破败",
+          "status": "resolved",
+          "interpretation": {
+            "current": [],
+            "later": [
+              "破败王者之刃"
+            ],
+            "alternatives": [],
+            "against": [],
+            "conditional": [],
+            "uncertain": false,
+            "pending": false,
+            "recognized": true,
+            "reason": "classified"
+          }
+        }
+      ]
+    },
+    {
+      "model": "deepseek-v4-pro",
+      "elapsedMs": 1579,
+      "requests": 1,
+      "error": "",
+      "estimatedPeakCostCny": 0.007551,
+      "costUnknown": false,
+      "cases": [
+        {
+          "text": "对面这种万雪的出破败能加多少伤害不知道",
+          "status": "unresolved",
+          "interpretation": {
+            "current": [],
+            "later": [],
+            "alternatives": [],
+            "against": [],
+            "conditional": [],
+            "uncertain": true,
+            "pending": true,
+            "recognized": false,
+            "reason": "classified"
+          }
+        },
+        {
+          "text": "出破败也打不动无所谓的",
+          "status": "unresolved",
+          "interpretation": {
+            "current": [],
+            "later": [],
+            "alternatives": [],
+            "against": [],
+            "conditional": [],
+            "uncertain": true,
+            "pending": true,
+            "recognized": false,
+            "reason": "classified"
+          }
+        },
+        {
+          "text": "最后一件可以破败",
+          "status": "resolved",
+          "interpretation": {
+            "current": [],
+            "later": [
+              "破败王者之刃"
+            ],
+            "alternatives": [],
+            "against": [],
+            "conditional": [],
+            "uncertain": false,
+            "pending": false,
+            "recognized": true,
+            "reason": "classified"
+          }
+        }
+      ]
+    }
+  ]
+}

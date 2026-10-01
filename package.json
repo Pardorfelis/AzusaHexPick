@@ -1,0 +1,13 @@
+{
+  "name": "azusa-hexpick",
+  "description": "梓有妙选 · Azusa HexPick，为阿梓的海克斯大乱斗整理弹幕选择与出装建议。",
+  "version": "0.3.0",
+  "private": true,
+  "repository": {"type": "git", "url": "https://github.com/Pardorfelis/AzusaHexPick.git"},
+  "type": "module",
+  "engines": {"node": ">=22"},
+  "scripts": {
+    "start": "node server.mjs",
+    "test": "node --test tests/*.test.mjs"
+  }
+}

@@ -1,0 +1,782 @@
+{
+  "scope": "最终装备目录、语义规则及既有历史文本的离线回归。同步保留此前真实接口失败的引用，不追加直播、网络或付费请求，不称真实模型修复后语义已通过。",
+  "source": {
+    "url": "https://ddragon.leagueoflegends.com/cdn/16.19.1/data/zh_CN/item.json",
+    "version": "16.19.1",
+    "rows": 870,
+    "uniqueNames": 543,
+    "savedMetadata": "validation/riot-item-16.19.1.json"
+  },
+  "coverage": {
+    "formalNames": 411,
+    "nicknames": 102,
+    "ambiguousTerms": 13,
+    "previousFormalNames": 12,
+    "previousNicknames": 21
+  },
+  "filterMethod": [
+    "按正式名称去重。",
+    "剔除空名称、HTML 标签、任务、奖励、占位项及已明确识别的伪物品。",
+    "具有正总价格的正式装备保留；零价格且标为地图可用 Trinket 的视野物品保留。物品标签可缺失，不作为有价格装备的必要条件。",
+    "不以 purchasable 为过滤条件，以保留魔切、炽天使之拥等正常变形物。",
+    "不按地图过滤有价格的正式装备，不声称它们在当前海克斯模式中均可购买。"
+  ],
+  "nicknameSources": [
+    {
+      "url": "https://www.bilibili.com/video/BV1HF411V7wu/",
+      "aliases": [
+        "绿甲"
+      ],
+      "note": "原创装备分析以振奋盔甲标签和绿甲标题说明同一名称，只引用简称对应关系。"
+    },
+    {
+      "url": "https://jingyan.baidu.com/article/e3c78d644334ea3c4c85f5e3.html",
+      "aliases": [
+        "蓝盾"
+      ],
+      "note": "作者原创出装分析在兰顿之兆段落使用蓝盾简称，只引用名称关系。"
+    },
+    {
+      "url": "https://www.bilibili.com/video/BV1M6421w7p6/",
+      "aliases": [
+        "青龙刀",
+        "黑切"
+      ],
+      "note": "原创装备对比，标签包含朔极之矛与黑色切割者。"
+    },
+    {
+      "url": "https://www.bilibili.com/video/BV1Dz421q7XK",
+      "aliases": [
+        "羊刀"
+      ],
+      "note": "原创装备讨论，标题羊刀与鬼索的狂暴之刃标签对应。"
+    },
+    {
+      "url": "https://www.bilibili.com/video/BV1FV4y1n7B5/",
+      "aliases": [
+        "绿叉"
+      ],
+      "note": "原创端游视频标题直接讨论幻影之舞为何称为绿叉。"
+    },
+    {
+      "url": "https://www.bilibili.com/video/BV17K4y167W7/",
+      "aliases": [
+        "峡谷制造者"
+      ],
+      "note": "原创装备解读说明旧称与裂隙制造者的更名关系。"
+    },
+    {
+      "url": "https://www.bilibili.com/opus/232549397924818585",
+      "aliases": [
+        "血手"
+      ],
+      "note": "原创端游分析明确斯特拉克的挑战护手简称血手。"
+    },
+    {
+      "url": "https://www.bilibili.com/video/BV1oC4y1o72T/",
+      "aliases": [
+        "杀人书"
+      ],
+      "note": "原创视频标题明确梅贾的窃魂卷与杀人书对应，只借助名称关系，不引用手游装备属性。"
+    },
+    {
+      "url": "https://www.bilibili.com/video/BV1bM411f78q/",
+      "aliases": [
+        "多蓝盾"
+      ],
+      "note": "原创剑魔教学使用出门多蓝盾，应避免被蓝盾子串误匹配。"
+    }
+  ],
+  "ambiguousAliases": [
+    {
+      "alias": "蓝甲",
+      "reason": "颜色称呼不能唯一指向装备。"
+    },
+    {
+      "alias": "绿鞋",
+      "reason": "未找到在当前端游上下文中唯一对应的可靠依据。"
+    },
+    {
+      "alias": "大穿",
+      "reason": "可能泛指不同成装穿甲弓。"
+    },
+    {
+      "alias": "大轻语",
+      "reason": "成装穿甲弓存在多个选择。"
+    },
+    {
+      "alias": "轻语",
+      "reason": "可能指最后的轻语或其不同成装。"
+    },
+    {
+      "alias": "面具",
+      "reason": "不同法系和抗性装备均可能被称为面具。"
+    },
+    {
+      "alias": "大面具",
+      "reason": "当前目录同时包含兰德里的折磨和兰德里的苦楚。"
+    },
+    {
+      "alias": "兰德里",
+      "reason": "当前目录同时包含兰德里的折磨和兰德里的苦楚。"
+    },
+    {
+      "alias": "饮魔刀",
+      "reason": "海克斯饮魔刀与玛莫提乌斯之噬须区分。"
+    },
+    {
+      "alias": "吸血刀",
+      "reason": "可能泛指饮血剑、吸血鬼节杖或其他吸血装备。"
+    },
+    {
+      "alias": "皇冠",
+      "reason": "舒瑞娅的战歌和破碎王后之冕等称呼可能混用。"
+    },
+    {
+      "alias": "九头蛇",
+      "reason": "存在贪欲、巨型、亵渎等不同装备。"
+    },
+    {
+      "alias": "小绿甲",
+      "reason": "不能从绿甲子串推断为振奋盔甲。"
+    }
+  ],
+  "api": {
+    "equipmentCandidates": "equipmentCandidates(text, limit = 24) → string[]，精确匹配、去重、上限 24，不猜陌生词。",
+    "extractUnknownEquipmentCandidates": "extractUnknownEquipmentCandidates(text) → string[]，提取购买短句／裸装备后缀／未知换装目标／推荐片段中的歧义词，每条去重、上限 3，仅供待确认展示。"
+  },
+  "validation": {
+    "equipmentCommand": "node --test tests/equipment-catalog.test.mjs tests/equipment-replay.test.mjs",
+    "equipmentGroups": 18,
+    "equipmentPassed": 18,
+    "equipmentFailed": 0,
+    "command": "node --test tests/engine.test.mjs tests/equipment-catalog.test.mjs tests/equipment-replay.test.mjs",
+    "total": 36,
+    "passed": 36,
+    "failed": 0,
+    "countsVerifiedByExecution": true,
+    "realSource": "data/replays/azusa-p3.json 中既有记录及已捕获的完整历史文本。",
+    "postFixEvidence": "离线及模拟接口护栏，不是修复后真实模型语义验证。"
+  },
+  "examples": [
+    {
+      "text": "绿甲",
+      "current": [
+        "振奋盔甲"
+      ],
+      "later": [],
+      "alternatives": [],
+      "against": [],
+      "conditional": [],
+      "uncertain": false,
+      "pending": false,
+      "recognized": true,
+      "reason": "local-rules",
+      "candidates": [
+        "振奋盔甲"
+      ],
+      "unknown": []
+    },
+    {
+      "text": "蓝盾",
+      "current": [
+        "兰顿之兆"
+      ],
+      "later": [],
+      "alternatives": [],
+      "against": [],
+      "conditional": [],
+      "uncertain": false,
+      "pending": false,
+      "recognized": true,
+      "reason": "local-rules",
+      "candidates": [
+        "兰顿之兆"
+      ],
+      "unknown": []
+    },
+    {
+      "text": "多蓝盾",
+      "current": [
+        "多兰之盾"
+      ],
+      "later": [],
+      "alternatives": [],
+      "against": [],
+      "conditional": [],
+      "uncertain": false,
+      "pending": false,
+      "recognized": true,
+      "reason": "local-rules",
+      "candidates": [
+        "多兰之盾"
+      ],
+      "unknown": []
+    },
+    {
+      "text": "鞋子换无尽",
+      "current": [
+        "无尽之刃"
+      ],
+      "later": [],
+      "alternatives": [],
+      "against": [],
+      "conditional": [],
+      "uncertain": false,
+      "pending": false,
+      "recognized": true,
+      "reason": "local-rules",
+      "candidates": [
+        "鞋子",
+        "无尽之刃"
+      ],
+      "unknown": []
+    },
+    {
+      "text": "圆弧换无尽",
+      "current": [
+        "无尽之刃"
+      ],
+      "later": [],
+      "alternatives": [],
+      "against": [],
+      "conditional": [],
+      "uncertain": false,
+      "pending": false,
+      "recognized": true,
+      "reason": "local-rules",
+      "candidates": [
+        "公理圆弧",
+        "无尽之刃"
+      ],
+      "unknown": []
+    },
+    {
+      "text": "整个无尽呗",
+      "current": [
+        "无尽之刃"
+      ],
+      "later": [],
+      "alternatives": [],
+      "against": [],
+      "conditional": [],
+      "uncertain": false,
+      "pending": false,
+      "recognized": true,
+      "reason": "local-rules",
+      "candidates": [
+        "无尽之刃"
+      ],
+      "unknown": []
+    },
+    {
+      "text": "出装没啥问题",
+      "current": [],
+      "later": [],
+      "alternatives": [],
+      "against": [],
+      "conditional": [],
+      "uncertain": false,
+      "pending": false,
+      "recognized": false,
+      "reason": "descriptive-chat",
+      "candidates": [],
+      "unknown": []
+    },
+    {
+      "text": "装备没问题",
+      "current": [],
+      "later": [],
+      "alternatives": [],
+      "against": [],
+      "conditional": [],
+      "uncertain": false,
+      "pending": false,
+      "recognized": false,
+      "reason": "descriptive-chat",
+      "candidates": [],
+      "unknown": []
+    },
+    {
+      "text": "出装挺好",
+      "current": [],
+      "later": [],
+      "alternatives": [],
+      "against": [],
+      "conditional": [],
+      "uncertain": false,
+      "pending": false,
+      "recognized": false,
+      "reason": "descriptive-chat",
+      "candidates": [],
+      "unknown": []
+    },
+    {
+      "text": "出装主打听劝",
+      "current": [],
+      "later": [],
+      "alternatives": [],
+      "against": [],
+      "conditional": [],
+      "uncertain": false,
+      "pending": false,
+      "recognized": false,
+      "reason": "descriptive-chat",
+      "candidates": [],
+      "unknown": []
+    },
+    {
+      "text": "别出绿甲",
+      "current": [],
+      "later": [],
+      "alternatives": [],
+      "against": [
+        "振奋盔甲"
+      ],
+      "conditional": [],
+      "uncertain": false,
+      "pending": false,
+      "recognized": true,
+      "reason": "local-rules",
+      "candidates": [
+        "振奋盔甲"
+      ],
+      "unknown": []
+    },
+    {
+      "text": "如果有钱就出绿甲",
+      "current": [],
+      "later": [],
+      "alternatives": [],
+      "against": [],
+      "conditional": [
+        "振奋盔甲"
+      ],
+      "uncertain": false,
+      "pending": false,
+      "recognized": true,
+      "reason": "local-rules",
+      "candidates": [
+        "振奋盔甲"
+      ],
+      "unknown": []
+    },
+    {
+      "text": "最后一件可以破败",
+      "current": [],
+      "later": [
+        "破败王者之刃"
+      ],
+      "alternatives": [],
+      "against": [],
+      "conditional": [],
+      "uncertain": false,
+      "pending": false,
+      "recognized": true,
+      "reason": "local-rules",
+      "candidates": [
+        "破败王者之刃"
+      ],
+      "unknown": []
+    },
+    {
+      "text": "绿甲被动增加回复",
+      "current": [],
+      "later": [],
+      "alternatives": [],
+      "against": [],
+      "conditional": [],
+      "uncertain": false,
+      "pending": false,
+      "recognized": false,
+      "reason": "mechanics-discussion",
+      "candidates": [
+        "振奋盔甲"
+      ],
+      "unknown": []
+    },
+    {
+      "text": "蓝甲",
+      "current": [],
+      "later": [],
+      "alternatives": [],
+      "against": [],
+      "conditional": [],
+      "uncertain": true,
+      "pending": true,
+      "recognized": false,
+      "reason": "unknown-expression",
+      "candidates": [],
+      "unknown": [
+        "蓝甲"
+      ]
+    },
+    {
+      "text": "绿鞋",
+      "current": [],
+      "later": [],
+      "alternatives": [],
+      "against": [],
+      "conditional": [],
+      "uncertain": true,
+      "pending": true,
+      "recognized": false,
+      "reason": "unknown-expression",
+      "candidates": [],
+      "unknown": [
+        "绿鞋"
+      ]
+    },
+    {
+      "text": "大穿",
+      "current": [],
+      "later": [],
+      "alternatives": [],
+      "against": [],
+      "conditional": [],
+      "uncertain": true,
+      "pending": true,
+      "recognized": false,
+      "reason": "unknown-expression",
+      "candidates": [],
+      "unknown": [
+        "大穿"
+      ]
+    },
+    {
+      "text": "小绿甲",
+      "current": [],
+      "later": [],
+      "alternatives": [],
+      "against": [],
+      "conditional": [],
+      "uncertain": true,
+      "pending": true,
+      "recognized": false,
+      "reason": "unknown-expression",
+      "candidates": [],
+      "unknown": [
+        "小绿甲"
+      ]
+    },
+    {
+      "text": "出无尽＋大穿",
+      "current": [],
+      "later": [],
+      "alternatives": [],
+      "against": [],
+      "conditional": [],
+      "uncertain": true,
+      "pending": true,
+      "recognized": false,
+      "reason": "ambiguous-expression",
+      "candidates": [
+        "无尽之刃"
+      ],
+      "unknown": [
+        "大穿"
+      ]
+    },
+    {
+      "text": "不想出绿甲",
+      "current": [],
+      "later": [],
+      "alternatives": [],
+      "against": [
+        "振奋盔甲"
+      ],
+      "conditional": [],
+      "uncertain": false,
+      "pending": false,
+      "recognized": true,
+      "reason": "local-rules",
+      "candidates": [
+        "振奋盔甲"
+      ],
+      "unknown": []
+    },
+    {
+      "text": "先别急着出绿甲",
+      "current": [],
+      "later": [],
+      "alternatives": [],
+      "against": [
+        "振奋盔甲"
+      ],
+      "conditional": [],
+      "uncertain": false,
+      "pending": false,
+      "recognized": true,
+      "reason": "local-rules",
+      "candidates": [
+        "振奋盔甲"
+      ],
+      "unknown": []
+    },
+    {
+      "text": "别再出绿甲",
+      "current": [],
+      "later": [],
+      "alternatives": [],
+      "against": [
+        "振奋盔甲"
+      ],
+      "conditional": [],
+      "uncertain": false,
+      "pending": false,
+      "recognized": true,
+      "reason": "local-rules",
+      "candidates": [
+        "振奋盔甲"
+      ],
+      "unknown": []
+    },
+    {
+      "text": "没必要买蓝盾",
+      "current": [],
+      "later": [],
+      "alternatives": [],
+      "against": [
+        "兰顿之兆"
+      ],
+      "conditional": [],
+      "uncertain": false,
+      "pending": false,
+      "recognized": true,
+      "reason": "local-rules",
+      "candidates": [
+        "兰顿之兆"
+      ],
+      "unknown": []
+    },
+    {
+      "text": "出绿甲也没啥用",
+      "current": [],
+      "later": [],
+      "alternatives": [],
+      "against": [
+        "振奋盔甲"
+      ],
+      "conditional": [],
+      "uncertain": false,
+      "pending": false,
+      "recognized": true,
+      "reason": "local-rules",
+      "candidates": [
+        "振奋盔甲"
+      ],
+      "unknown": []
+    },
+    {
+      "text": "为什么要出绿甲",
+      "current": [],
+      "later": [],
+      "alternatives": [],
+      "against": [],
+      "conditional": [],
+      "uncertain": true,
+      "pending": true,
+      "recognized": false,
+      "reason": "question-or-ambiguity",
+      "candidates": [
+        "振奋盔甲"
+      ],
+      "unknown": []
+    },
+    {
+      "text": "为什么不出绿甲",
+      "current": [],
+      "later": [],
+      "alternatives": [],
+      "against": [],
+      "conditional": [],
+      "uncertain": true,
+      "pending": true,
+      "recognized": false,
+      "reason": "question-or-ambiguity",
+      "candidates": [
+        "振奋盔甲"
+      ],
+      "unknown": []
+    },
+    {
+      "text": "没钱买蓝盾",
+      "current": [],
+      "later": [],
+      "alternatives": [],
+      "against": [],
+      "conditional": [],
+      "uncertain": true,
+      "pending": true,
+      "recognized": false,
+      "reason": "uncertain-attitude",
+      "candidates": [
+        "兰顿之兆"
+      ],
+      "unknown": []
+    },
+    {
+      "text": "鞋子换蓝甲",
+      "current": [],
+      "later": [],
+      "alternatives": [],
+      "against": [],
+      "conditional": [],
+      "uncertain": true,
+      "pending": true,
+      "recognized": false,
+      "reason": "unknown-replacement",
+      "candidates": [
+        "鞋子"
+      ],
+      "unknown": [
+        "蓝甲"
+      ]
+    },
+    {
+      "text": "圆弧换大穿",
+      "current": [],
+      "later": [],
+      "alternatives": [],
+      "against": [],
+      "conditional": [],
+      "uncertain": true,
+      "pending": true,
+      "recognized": false,
+      "reason": "unknown-replacement",
+      "candidates": [
+        "公理圆弧"
+      ],
+      "unknown": [
+        "大穿"
+      ]
+    },
+    {
+      "text": "鞋子换绿鞋",
+      "current": [],
+      "later": [],
+      "alternatives": [],
+      "against": [],
+      "conditional": [],
+      "uncertain": true,
+      "pending": true,
+      "recognized": false,
+      "reason": "unknown-replacement",
+      "candidates": [
+        "鞋子"
+      ],
+      "unknown": [
+        "绿鞋"
+      ]
+    },
+    {
+      "text": "先别出绿甲，出蓝甲",
+      "current": [],
+      "later": [],
+      "alternatives": [],
+      "against": [
+        "振奋盔甲"
+      ],
+      "conditional": [],
+      "uncertain": true,
+      "pending": true,
+      "recognized": true,
+      "reason": "local-rules",
+      "candidates": [
+        "振奋盔甲"
+      ],
+      "unknown": [
+        "蓝甲"
+      ]
+    },
+    {
+      "text": "梦魇伤害靠平a，直接大穿+无尽，打起来先等塔姆上了你再飞后排",
+      "current": [],
+      "later": [],
+      "alternatives": [],
+      "against": [],
+      "conditional": [],
+      "uncertain": true,
+      "pending": true,
+      "recognized": false,
+      "reason": "ambiguous-expression",
+      "candidates": [
+        "无尽之刃"
+      ],
+      "unknown": [
+        "大穿"
+      ]
+    }
+  ],
+  "limitations": [
+    "目录覆盖正常组件、成装、消耗品、视野物品和变形装备，不判断当前英雄、当前模式、金币与格子能否购买。",
+    "多套地图或历史名称被正式目录保留，不以地图开关推定海克斯可购买性。",
+    "简称来源只核对名称关系，不使用历史来源中的装备属性、价格或强度。",
+    "包含明确陌生备选的组合建议不强行只给已知部分投票。",
+    "无候选的陌生词不能由相似拼写自动映射，需达到重复阈值后由使用者确认。",
+    "当前人工样例与单元回归证明具体边界行为，不代表真实弹幕总体准确率。",
+    "此前真实 Flash 检查存在完整长句误投，已保留原始失败结果；修复后未再次付费检查，不能称真实模型语义已验证通过。"
+  ],
+  "finalSemanticGuards": [
+    {
+      "category": "复杂否定",
+      "texts": [
+        "不想出绿甲",
+        "先别急着出绿甲",
+        "别再出绿甲",
+        "没必要买蓝盾",
+        "出绿甲也没啥用"
+      ],
+      "expected": "没有首选；明确不购买或暂缓表达保留反对意见。"
+    },
+    {
+      "category": "无问号问题与经济不足",
+      "texts": [
+        "为什么要出绿甲",
+        "为什么不出绿甲",
+        "没钱买蓝盾",
+        "钱不够买蓝盾",
+        "买不起蓝盾"
+      ],
+      "expected": "没有首选和强行反对，保持待识别。"
+    },
+    {
+      "category": "未知换装目标",
+      "texts": [
+        "鞋子换蓝甲",
+        "圆弧换大穿",
+        "鞋子换绿鞋"
+      ],
+      "expected": "保留目标原词，进入待识别，不给来源装备投票。"
+    },
+    {
+      "category": "历史完整长句",
+      "texts": [
+        "梦魇伤害靠平a，直接大穿+无尽，打起来先等塔姆上了你再飞后排"
+      ],
+      "expected": "未知原词为大穿，首选为空，待识别为真。3 个独立观众重复后展示大穿的 3 次未知提及，确定装备首选为空。"
+    },
+    {
+      "category": "程序 AI 护栏",
+      "texts": [
+        "出无尽＋大穿"
+      ],
+      "expected": "未知词与已知词混合不请求 AI，不从旧同文缓存补已知部分首选；此结论来自模拟接口。"
+    }
+  ],
+  "realApiEvidence": {
+    "file": "validation/equipment-v03-ai-initial-result.json",
+    "preserved": true,
+    "apiCalls": 1,
+    "sourceCases": 2,
+    "outcome": "failed-semantic-guard",
+    "failingText": "梦魇伤害靠平a，直接大穿+无尽，打起来先等塔姆上了你再飞后排",
+    "observedCurrent": [
+      "无尽之刃"
+    ],
+    "explanation": "此前真实请求成功返回，但未知大穿未被提取，整句错误地只给无尽首选票。失败证据保留。",
+    "repeatedPaidValidationAfterFix": false,
+    "postFixLiveModelSemanticsVerified": false,
+    "modelLabel": "Flash"
+  }
+}

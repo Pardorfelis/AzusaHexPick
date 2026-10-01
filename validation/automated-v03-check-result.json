@@ -1,0 +1,19 @@
+{
+  "version": "0.3.0",
+  "checkedAt": "2026-10-01T11:50:39.1936581Z",
+  "command": "scripts/check.ps1",
+  "node": {
+    "tests": 171,
+    "pass": 171,
+    "fail": 0,
+    "skipped": 0
+  },
+  "python": {
+    "tests": 31,
+    "pass": 31,
+    "fail": 0
+  },
+  "paidApiCalls": 0,
+  "liveConnections": 0,
+  "scope": "当前源代码完整自动回归，实际浏览器／原生窗口检查另行记录"
+}

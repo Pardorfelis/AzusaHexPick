@@ -1,0 +1,143 @@
+{
+  "purpose": "bounded-offline-mvp-load-check",
+  "recordedAt": "2026-10-01T03:01:17.136Z",
+  "nodeVersion": "v24.16.0",
+  "scope": "每种模式只运行一次，仅为本机合成压力检查，不证明直播全量、实时性能阈值或连续数小时稳定。",
+  "memoryNote": "内存为本进程观测值，非引擎独占；每 1000 条采样，因此采样峰值不等于精确峰值。",
+  "timingNote": "处理耗时包含逐条独立边界检查及采样开销。模拟接收时钟推进 30 秒，不是等待 30 秒的网络测试。",
+  "gcExposed": true,
+  "cases": [
+    {
+      "mode": "hex",
+      "simulatedMessages": 100000,
+      "simulatedMilliseconds": 30000,
+      "syntheticAnonymousSources": 1000,
+      "configuredLimits": {
+        "dedup": 20000,
+        "records": 2000,
+        "participants": 1000
+      },
+      "checksPassed": true,
+      "retainedPeak": {
+        "dedup": 20000,
+        "records": 0,
+        "anonymous": 1000,
+        "revisions": 0
+      },
+      "receivedMessages": 100000,
+      "validMessages": 100000,
+      "processingMs": 688.056,
+      "cpuMilliseconds": {
+        "user": 687,
+        "system": 16
+      },
+      "memoryBytes": {
+        "before": {
+          "rss": 48431104,
+          "heapUsed": 4833752,
+          "heapTotal": 8069120,
+          "external": 2107946,
+          "arrayBuffers": 22783
+        },
+        "after": {
+          "rss": 71327744,
+          "heapUsed": 18976352,
+          "heapTotal": 31977472,
+          "external": 2080867,
+          "arrayBuffers": 22799
+        },
+        "sampledPeak": {
+          "rss": 71327744,
+          "heapUsed": 21974576,
+          "heapTotal": 31977472,
+          "external": 2107946,
+          "arrayBuffers": 22799
+        },
+        "samples": 101,
+        "sampleEveryMessages": 1000
+      },
+      "comparison": {
+        "expectedMessages": {
+          "1": 16667,
+          "2": 16667,
+          "3": 16667,
+          "1d": 16667,
+          "2d": 16666,
+          "3d": 16666
+        },
+        "expectedAnonymous": {
+          "1": 167,
+          "2": 167,
+          "3": 167,
+          "1d": 167,
+          "2d": 166,
+          "3d": 166
+        }
+      }
+    },
+    {
+      "mode": "equipment",
+      "simulatedMessages": 10000,
+      "simulatedMilliseconds": 30000,
+      "syntheticAnonymousSources": 1000,
+      "configuredLimits": {
+        "dedup": 20000,
+        "records": 2000,
+        "participants": 1000
+      },
+      "checksPassed": true,
+      "retainedPeak": {
+        "dedup": 10000,
+        "records": 2000,
+        "anonymous": 1000,
+        "revisions": 1000
+      },
+      "receivedMessages": 10000,
+      "validMessages": 10000,
+      "processingMs": 177.954,
+      "cpuMilliseconds": {
+        "user": 172,
+        "system": 0
+      },
+      "memoryBytes": {
+        "before": {
+          "rss": 66301952,
+          "heapUsed": 4962960,
+          "heapTotal": 23797760,
+          "external": 2111585,
+          "arrayBuffers": 22799
+        },
+        "after": {
+          "rss": 84234240,
+          "heapUsed": 22667888,
+          "heapTotal": 44417024,
+          "external": 2111585,
+          "arrayBuffers": 22799
+        },
+        "sampledPeak": {
+          "rss": 84234240,
+          "heapUsed": 24658656,
+          "heapTotal": 44417024,
+          "external": 2111585,
+          "arrayBuffers": 22799
+        },
+        "samples": 11,
+        "sampleEveryMessages": 1000
+      },
+      "comparison": {
+        "expectedMessages": {
+          "灭世者的死亡之帽": 2500,
+          "中娅沙漏": 2500,
+          "虚空之杖": 2500,
+          "无尽之刃": 2500
+        },
+        "expectedAnonymous": {
+          "灭世者的死亡之帽": 250,
+          "中娅沙漏": 250,
+          "虚空之杖": 250,
+          "无尽之刃": 250
+        }
+      }
+    }
+  ]
+}

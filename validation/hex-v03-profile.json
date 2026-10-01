@@ -1,0 +1,110 @@
+{
+  "schemaVersion": 1,
+  "profileVersion": "0.3",
+  "annotationDate": "2026-10-01",
+  "method": "逐条人工审阅新动作需求并由根任务确认；仅覆盖明确改变的 14 条，不按解析器输出生成预期。",
+  "baseGoldSha256": "d808f26a4170aa4710bda089d3d85f98a015892323e60e1c24814ce4ef990de1",
+  "commands": ["1", "2", "3", "1d", "2d", "3d", "d", "12d", "13d", "23d"],
+  "scope": [
+    "裸 d 和全 D 表示全部刷新，每条一动作。",
+    "重复 d 表示一次全部刷新，不按字符数量拆票。",
+    "13d 和 23d 表示完整组合刷新动作，不拆成多个单项刷新。",
+    "未列出的 487 条继续沿用旧金标，包括否定、多选、回顾和未知指令。"
+  ],
+  "overrides": [
+    {
+      "id": "real-azusa-p3-8e5737e48ba79462a334e3cb", "textGuard": "d",
+      "oldExpectedKey": null, "oldCategory": "ambiguous-refresh", "oldCoverageTier": "rejection",
+      "expectedKey": "d", "category": "positive", "coverageTier": "exact", "allowPending": false,
+      "reason": "新需求明确裸 d 为全部刷新。"
+    },
+    {
+      "id": "synthetic-091", "textGuard": "d",
+      "oldExpectedKey": null, "oldCategory": "ambiguous-refresh", "oldCoverageTier": "rejection",
+      "expectedKey": "d", "category": "positive", "coverageTier": "exact", "allowPending": false,
+      "reason": "新需求明确裸 d 为全部刷新。"
+    },
+    {
+      "id": "real-azusa-p4-a51a12cd2b653fd0d196d437", "textGuard": "全D",
+      "oldExpectedKey": null, "oldCategory": "ambiguous-refresh", "oldCoverageTier": "rejection",
+      "expectedKey": "d", "category": "positive", "coverageTier": "common", "allowPending": false,
+      "reason": "新需求明确全 D 为全部刷新短句。"
+    },
+    {
+      "id": "real-azusa-p4-cb478152ce76853c55be2d5e", "textGuard": "全D",
+      "oldExpectedKey": null, "oldCategory": "ambiguous-refresh", "oldCoverageTier": "rejection",
+      "expectedKey": "d", "category": "positive", "coverageTier": "common", "allowPending": false,
+      "reason": "新需求明确全 D 为全部刷新短句。"
+    },
+    {
+      "id": "real-azusa-p4-a7b7f113a3e480fb4f197758", "textGuard": "全D",
+      "oldExpectedKey": null, "oldCategory": "ambiguous-refresh", "oldCoverageTier": "rejection",
+      "expectedKey": "d", "category": "positive", "coverageTier": "common", "allowPending": false,
+      "reason": "新需求明确全 D 为全部刷新短句。"
+    },
+    {
+      "id": "real-azusa-p4-11fa13d5c36afb02cafecc1e", "textGuard": "全d",
+      "oldExpectedKey": null, "oldCategory": "ambiguous-refresh", "oldCoverageTier": "rejection",
+      "expectedKey": "d", "category": "positive", "coverageTier": "common", "allowPending": false,
+      "reason": "新需求明确全 d 为全部刷新短句。"
+    },
+    {
+      "id": "real-azusa-p4-7d0f98cea3ae95aedb80532a", "textGuard": "全D",
+      "oldExpectedKey": null, "oldCategory": "ambiguous-refresh", "oldCoverageTier": "rejection",
+      "expectedKey": "d", "category": "positive", "coverageTier": "common", "allowPending": false,
+      "reason": "新需求明确全 D 为全部刷新短句。"
+    },
+    {
+      "id": "real-azusa-p4-14bc50f0c5f8dc6e9e9f8eb7", "textGuard": "全D",
+      "oldExpectedKey": null, "oldCategory": "ambiguous-refresh", "oldCoverageTier": "rejection",
+      "expectedKey": "d", "category": "positive", "coverageTier": "common", "allowPending": false,
+      "reason": "新需求明确全 D 为全部刷新短句。"
+    },
+    {
+      "id": "real-azusa-p4-77bf1ea34ccb32229e3fc266", "textGuard": "全D",
+      "oldExpectedKey": null, "oldCategory": "ambiguous-refresh", "oldCoverageTier": "rejection",
+      "expectedKey": "d", "category": "positive", "coverageTier": "common", "allowPending": false,
+      "reason": "新需求明确全 D 为全部刷新短句。"
+    },
+    {
+      "id": "synthetic-088", "textGuard": "全d",
+      "oldExpectedKey": null, "oldCategory": "ambiguous-refresh", "oldCoverageTier": "rejection",
+      "expectedKey": "d", "category": "positive", "coverageTier": "common", "allowPending": false,
+      "reason": "新需求明确全 d 为全部刷新短句。"
+    },
+    {
+      "id": "real-azusa-p4-e4985b2987b262628987286d", "textGuard": "13d",
+      "oldExpectedKey": null, "oldCategory": "multiple-refresh", "oldCoverageTier": "rejection",
+      "expectedKey": "13d", "category": "positive", "coverageTier": "exact", "allowPending": false,
+      "reason": "新需求明确刷新 1 和 3 为一条完整动作。"
+    },
+    {
+      "id": "synthetic-087", "textGuard": "13d",
+      "oldExpectedKey": null, "oldCategory": "multiple-refresh", "oldCoverageTier": "rejection",
+      "expectedKey": "13d", "category": "positive", "coverageTier": "exact", "allowPending": false,
+      "reason": "新需求明确刷新 1 和 3 为一条完整动作。"
+    },
+    {
+      "id": "real-azusa-p4-3b90aa1b1cbd8c3390784c77", "textGuard": "23d",
+      "oldExpectedKey": null, "oldCategory": "multiple-refresh", "oldCoverageTier": "rejection",
+      "expectedKey": "23d", "category": "positive", "coverageTier": "exact", "allowPending": false,
+      "reason": "新需求明确刷新 2 和 3 为一条完整动作。"
+    },
+    {
+      "id": "real-azusa-p4-279fca2c1f1184ca9ff8bb3d", "textGuard": "ddd",
+      "oldExpectedKey": null, "oldCategory": "ambiguous-refresh", "oldCoverageTier": "rejection",
+      "expectedKey": "d", "category": "positive", "coverageTier": "repeated", "allowPending": false,
+      "reason": "用户明确重复 d 表示全刷新，该条仍只计一次动作。"
+    }
+  ],
+  "windowExpectations": [
+    { "id": "p3-user-30s", "directVotes": 64, "reason": "新动作未出现在该 30 秒窗口内，计入数量应保留。" },
+    { "id": "p3-user-60s", "directVotes": 90, "reason": "该 60 秒窗口包含一条新增有效的裸 d。" },
+    { "id": "p3-original-10s", "directVotes": 35, "reason": "24：40 起的原始 10 秒窗口，计入数量应保留。" }
+  ],
+  "limitations": [
+    "人工版本覆盖表只反映已确认的新需求，不代表完整自然语言语义金标。",
+    "未修改旧 501 条原件；原先复杂语义的拒绝仍按覆盖率分别呈现。",
+    "有限回归与历史回放不能证明真实直播不会误计、全量送达或长期稳定。"
+  ]
+}

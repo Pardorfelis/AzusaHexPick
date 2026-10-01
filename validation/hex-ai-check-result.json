@@ -1,0 +1,39 @@
+{
+  "scope": "海克斯 AI 新链路的三条真实片段表达，单次 Flash 检查，不是总体准确率评估。",
+  "checkedAt": "2026-10-01T04:48:49.465Z",
+  "model": "deepseek-flash",
+  "apiCalls": 1,
+  "elapsedMs": 717,
+  "httpStatus": 200,
+  "transportCode": null,
+  "conservativePeakReserveCny": 0.00693,
+  "estimatedPeakCostCny": 0.000986,
+  "costUnknown": false,
+  "error": "",
+  "noAutomaticRetries": true,
+  "cases": [
+    {
+      "text": "2收集者",
+      "command": "2",
+      "tier": "ai",
+      "reason": "ai",
+      "pending": false
+    },
+    {
+      "text": "2然后收集者",
+      "command": "2",
+      "tier": "ai",
+      "reason": "ai",
+      "pending": false
+    },
+    {
+      "text": "不拿2诗人啊",
+      "command": null,
+      "tier": null,
+      "reason": "ambiguous",
+      "pending": true
+    }
+  ],
+  "finalAiEnabled": false,
+  "finalHexAiEnabled": false
+}

@@ -1,0 +1,140 @@
+{
+  "version": "0.3.0",
+  "scope": "真实浏览器正常速度 P3 回放及只读副屏检查，非直播现场决策",
+  "checkedAt": "2026-10-01T11:48:31.9022347Z",
+  "hex60": {
+    "dataset": "azusa-p3",
+    "positionSeconds": 6830,
+    "seconds": 60,
+    "speed": 1,
+    "status": "locked",
+    "received": 150,
+    "valid": 90,
+    "pending": 6,
+    "actions": [
+      {
+        "key": "1",
+        "label": "选择 1",
+        "votes": 12,
+        "messageVotes": 12,
+        "anonymousVotes": 6
+      },
+      {
+        "key": "2",
+        "label": "选择 2",
+        "votes": 64,
+        "messageVotes": 64,
+        "anonymousVotes": 41
+      },
+      {
+        "key": "3",
+        "label": "选择 3",
+        "votes": 11,
+        "messageVotes": 11,
+        "anonymousVotes": 6
+      },
+      {
+        "key": "1d",
+        "label": "刷新 1",
+        "votes": 2,
+        "messageVotes": 2,
+        "anonymousVotes": 1
+      },
+      {
+        "key": "2d",
+        "label": "刷新 2",
+        "votes": 0,
+        "messageVotes": 0,
+        "anonymousVotes": 0
+      },
+      {
+        "key": "3d",
+        "label": "刷新 3",
+        "votes": 0,
+        "messageVotes": 0,
+        "anonymousVotes": 0
+      },
+      {
+        "key": "d",
+        "label": "全部刷新",
+        "votes": 1,
+        "messageVotes": 1,
+        "anonymousVotes": 1
+      },
+      {
+        "key": "12d",
+        "label": "刷新 1＋2",
+        "votes": 0,
+        "messageVotes": 0,
+        "anonymousVotes": 0
+      },
+      {
+        "key": "13d",
+        "label": "刷新 1＋3",
+        "votes": 0,
+        "messageVotes": 0,
+        "anonymousVotes": 0
+      },
+      {
+        "key": "23d",
+        "label": "刷新 2＋3",
+        "votes": 0,
+        "messageVotes": 0,
+        "anonymousVotes": 0
+      }
+    ],
+    "requests": 0
+  },
+  "readOnlyHasTenActions": true,
+  "readOnlyHasNoControls": true,
+  "screenshot": "web-v03-hex.png",
+  "equipment": {
+    "dataset": "azusa-p3",
+    "positionSeconds": 4990,
+    "seconds": 30,
+    "speed": 1,
+    "status": "locked",
+    "received": 76,
+    "valid": 10,
+    "pending": 5,
+    "current": [
+      {
+        "name": "破败王者之刃",
+        "messageVotes": 8,
+        "anonymousVotes": 8,
+        "votes": 8
+      }
+    ],
+    "against": [
+      {
+        "name": "破败王者之刃",
+        "messageVotes": 1,
+        "anonymousVotes": 1,
+        "votes": 1
+      }
+    ],
+    "diagnostics": {
+      "byTier": {
+        "local": 10,
+        "ai": 0
+      },
+      "ignoredByReason": {
+        "not-suggestion": 51,
+        "mechanics-discussion": 10
+      },
+      "pendingCount": 5,
+      "unknownMinimumMentions": 3
+    },
+    "requests": 0,
+    "localAuditVisible": true,
+    "readOnlyRawAuditAbsent": true,
+    "screenshot": "web-v03-equipment.png"
+  },
+  "final": {
+    "source": "replay",
+    "playback": "paused",
+    "equipmentAi": false,
+    "hexAi": false,
+    "helperConnected": true
+  }
+}

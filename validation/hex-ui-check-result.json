@@ -1,0 +1,31 @@
+{
+  "version": "0.2.0",
+  "dataset": "azusa-p3",
+  "startSeconds": 6830,
+  "playbackSpeed": 1,
+  "countMode": "messages",
+  "aiEnabled": false,
+  "hexAiEnabled": false,
+  "windows": [
+    {
+      "durationSeconds": 30,
+      "received": 94,
+      "included": 64,
+      "unresolved": 1,
+      "commands": {"1": 9, "2": 44, "3": 10, "1d": 1, "2d": 0, "3d": 0}
+    },
+    {
+      "durationSeconds": 60,
+      "received": 150,
+      "included": 89,
+      "unresolved": 6,
+      "commands": {"1": 12, "2": 64, "3": 11, "1d": 2, "2d": 0, "3d": 0}
+    }
+  ],
+  "browserResultsMatchOffline": true,
+  "readonlyPanelVisuallyChecked": true,
+  "localAuditVisuallyChecked": true,
+  "nativePanelVisuallyChecked": true,
+  "realGameAcceptance": false,
+  "realPhoneAcceptance": false
+}

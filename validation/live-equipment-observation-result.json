@@ -1,0 +1,717 @@
+{
+  "scope": "阿梓真实直播游客只读采样，按当前本地分类器同时观察海克斯与装备；不是应用轮次结果或付费 AI 测试。",
+  "requestedRoom": 80397,
+  "shortRoom": 510,
+  "initiatedAt": "2026-10-01T10:55:12.028Z",
+  "observedAt": "2026-10-01T10:55:12.433Z",
+  "elapsedMs": 300406,
+  "observationMs": 300001,
+  "authenticated": true,
+  "statuses": [
+    {
+      "state": "connecting",
+      "atMs": 15,
+      "generation": 1,
+      "attempt": 0,
+      "reconnected": false,
+      "message": "正在连接直播间。"
+    },
+    {
+      "state": "live",
+      "atMs": 405,
+      "generation": 1,
+      "attempt": 0,
+      "reconnected": false,
+      "message": "已接入直播间；按匿名标识统计，不能视为精确人数。"
+    },
+    {
+      "state": "stopped",
+      "atMs": 300405,
+      "generation": 2,
+      "attempt": 0,
+      "reconnected": false,
+      "message": "已停止接收弹幕。"
+    }
+  ],
+  "moduleDigests": {
+    "../src/live-source.mjs": "53bfbdd1b11fab9590b02570cadd931624b75c3e002b54dd73e34a1ded3e4aaf",
+    "../src/hex.mjs": "7d22aa82bbfb1e5a735a23b54a4f86bb0aeb4de85c8da819e602d973c0d9bd7a",
+    "../src/equipment.mjs": "49a5bd3aef0e21a28d11d66abdd364ef50f8eb8141141fd006e2222c0ecb348f",
+    "../data/equipment-aliases.json": "440b3f3adf41b5ada5a324ad624a2cdb32f6b9f982080a9430beec11932ac843"
+  },
+  "counters": {
+    "transportMessages": 420,
+    "messages": 420,
+    "duplicates": 0,
+    "idUnreliableMessages": 0,
+    "anonymousMessages": 420,
+    "dedupEvictions": 0,
+    "identityCapacityMessages": 0,
+    "ordinaryOnlyMessages": 398,
+    "hexRelatedMessages": 10,
+    "equipmentRelatedMessages": 12,
+    "hexCountedMessages": 6,
+    "hexPendingMessages": 4,
+    "equipmentRecognizedMessages": 1,
+    "equipmentCurrentMessages": 1,
+    "equipmentAgainstMessages": 0,
+    "equipmentPendingMessages": 11,
+    "equipmentUnknownExpressionMessages": 6,
+    "equipmentLexicalOnlyMessages": 0
+  },
+  "hex": {
+    "byReason": {
+      "ordinary": 410,
+      "ambiguous": 4,
+      "support": 6
+    },
+    "byTier": {
+      "exact": 5,
+      "repeated": 1
+    },
+    "messageCommands": {
+      "1": 2,
+      "2": 3,
+      "3": 1,
+      "1d": 0,
+      "2d": 0,
+      "3d": 0
+    },
+    "anonymousLatestCommands": {
+      "1": 2,
+      "2": 2,
+      "3": 1,
+      "1d": 0,
+      "2d": 0,
+      "3d": 0
+    },
+    "anonymousLatestScope": "整个采样期的匿名候选最新指令，跨多个选择，不能视为某一轮投票或精确人数。"
+  },
+  "equipment": {
+    "byReason": {
+      "ambiguous-expression": 5,
+      "not-suggestion": 408,
+      "unknown-expression": 6,
+      "local-rules": 1
+    },
+    "messageVotes": {
+      "current": {
+        "无尽之刃": 1
+      },
+      "later": {},
+      "alternatives": {},
+      "against": {},
+      "conditional": {}
+    },
+    "unknownExpressionSampleIndices": [
+      3,
+      4,
+      11,
+      14,
+      15
+    ],
+    "unrecognizedLexicalSampleIndices": [
+      3,
+      11,
+      14,
+      15
+    ],
+    "pendingSampleIndices": [
+      0,
+      2,
+      3,
+      4,
+      10,
+      11,
+      12,
+      14,
+      15,
+      16
+    ],
+    "solicitationContext": "仅采集弹幕文本，未听取主播语音，不能确认期间主播是否征求出装。"
+  },
+  "anonymousCandidates": {
+    "retainedDistinct": 216,
+    "retainedHexDistinct": 5,
+    "capacity": 20000,
+    "identifiersPersisted": false,
+    "exactPeople": false
+  },
+  "samples": [
+    {
+      "atMs": 5152,
+      "lastAtMs": 5152,
+      "type": "equipment",
+      "text": "梦魇伤害靠平a，直接大穿+无尽，打起来先等塔姆上了你再飞后排",
+      "textTruncated": false,
+      "observations": 1,
+      "hex": {
+        "command": null,
+        "tier": null,
+        "reason": "ordinary",
+        "pending": false,
+        "candidate": null
+      },
+      "equipment": {
+        "reason": "ambiguous-expression",
+        "recognized": false,
+        "pending": true,
+        "lexicalReviewCandidate": false,
+        "current": [],
+        "later": [],
+        "alternatives": [],
+        "against": [],
+        "conditional": []
+      }
+    },
+    {
+      "atMs": 26719,
+      "lastAtMs": 26719,
+      "type": "hex",
+      "text": "拖一拖等3只手和天使有得打",
+      "textTruncated": false,
+      "observations": 1,
+      "hex": {
+        "command": null,
+        "tier": null,
+        "reason": "ambiguous",
+        "pending": true,
+        "candidate": "3"
+      },
+      "equipment": {
+        "reason": "not-suggestion",
+        "recognized": false,
+        "pending": false,
+        "lexicalReviewCandidate": false,
+        "current": [],
+        "later": [],
+        "alternatives": [],
+        "against": [],
+        "conditional": []
+      }
+    },
+    {
+      "atMs": 51416,
+      "lastAtMs": 51416,
+      "type": "equipment",
+      "text": "破败打塔姆好点",
+      "textTruncated": false,
+      "observations": 1,
+      "hex": {
+        "command": null,
+        "tier": null,
+        "reason": "ordinary",
+        "pending": false,
+        "candidate": null
+      },
+      "equipment": {
+        "reason": "ambiguous-expression",
+        "recognized": false,
+        "pending": true,
+        "lexicalReviewCandidate": false,
+        "current": [],
+        "later": [],
+        "alternatives": [],
+        "against": [],
+        "conditional": []
+      }
+    },
+    {
+      "atMs": 54007,
+      "lastAtMs": 54007,
+      "type": "equipment",
+      "text": "其实都差不多，出装没啥问题",
+      "textTruncated": false,
+      "observations": 1,
+      "hex": {
+        "command": null,
+        "tier": null,
+        "reason": "ordinary",
+        "pending": false,
+        "candidate": null
+      },
+      "equipment": {
+        "reason": "unknown-expression",
+        "recognized": false,
+        "pending": true,
+        "lexicalReviewCandidate": true,
+        "current": [],
+        "later": [],
+        "alternatives": [],
+        "against": [],
+        "conditional": []
+      }
+    },
+    {
+      "atMs": 93583,
+      "lastAtMs": 93583,
+      "type": "equipment",
+      "text": "出大穿然后鍛体就行了阿梓",
+      "textTruncated": false,
+      "observations": 1,
+      "hex": {
+        "command": null,
+        "tier": null,
+        "reason": "ordinary",
+        "pending": false,
+        "candidate": null
+      },
+      "equipment": {
+        "reason": "unknown-expression",
+        "recognized": false,
+        "pending": true,
+        "lexicalReviewCandidate": false,
+        "current": [],
+        "later": [],
+        "alternatives": [],
+        "against": [],
+        "conditional": []
+      }
+    },
+    {
+      "atMs": 142924,
+      "lastAtMs": 285926,
+      "type": "hex",
+      "text": "1",
+      "textTruncated": false,
+      "observations": 2,
+      "hex": {
+        "command": "1",
+        "tier": "exact",
+        "reason": "support",
+        "pending": false,
+        "candidate": null
+      },
+      "equipment": {
+        "reason": "not-suggestion",
+        "recognized": false,
+        "pending": false,
+        "lexicalReviewCandidate": false,
+        "current": [],
+        "later": [],
+        "alternatives": [],
+        "against": [],
+        "conditional": []
+      }
+    },
+    {
+      "atMs": 148972,
+      "lastAtMs": 148972,
+      "type": "hex",
+      "text": "3333",
+      "textTruncated": false,
+      "observations": 1,
+      "hex": {
+        "command": "3",
+        "tier": "repeated",
+        "reason": "support",
+        "pending": false,
+        "candidate": null
+      },
+      "equipment": {
+        "reason": "not-suggestion",
+        "recognized": false,
+        "pending": false,
+        "lexicalReviewCandidate": false,
+        "current": [],
+        "later": [],
+        "alternatives": [],
+        "against": [],
+        "conditional": []
+      }
+    },
+    {
+      "atMs": 151536,
+      "lastAtMs": 151536,
+      "type": "hex",
+      "text": "我还以为赢了，结果一看1：1",
+      "textTruncated": false,
+      "observations": 1,
+      "hex": {
+        "command": null,
+        "tier": null,
+        "reason": "ambiguous",
+        "pending": true,
+        "candidate": "1"
+      },
+      "equipment": {
+        "reason": "not-suggestion",
+        "recognized": false,
+        "pending": false,
+        "lexicalReviewCandidate": false,
+        "current": [],
+        "later": [],
+        "alternatives": [],
+        "against": [],
+        "conditional": []
+      }
+    },
+    {
+      "atMs": 161939,
+      "lastAtMs": 284654,
+      "type": "hex",
+      "text": "2",
+      "textTruncated": false,
+      "observations": 3,
+      "hex": {
+        "command": "2",
+        "tier": "exact",
+        "reason": "support",
+        "pending": false,
+        "candidate": null
+      },
+      "equipment": {
+        "reason": "not-suggestion",
+        "recognized": false,
+        "pending": false,
+        "lexicalReviewCandidate": false,
+        "current": [],
+        "later": [],
+        "alternatives": [],
+        "against": [],
+        "conditional": []
+      }
+    },
+    {
+      "atMs": 163776,
+      "lastAtMs": 205369,
+      "type": "hex",
+      "text": "1比1",
+      "textTruncated": false,
+      "observations": 2,
+      "hex": {
+        "command": null,
+        "tier": null,
+        "reason": "ambiguous",
+        "pending": true,
+        "candidate": "1"
+      },
+      "equipment": {
+        "reason": "not-suggestion",
+        "recognized": false,
+        "pending": false,
+        "lexicalReviewCandidate": false,
+        "current": [],
+        "later": [],
+        "alternatives": [],
+        "against": [],
+        "conditional": []
+      }
+    },
+    {
+      "atMs": 171561,
+      "lastAtMs": 171561,
+      "type": "equipment",
+      "text": "鞋子换无尽",
+      "textTruncated": false,
+      "observations": 1,
+      "hex": {
+        "command": null,
+        "tier": null,
+        "reason": "ordinary",
+        "pending": false,
+        "candidate": null
+      },
+      "equipment": {
+        "reason": "ambiguous-expression",
+        "recognized": false,
+        "pending": true,
+        "lexicalReviewCandidate": false,
+        "current": [],
+        "later": [],
+        "alternatives": [],
+        "against": [],
+        "conditional": []
+      }
+    },
+    {
+      "atMs": 217808,
+      "lastAtMs": 217808,
+      "type": "equipment",
+      "text": "梓神比我唐比队友玩的好，出装主打听劝",
+      "textTruncated": false,
+      "observations": 1,
+      "hex": {
+        "command": null,
+        "tier": null,
+        "reason": "ordinary",
+        "pending": false,
+        "candidate": null
+      },
+      "equipment": {
+        "reason": "unknown-expression",
+        "recognized": false,
+        "pending": true,
+        "lexicalReviewCandidate": true,
+        "current": [],
+        "later": [],
+        "alternatives": [],
+        "against": [],
+        "conditional": []
+      }
+    },
+    {
+      "atMs": 220409,
+      "lastAtMs": 220409,
+      "type": "equipment",
+      "text": "圆弧换无尽",
+      "textTruncated": false,
+      "observations": 1,
+      "hex": {
+        "command": null,
+        "tier": null,
+        "reason": "ordinary",
+        "pending": false,
+        "candidate": null
+      },
+      "equipment": {
+        "reason": "ambiguous-expression",
+        "recognized": false,
+        "pending": true,
+        "lexicalReviewCandidate": false,
+        "current": [],
+        "later": [],
+        "alternatives": [],
+        "against": [],
+        "conditional": []
+      }
+    },
+    {
+      "atMs": 272438,
+      "lastAtMs": 272438,
+      "type": "equipment",
+      "text": "整个无尽呗",
+      "textTruncated": false,
+      "observations": 1,
+      "hex": {
+        "command": null,
+        "tier": null,
+        "reason": "ordinary",
+        "pending": false,
+        "candidate": null
+      },
+      "equipment": {
+        "reason": "local-rules",
+        "recognized": true,
+        "pending": false,
+        "lexicalReviewCandidate": false,
+        "current": [
+          "无尽之刃"
+        ],
+        "later": [],
+        "alternatives": [],
+        "against": [],
+        "conditional": []
+      }
+    },
+    {
+      "atMs": 286743,
+      "lastAtMs": 287271,
+      "type": "equipment",
+      "text": "穿甲",
+      "textTruncated": false,
+      "observations": 2,
+      "hex": {
+        "command": null,
+        "tier": null,
+        "reason": "ordinary",
+        "pending": false,
+        "candidate": null
+      },
+      "equipment": {
+        "reason": "unknown-expression",
+        "recognized": false,
+        "pending": true,
+        "lexicalReviewCandidate": true,
+        "current": [],
+        "later": [],
+        "alternatives": [],
+        "against": [],
+        "conditional": []
+      }
+    },
+    {
+      "atMs": 288037,
+      "lastAtMs": 288037,
+      "type": "equipment",
+      "text": "别断了干净换装备啊？要收集者要鞋子有什么用？",
+      "textTruncated": false,
+      "observations": 1,
+      "hex": {
+        "command": null,
+        "tier": null,
+        "reason": "ordinary",
+        "pending": false,
+        "candidate": null
+      },
+      "equipment": {
+        "reason": "unknown-expression",
+        "recognized": false,
+        "pending": true,
+        "lexicalReviewCandidate": true,
+        "current": [],
+        "later": [],
+        "alternatives": [],
+        "against": [],
+        "conditional": []
+      }
+    },
+    {
+      "atMs": 290610,
+      "lastAtMs": 290610,
+      "type": "equipment",
+      "text": "收集者换无尽",
+      "textTruncated": false,
+      "observations": 1,
+      "hex": {
+        "command": null,
+        "tier": null,
+        "reason": "ordinary",
+        "pending": false,
+        "candidate": null
+      },
+      "equipment": {
+        "reason": "ambiguous-expression",
+        "recognized": false,
+        "pending": true,
+        "lexicalReviewCandidate": false,
+        "current": [],
+        "later": [],
+        "alternatives": [],
+        "against": [],
+        "conditional": []
+      }
+    }
+  ],
+  "sampleLimits": {
+    "maximumTotal": 200,
+    "maximumPerType": 100,
+    "charactersPerSample": 240,
+    "senderMetadataSaved": false,
+    "ordinaryOnlyTextSaved": false
+  },
+  "stopCallMs": 1,
+  "chatSent": false,
+  "loginCredentialsRead": false,
+  "modelApiCalls": 0,
+  "limitations": [
+    "游客接入可观察实际送达文本，不能据此证明平台弹幕全量或长期连接稳定。",
+    "只按本地接收时间排序，相对时间不含可靠的游戏画面同步或 5 秒延迟校正。",
+    "采样横跨多个选择；所有文本均假设英雄联盟观察上下文，不代表应用已开启相应轮次。",
+    "装备数量必须结合主播是否征求建议理解；零票不能直接归因于 AI 或分类器失效。",
+    "当前采样窗口不还原用户先前收到 37 条、计入 0 条、未决 8 条的 60 秒测试。",
+    "匿名候选只用于会话统计，不能视为精确人数；重连中断弹幕无法补回。",
+    "相关样本按有限配额保留，普通聊天只存数量；未决和忽略不是人工准确率标注。"
+  ],
+  "sampleFiltering": {
+    "discardedOrdinaryNumericSamples": 16,
+    "discardedOrdinaryNumericMessages": 17,
+    "scope": "采样结束后删除与投票无关的普通数字及打卡原文；对应消息仅保留数量。"
+  },
+  "offlineLexicalCheck": {
+    "scope": "单独的纯本地合成语句检查，不是该直播窗口的消息。",
+    "checkedAt": "2026-10-01T11:02:12.730Z",
+    "equipmentDigest": "49a5bd3aef0e21a28d11d66abdd364ef50f8eb8141141fd006e2222c0ecb348f",
+    "matchesObservedEquipmentDigest": true,
+    "cases": [
+      {
+        "text": "绿甲",
+        "result": {
+          "current": [],
+          "later": [],
+          "alternatives": [],
+          "against": [],
+          "conditional": [],
+          "uncertain": true,
+          "pending": true,
+          "recognized": false,
+          "reason": "unknown-expression"
+        }
+      },
+      {
+        "text": "蓝盾",
+        "result": {
+          "current": [],
+          "later": [],
+          "alternatives": [],
+          "against": [],
+          "conditional": [],
+          "uncertain": false,
+          "pending": false,
+          "recognized": false,
+          "reason": "not-suggestion"
+        }
+      },
+      {
+        "text": "兰顿",
+        "result": {
+          "current": [],
+          "later": [],
+          "alternatives": [],
+          "against": [],
+          "conditional": [],
+          "uncertain": false,
+          "pending": false,
+          "recognized": false,
+          "reason": "not-suggestion"
+        }
+      },
+      {
+        "text": "出绿甲",
+        "result": {
+          "current": [],
+          "later": [],
+          "alternatives": [],
+          "against": [],
+          "conditional": [],
+          "uncertain": true,
+          "pending": true,
+          "recognized": false,
+          "reason": "unknown-expression"
+        }
+      },
+      {
+        "text": "出蓝盾",
+        "result": {
+          "current": [],
+          "later": [],
+          "alternatives": [],
+          "against": [],
+          "conditional": [],
+          "uncertain": true,
+          "pending": true,
+          "recognized": false,
+          "reason": "unknown-expression"
+        }
+      },
+      {
+        "text": "破败打塔姆好点",
+        "result": {
+          "current": [],
+          "later": [],
+          "alternatives": [],
+          "against": [],
+          "conditional": [],
+          "uncertain": true,
+          "pending": true,
+          "recognized": false,
+          "reason": "ambiguous-expression"
+        }
+      },
+      {
+        "text": "其实都差不多，出装没啥问题",
+        "result": {
+          "current": [],
+          "later": [],
+          "alternatives": [],
+          "against": [],
+          "conditional": [],
+          "uncertain": true,
+          "pending": true,
+          "recognized": false,
+          "reason": "unknown-expression"
+        }
+      }
+    ]
+  }
+}

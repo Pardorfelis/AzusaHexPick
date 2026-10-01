@@ -1,0 +1,54 @@
+{
+  "scope": "版本 0.3.0 对两条已捕获历史弹幕的一次 Flash 检查，不代表当前直播、整体准确率或稳定延迟。",
+  "checkedAt": "2026-10-01T11:34:09.879Z",
+  "apiCalls": 1,
+  "httpStatus": 200,
+  "elapsedMs": 829,
+  "conservativePeakReserveCny": 0.007904,
+  "estimatedPeakCostCny": 0.001474,
+  "costUnknown": false,
+  "error": "",
+  "policy": {
+    "status": "no-pending",
+    "message": "暂无新鲜的待识别建议。",
+    "intervalMs": 3750,
+    "nextRequestAt": 1790854452800,
+    "pendingCount": 0,
+    "eligibleCount": 0,
+    "appliedCount": 2,
+    "countedCount": 2,
+    "unresolvedCount": 0,
+    "discardedCount": 0,
+    "lateCount": 0,
+    "cacheHits": 0
+  },
+  "cases": [
+    {
+      "text": "破败打塔姆好点",
+      "current": [
+        "破败王者之刃"
+      ],
+      "against": [],
+      "later": [],
+      "alternatives": [],
+      "conditional": [],
+      "pending": false,
+      "via": "ai"
+    },
+    {
+      "text": "梦魇伤害靠平a，直接大穿+无尽，打起来先等塔姆上了你再飞后排",
+      "current": [
+        "无尽之刃"
+      ],
+      "against": [],
+      "later": [],
+      "alternatives": [],
+      "conditional": [],
+      "pending": false,
+      "via": "ai"
+    }
+  ],
+  "noAutomaticRetries": true,
+  "finalEquipmentAiEnabled": false,
+  "finalHexAiEnabled": false
+}

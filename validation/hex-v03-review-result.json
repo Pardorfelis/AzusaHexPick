@@ -1,0 +1,1111 @@
+{
+  "schemaVersion": 2,
+  "profileVersion": "0.3",
+  "generatedAt": "2026-10-01T11:25:46.327Z",
+  "cases": 501,
+  "commands": [
+    "1",
+    "2",
+    "3",
+    "1d",
+    "2d",
+    "3d",
+    "d",
+    "12d",
+    "13d",
+    "23d"
+  ],
+  "manualOverlayCount": 14,
+  "unchangedOriginalCases": 487,
+  "appliedOverrides": [
+    {
+      "id": "real-azusa-p3-8e5737e48ba79462a334e3cb",
+      "textGuard": "d",
+      "oldExpectedKey": null,
+      "oldCategory": "ambiguous-refresh",
+      "oldCoverageTier": "rejection",
+      "expectedKey": "d",
+      "category": "positive",
+      "coverageTier": "exact",
+      "allowPending": false,
+      "reason": "新需求明确裸 d 为全部刷新。"
+    },
+    {
+      "id": "synthetic-091",
+      "textGuard": "d",
+      "oldExpectedKey": null,
+      "oldCategory": "ambiguous-refresh",
+      "oldCoverageTier": "rejection",
+      "expectedKey": "d",
+      "category": "positive",
+      "coverageTier": "exact",
+      "allowPending": false,
+      "reason": "新需求明确裸 d 为全部刷新。"
+    },
+    {
+      "id": "real-azusa-p4-a51a12cd2b653fd0d196d437",
+      "textGuard": "全D",
+      "oldExpectedKey": null,
+      "oldCategory": "ambiguous-refresh",
+      "oldCoverageTier": "rejection",
+      "expectedKey": "d",
+      "category": "positive",
+      "coverageTier": "common",
+      "allowPending": false,
+      "reason": "新需求明确全 D 为全部刷新短句。"
+    },
+    {
+      "id": "real-azusa-p4-cb478152ce76853c55be2d5e",
+      "textGuard": "全D",
+      "oldExpectedKey": null,
+      "oldCategory": "ambiguous-refresh",
+      "oldCoverageTier": "rejection",
+      "expectedKey": "d",
+      "category": "positive",
+      "coverageTier": "common",
+      "allowPending": false,
+      "reason": "新需求明确全 D 为全部刷新短句。"
+    },
+    {
+      "id": "real-azusa-p4-a7b7f113a3e480fb4f197758",
+      "textGuard": "全D",
+      "oldExpectedKey": null,
+      "oldCategory": "ambiguous-refresh",
+      "oldCoverageTier": "rejection",
+      "expectedKey": "d",
+      "category": "positive",
+      "coverageTier": "common",
+      "allowPending": false,
+      "reason": "新需求明确全 D 为全部刷新短句。"
+    },
+    {
+      "id": "real-azusa-p4-11fa13d5c36afb02cafecc1e",
+      "textGuard": "全d",
+      "oldExpectedKey": null,
+      "oldCategory": "ambiguous-refresh",
+      "oldCoverageTier": "rejection",
+      "expectedKey": "d",
+      "category": "positive",
+      "coverageTier": "common",
+      "allowPending": false,
+      "reason": "新需求明确全 d 为全部刷新短句。"
+    },
+    {
+      "id": "real-azusa-p4-7d0f98cea3ae95aedb80532a",
+      "textGuard": "全D",
+      "oldExpectedKey": null,
+      "oldCategory": "ambiguous-refresh",
+      "oldCoverageTier": "rejection",
+      "expectedKey": "d",
+      "category": "positive",
+      "coverageTier": "common",
+      "allowPending": false,
+      "reason": "新需求明确全 D 为全部刷新短句。"
+    },
+    {
+      "id": "real-azusa-p4-14bc50f0c5f8dc6e9e9f8eb7",
+      "textGuard": "全D",
+      "oldExpectedKey": null,
+      "oldCategory": "ambiguous-refresh",
+      "oldCoverageTier": "rejection",
+      "expectedKey": "d",
+      "category": "positive",
+      "coverageTier": "common",
+      "allowPending": false,
+      "reason": "新需求明确全 D 为全部刷新短句。"
+    },
+    {
+      "id": "real-azusa-p4-77bf1ea34ccb32229e3fc266",
+      "textGuard": "全D",
+      "oldExpectedKey": null,
+      "oldCategory": "ambiguous-refresh",
+      "oldCoverageTier": "rejection",
+      "expectedKey": "d",
+      "category": "positive",
+      "coverageTier": "common",
+      "allowPending": false,
+      "reason": "新需求明确全 D 为全部刷新短句。"
+    },
+    {
+      "id": "synthetic-088",
+      "textGuard": "全d",
+      "oldExpectedKey": null,
+      "oldCategory": "ambiguous-refresh",
+      "oldCoverageTier": "rejection",
+      "expectedKey": "d",
+      "category": "positive",
+      "coverageTier": "common",
+      "allowPending": false,
+      "reason": "新需求明确全 d 为全部刷新短句。"
+    },
+    {
+      "id": "real-azusa-p4-e4985b2987b262628987286d",
+      "textGuard": "13d",
+      "oldExpectedKey": null,
+      "oldCategory": "multiple-refresh",
+      "oldCoverageTier": "rejection",
+      "expectedKey": "13d",
+      "category": "positive",
+      "coverageTier": "exact",
+      "allowPending": false,
+      "reason": "新需求明确刷新 1 和 3 为一条完整动作。"
+    },
+    {
+      "id": "synthetic-087",
+      "textGuard": "13d",
+      "oldExpectedKey": null,
+      "oldCategory": "multiple-refresh",
+      "oldCoverageTier": "rejection",
+      "expectedKey": "13d",
+      "category": "positive",
+      "coverageTier": "exact",
+      "allowPending": false,
+      "reason": "新需求明确刷新 1 和 3 为一条完整动作。"
+    },
+    {
+      "id": "real-azusa-p4-3b90aa1b1cbd8c3390784c77",
+      "textGuard": "23d",
+      "oldExpectedKey": null,
+      "oldCategory": "multiple-refresh",
+      "oldCoverageTier": "rejection",
+      "expectedKey": "23d",
+      "category": "positive",
+      "coverageTier": "exact",
+      "allowPending": false,
+      "reason": "新需求明确刷新 2 和 3 为一条完整动作。"
+    },
+    {
+      "id": "real-azusa-p4-279fca2c1f1184ca9ff8bb3d",
+      "textGuard": "ddd",
+      "oldExpectedKey": null,
+      "oldCategory": "ambiguous-refresh",
+      "oldCoverageTier": "rejection",
+      "expectedKey": "d",
+      "category": "positive",
+      "coverageTier": "repeated",
+      "allowPending": false,
+      "reason": "用户明确重复 d 表示全刷新，该条仍只计一次动作。"
+    }
+  ],
+  "provenance": {
+    "originalGold": {
+      "path": "validation\\hex-language-cases.json",
+      "sha256": "d808f26a4170aa4710bda089d3d85f98a015892323e60e1c24814ce4ef990de1"
+    },
+    "oldReport": {
+      "path": "validation\\hex-review-result.json",
+      "sha256": "244912f80502af008ca08bd2d7a828bd275bb68e5b15ba06a4931cfdd40a5311"
+    },
+    "profile": {
+      "path": "validation\\hex-v03-profile.json",
+      "sha256": "d0cb1555a5af349c78a963f685de797382590a430aa678eb528566bf8fa7c3c3"
+    },
+    "effectiveCasesSha256": "cd9d320300f1bc701246dc0266a3c608954c8957b4401d169f42c9c7ad58b4e5",
+    "parser": {
+      "path": "src\\hex.mjs",
+      "sha256": "d8c00bbd023c763519dbbf1815c549d6ee09237fbca7b76b60ae6ce98659c7e4"
+    },
+    "runner": {
+      "path": "validation\\hex-review.mjs",
+      "sha256": "8fd42ff7e024b249a96be064942946a6de089392793d6f36d4527f1786c5b393"
+    },
+    "replayDatasetSha256": {
+      "azusa-p3": "21b586afddd3f7914ea9f25e4238fe21881587a536da12c7bfaa4c477b1ee9a0",
+      "azusa-p4": "eec139602a8d8bb6263d950614297a0dece9f787f748f92c1a05f9a4bfd646cf"
+    },
+    "historicalInputsUnchanged": true
+  },
+  "status": "no-unsafe-result-observed",
+  "directFailures": 0,
+  "candidateTypeFailures": 0,
+  "rejectionPendingFailures": 0,
+  "criticalFailures": 0,
+  "qualityFailures": 0,
+  "invalidOutputs": [],
+  "wrongVotes": [],
+  "falseVotes": [],
+  "unsafePending": [],
+  "validatorFailures": [],
+  "actionRangeChecks": [
+    {
+      "text": "1",
+      "expectedKey": "1",
+      "actualCommand": "1",
+      "reason": "support",
+      "passed": true
+    },
+    {
+      "text": "2",
+      "expectedKey": "2",
+      "actualCommand": "2",
+      "reason": "support",
+      "passed": true
+    },
+    {
+      "text": "3",
+      "expectedKey": "3",
+      "actualCommand": "3",
+      "reason": "support",
+      "passed": true
+    },
+    {
+      "text": "1d",
+      "expectedKey": "1d",
+      "actualCommand": "1d",
+      "reason": "support",
+      "passed": true
+    },
+    {
+      "text": "2d",
+      "expectedKey": "2d",
+      "actualCommand": "2d",
+      "reason": "support",
+      "passed": true
+    },
+    {
+      "text": "3d",
+      "expectedKey": "3d",
+      "actualCommand": "3d",
+      "reason": "support",
+      "passed": true
+    },
+    {
+      "text": "d",
+      "expectedKey": "d",
+      "actualCommand": "d",
+      "reason": "support",
+      "passed": true
+    },
+    {
+      "text": "12d",
+      "expectedKey": "12d",
+      "actualCommand": "12d",
+      "reason": "support",
+      "passed": true
+    },
+    {
+      "text": "13d",
+      "expectedKey": "13d",
+      "actualCommand": "13d",
+      "reason": "support",
+      "passed": true
+    },
+    {
+      "text": "23d",
+      "expectedKey": "23d",
+      "actualCommand": "23d",
+      "reason": "support",
+      "passed": true
+    }
+  ],
+  "rangeFailures": [],
+  "specifiedWindows": [
+    {
+      "id": "p3-user-30s",
+      "expectedDirectVotes": 64,
+      "actualDirectVotes": 64,
+      "passed": true,
+      "reason": "新动作未出现在该 30 秒窗口内，计入数量应保留。"
+    },
+    {
+      "id": "p3-user-60s",
+      "expectedDirectVotes": 90,
+      "actualDirectVotes": 90,
+      "passed": true,
+      "reason": "该 60 秒窗口包含一条新增有效的裸 d。"
+    },
+    {
+      "id": "p3-original-10s",
+      "expectedDirectVotes": 35,
+      "actualDirectVotes": 35,
+      "passed": true,
+      "reason": "24：40 起的原始 10 秒窗口，计入数量应保留。"
+    }
+  ],
+  "windowRegressions": [],
+  "tiers": {
+    "rejection": {
+      "cases": 216,
+      "positives": 0,
+      "accepted": 0,
+      "deferred": 0,
+      "rejected": 0,
+      "falseVotes": 0
+    },
+    "exact": {
+      "cases": 80,
+      "positives": 80,
+      "accepted": 80,
+      "deferred": 0,
+      "rejected": 0,
+      "falseVotes": 0
+    },
+    "repeated": {
+      "cases": 122,
+      "positives": 122,
+      "accepted": 122,
+      "deferred": 0,
+      "rejected": 0,
+      "falseVotes": 0
+    },
+    "common": {
+      "cases": 65,
+      "positives": 65,
+      "accepted": 47,
+      "deferred": 7,
+      "rejected": 11,
+      "falseVotes": 0
+    },
+    "contextual": {
+      "cases": 18,
+      "positives": 18,
+      "accepted": 4,
+      "deferred": 11,
+      "rejected": 3,
+      "falseVotes": 0
+    }
+  },
+  "categories": {
+    "chat": {
+      "cases": 67,
+      "falseVotes": 0,
+      "unsafePending": 0
+    },
+    "positive": {
+      "cases": 285,
+      "falseVotes": 0,
+      "unsafePending": 0
+    },
+    "multiple": {
+      "cases": 23,
+      "falseVotes": 0,
+      "unsafePending": 0
+    },
+    "unmapped-skill": {
+      "cases": 24,
+      "falseVotes": 0,
+      "unsafePending": 0
+    },
+    "negative": {
+      "cases": 34,
+      "falseVotes": 0,
+      "unsafePending": 0
+    },
+    "ambiguous": {
+      "cases": 2,
+      "falseVotes": 0,
+      "unsafePending": 0
+    },
+    "retrospective": {
+      "cases": 13,
+      "falseVotes": 0,
+      "unsafePending": 0
+    },
+    "multiple-refresh": {
+      "cases": 11,
+      "falseVotes": 0,
+      "unsafePending": 0
+    },
+    "conditional": {
+      "cases": 4,
+      "falseVotes": 0,
+      "unsafePending": 0
+    },
+    "ambiguous-refresh": {
+      "cases": 4,
+      "falseVotes": 0,
+      "unsafePending": 0
+    },
+    "ordinary-number": {
+      "cases": 20,
+      "falseVotes": 0,
+      "unsafePending": 0
+    },
+    "future": {
+      "cases": 4,
+      "falseVotes": 0,
+      "unsafePending": 0
+    },
+    "question": {
+      "cases": 5,
+      "falseVotes": 0,
+      "unsafePending": 0
+    },
+    "injection": {
+      "cases": 5,
+      "falseVotes": 0,
+      "unsafePending": 0
+    }
+  },
+  "missedCommon": [
+    {
+      "id": "real-azusa-p4-41fbcd7ee4d68ae8264bedf8",
+      "text": "d2啊",
+      "source": {
+        "kind": "replay",
+        "dataset": "azusa-p4",
+        "messageId": "41fbcd7ee4d68ae8264bedf8",
+        "at": 3482.922
+      },
+      "expectedKey": "2d",
+      "category": "positive",
+      "coverageTier": "common",
+      "actualCommand": null,
+      "pending": false,
+      "candidate": null,
+      "reason": "multi"
+    },
+    {
+      "id": "synthetic-024",
+      "text": "选第3个",
+      "source": {
+        "kind": "synthetic"
+      },
+      "expectedKey": "3",
+      "category": "positive",
+      "coverageTier": "common",
+      "actualCommand": null,
+      "pending": false,
+      "candidate": null,
+      "reason": "ordinary"
+    },
+    {
+      "id": "synthetic-025",
+      "text": "选二",
+      "source": {
+        "kind": "synthetic"
+      },
+      "expectedKey": "2",
+      "category": "positive",
+      "coverageTier": "common",
+      "actualCommand": null,
+      "pending": false,
+      "candidate": null,
+      "reason": "ordinary"
+    },
+    {
+      "id": "synthetic-026",
+      "text": "拿第三个",
+      "source": {
+        "kind": "synthetic"
+      },
+      "expectedKey": "3",
+      "category": "positive",
+      "coverageTier": "common",
+      "actualCommand": null,
+      "pending": false,
+      "candidate": null,
+      "reason": "ordinary"
+    },
+    {
+      "id": "synthetic-027",
+      "text": "选第一个",
+      "source": {
+        "kind": "synthetic"
+      },
+      "expectedKey": "1",
+      "category": "positive",
+      "coverageTier": "common",
+      "actualCommand": null,
+      "pending": false,
+      "candidate": null,
+      "reason": "ordinary"
+    },
+    {
+      "id": "synthetic-039",
+      "text": "别选1，选2",
+      "source": {
+        "kind": "synthetic"
+      },
+      "expectedKey": "2",
+      "category": "positive",
+      "coverageTier": "common",
+      "actualCommand": null,
+      "pending": false,
+      "candidate": null,
+      "reason": "multi"
+    },
+    {
+      "id": "synthetic-040",
+      "text": "不选3，直接2",
+      "source": {
+        "kind": "synthetic"
+      },
+      "expectedKey": "2",
+      "category": "positive",
+      "coverageTier": "common",
+      "actualCommand": null,
+      "pending": false,
+      "candidate": null,
+      "reason": "multi"
+    },
+    {
+      "id": "synthetic-043",
+      "text": "d3",
+      "source": {
+        "kind": "synthetic"
+      },
+      "expectedKey": "3d",
+      "category": "positive",
+      "coverageTier": "common",
+      "actualCommand": null,
+      "pending": false,
+      "candidate": null,
+      "reason": "multi"
+    },
+    {
+      "id": "synthetic-045",
+      "text": "d2啊",
+      "source": {
+        "kind": "synthetic"
+      },
+      "expectedKey": "2d",
+      "category": "positive",
+      "coverageTier": "common",
+      "actualCommand": null,
+      "pending": false,
+      "candidate": null,
+      "reason": "multi"
+    },
+    {
+      "id": "synthetic-046",
+      "text": "刷新第二个",
+      "source": {
+        "kind": "synthetic"
+      },
+      "expectedKey": "2d",
+      "category": "positive",
+      "coverageTier": "common",
+      "actualCommand": null,
+      "pending": false,
+      "candidate": null,
+      "reason": "ordinary"
+    },
+    {
+      "id": "synthetic-047",
+      "text": "第3个刷新",
+      "source": {
+        "kind": "synthetic"
+      },
+      "expectedKey": "3d",
+      "category": "positive",
+      "coverageTier": "common",
+      "actualCommand": null,
+      "pending": false,
+      "candidate": null,
+      "reason": "ordinary"
+    }
+  ],
+  "windows": [
+    {
+      "id": "p3-original-10s",
+      "dataset": "azusa-p3",
+      "start": 1480,
+      "end": 1490,
+      "totalMessages": 45,
+      "baselineVotes": 17,
+      "baselineCounts": {
+        "1": 6,
+        "2": 11,
+        "3": 0,
+        "1d": 0,
+        "2d": 0,
+        "3d": 0,
+        "d": 0,
+        "12d": 0,
+        "13d": 0,
+        "23d": 0
+      },
+      "repeatedOnlyAdditionalVotes": 16,
+      "repeatedOnlyAdditionalCounts": {
+        "1": 4,
+        "2": 11,
+        "3": 1,
+        "1d": 0,
+        "2d": 0,
+        "3d": 0,
+        "d": 0,
+        "12d": 0,
+        "13d": 0,
+        "23d": 0
+      },
+      "directVotes": 35,
+      "directCounts": {
+        "1": 12,
+        "2": 22,
+        "3": 1,
+        "1d": 0,
+        "2d": 0,
+        "3d": 0,
+        "d": 0,
+        "12d": 0,
+        "13d": 0,
+        "23d": 0
+      },
+      "pendingMessages": 1,
+      "pendingCounts": {
+        "1": 1,
+        "2": 0,
+        "3": 0,
+        "1d": 0,
+        "2d": 0,
+        "3d": 0,
+        "d": 0,
+        "12d": 0,
+        "13d": 0,
+        "23d": 0
+      },
+      "anonymousDirectVotes": 32,
+      "anonymousDirectCounts": {
+        "1": 11,
+        "2": 20,
+        "3": 1,
+        "1d": 0,
+        "2d": 0,
+        "3d": 0,
+        "d": 0,
+        "12d": 0,
+        "13d": 0,
+        "23d": 0
+      },
+      "anonymousReferenceNote": "当前本地规则与明确反对撤回语义下的匿名标识参考，不是精确人数，也未包含 AI 回填。",
+      "commonPositiveReference": 36,
+      "commonPositiveCounts": {
+        "1": 13,
+        "2": 22,
+        "3": 1,
+        "1d": 0,
+        "2d": 0,
+        "3d": 0,
+        "d": 0,
+        "12d": 0,
+        "13d": 0,
+        "23d": 0
+      },
+      "semanticPositiveReference": 36,
+      "semanticPositiveCounts": {
+        "1": 13,
+        "2": 22,
+        "3": 1,
+        "1d": 0,
+        "2d": 0,
+        "3d": 0,
+        "d": 0,
+        "12d": 0,
+        "13d": 0,
+        "23d": 0
+      },
+      "issues": []
+    },
+    {
+      "id": "p3-user-30s",
+      "dataset": "azusa-p3",
+      "start": 6830,
+      "end": 6860,
+      "totalMessages": 94,
+      "baselineVotes": 20,
+      "baselineCounts": {
+        "1": 2,
+        "2": 14,
+        "3": 3,
+        "1d": 1,
+        "2d": 0,
+        "3d": 0,
+        "d": 0,
+        "12d": 0,
+        "13d": 0,
+        "23d": 0
+      },
+      "repeatedOnlyAdditionalVotes": 38,
+      "repeatedOnlyAdditionalCounts": {
+        "1": 7,
+        "2": 24,
+        "3": 7,
+        "1d": 0,
+        "2d": 0,
+        "3d": 0,
+        "d": 0,
+        "12d": 0,
+        "13d": 0,
+        "23d": 0
+      },
+      "directVotes": 64,
+      "directCounts": {
+        "1": 9,
+        "2": 44,
+        "3": 10,
+        "1d": 1,
+        "2d": 0,
+        "3d": 0,
+        "d": 0,
+        "12d": 0,
+        "13d": 0,
+        "23d": 0
+      },
+      "pendingMessages": 1,
+      "pendingCounts": {
+        "1": 0,
+        "2": 1,
+        "3": 0,
+        "1d": 0,
+        "2d": 0,
+        "3d": 0,
+        "d": 0,
+        "12d": 0,
+        "13d": 0,
+        "23d": 0
+      },
+      "anonymousDirectVotes": 41,
+      "anonymousDirectCounts": {
+        "1": 4,
+        "2": 29,
+        "3": 7,
+        "1d": 1,
+        "2d": 0,
+        "3d": 0,
+        "d": 0,
+        "12d": 0,
+        "13d": 0,
+        "23d": 0
+      },
+      "anonymousReferenceNote": "当前本地规则与明确反对撤回语义下的匿名标识参考，不是精确人数，也未包含 AI 回填。",
+      "commonPositiveReference": 64,
+      "commonPositiveCounts": {
+        "1": 9,
+        "2": 44,
+        "3": 10,
+        "1d": 1,
+        "2d": 0,
+        "3d": 0,
+        "d": 0,
+        "12d": 0,
+        "13d": 0,
+        "23d": 0
+      },
+      "semanticPositiveReference": 65,
+      "semanticPositiveCounts": {
+        "1": 9,
+        "2": 45,
+        "3": 10,
+        "1d": 1,
+        "2d": 0,
+        "3d": 0,
+        "d": 0,
+        "12d": 0,
+        "13d": 0,
+        "23d": 0
+      },
+      "issues": []
+    },
+    {
+      "id": "p3-user-60s",
+      "dataset": "azusa-p3",
+      "start": 6830,
+      "end": 6890,
+      "totalMessages": 150,
+      "baselineVotes": 25,
+      "baselineCounts": {
+        "1": 2,
+        "2": 17,
+        "3": 3,
+        "1d": 2,
+        "2d": 0,
+        "3d": 0,
+        "d": 1,
+        "12d": 0,
+        "13d": 0,
+        "23d": 0
+      },
+      "repeatedOnlyAdditionalVotes": 53,
+      "repeatedOnlyAdditionalCounts": {
+        "1": 10,
+        "2": 35,
+        "3": 8,
+        "1d": 0,
+        "2d": 0,
+        "3d": 0,
+        "d": 0,
+        "12d": 0,
+        "13d": 0,
+        "23d": 0
+      },
+      "directVotes": 90,
+      "directCounts": {
+        "1": 12,
+        "2": 64,
+        "3": 11,
+        "1d": 2,
+        "2d": 0,
+        "3d": 0,
+        "d": 1,
+        "12d": 0,
+        "13d": 0,
+        "23d": 0
+      },
+      "pendingMessages": 6,
+      "pendingCounts": {
+        "1": 0,
+        "2": 6,
+        "3": 0,
+        "1d": 0,
+        "2d": 0,
+        "3d": 0,
+        "d": 0,
+        "12d": 0,
+        "13d": 0,
+        "23d": 0
+      },
+      "anonymousDirectVotes": 55,
+      "anonymousDirectCounts": {
+        "1": 6,
+        "2": 41,
+        "3": 6,
+        "1d": 1,
+        "2d": 0,
+        "3d": 0,
+        "d": 1,
+        "12d": 0,
+        "13d": 0,
+        "23d": 0
+      },
+      "anonymousReferenceNote": "当前本地规则与明确反对撤回语义下的匿名标识参考，不是精确人数，也未包含 AI 回填。",
+      "commonPositiveReference": 88,
+      "commonPositiveCounts": {
+        "1": 12,
+        "2": 62,
+        "3": 11,
+        "1d": 2,
+        "2d": 0,
+        "3d": 0,
+        "d": 1,
+        "12d": 0,
+        "13d": 0,
+        "23d": 0
+      },
+      "semanticPositiveReference": 96,
+      "semanticPositiveCounts": {
+        "1": 12,
+        "2": 70,
+        "3": 11,
+        "1d": 2,
+        "2d": 0,
+        "3d": 0,
+        "d": 1,
+        "12d": 0,
+        "13d": 0,
+        "23d": 0
+      },
+      "issues": []
+    },
+    {
+      "id": "p4-original-10s",
+      "dataset": "azusa-p4",
+      "start": 3450,
+      "end": 3460,
+      "totalMessages": 45,
+      "baselineVotes": 15,
+      "baselineCounts": {
+        "1": 1,
+        "2": 10,
+        "3": 4,
+        "1d": 0,
+        "2d": 0,
+        "3d": 0,
+        "d": 0,
+        "12d": 0,
+        "13d": 0,
+        "23d": 0
+      },
+      "repeatedOnlyAdditionalVotes": 17,
+      "repeatedOnlyAdditionalCounts": {
+        "1": 2,
+        "2": 14,
+        "3": 1,
+        "1d": 0,
+        "2d": 0,
+        "3d": 0,
+        "d": 0,
+        "12d": 0,
+        "13d": 0,
+        "23d": 0
+      },
+      "directVotes": 34,
+      "directCounts": {
+        "1": 3,
+        "2": 24,
+        "3": 6,
+        "1d": 0,
+        "2d": 0,
+        "3d": 0,
+        "d": 1,
+        "12d": 0,
+        "13d": 0,
+        "23d": 0
+      },
+      "pendingMessages": 0,
+      "pendingCounts": {
+        "1": 0,
+        "2": 0,
+        "3": 0,
+        "1d": 0,
+        "2d": 0,
+        "3d": 0,
+        "d": 0,
+        "12d": 0,
+        "13d": 0,
+        "23d": 0
+      },
+      "anonymousDirectVotes": 28,
+      "anonymousDirectCounts": {
+        "1": 3,
+        "2": 19,
+        "3": 5,
+        "1d": 0,
+        "2d": 0,
+        "3d": 0,
+        "d": 1,
+        "12d": 0,
+        "13d": 0,
+        "23d": 0
+      },
+      "anonymousReferenceNote": "当前本地规则与明确反对撤回语义下的匿名标识参考，不是精确人数，也未包含 AI 回填。",
+      "commonPositiveReference": 34,
+      "commonPositiveCounts": {
+        "1": 3,
+        "2": 24,
+        "3": 6,
+        "1d": 0,
+        "2d": 0,
+        "3d": 0,
+        "d": 1,
+        "12d": 0,
+        "13d": 0,
+        "23d": 0
+      },
+      "semanticPositiveReference": 34,
+      "semanticPositiveCounts": {
+        "1": 3,
+        "2": 24,
+        "3": 6,
+        "1d": 0,
+        "2d": 0,
+        "3d": 0,
+        "d": 1,
+        "12d": 0,
+        "13d": 0,
+        "23d": 0
+      },
+      "issues": []
+    },
+    {
+      "id": "p4-review-40s",
+      "dataset": "azusa-p4",
+      "start": 3450,
+      "end": 3490,
+      "totalMessages": 153,
+      "baselineVotes": 30,
+      "baselineCounts": {
+        "1": 1,
+        "2": 15,
+        "3": 10,
+        "1d": 1,
+        "2d": 0,
+        "3d": 1,
+        "d": 0,
+        "12d": 0,
+        "13d": 1,
+        "23d": 1
+      },
+      "repeatedOnlyAdditionalVotes": 47,
+      "repeatedOnlyAdditionalCounts": {
+        "1": 4,
+        "2": 33,
+        "3": 9,
+        "1d": 0,
+        "2d": 0,
+        "3d": 0,
+        "d": 1,
+        "12d": 0,
+        "13d": 0,
+        "23d": 0
+      },
+      "directVotes": 89,
+      "directCounts": {
+        "1": 5,
+        "2": 50,
+        "3": 22,
+        "1d": 1,
+        "2d": 0,
+        "3d": 1,
+        "d": 8,
+        "12d": 0,
+        "13d": 1,
+        "23d": 1
+      },
+      "pendingMessages": 3,
+      "pendingCounts": {
+        "1": 0,
+        "2": 2,
+        "3": 1,
+        "1d": 0,
+        "2d": 0,
+        "3d": 0,
+        "d": 0,
+        "12d": 0,
+        "13d": 0,
+        "23d": 0
+      },
+      "anonymousDirectVotes": 55,
+      "anonymousDirectCounts": {
+        "1": 5,
+        "2": 29,
+        "3": 16,
+        "1d": 1,
+        "2d": 0,
+        "3d": 0,
+        "d": 3,
+        "12d": 0,
+        "13d": 0,
+        "23d": 1
+      },
+      "anonymousReferenceNote": "当前本地规则与明确反对撤回语义下的匿名标识参考，不是精确人数，也未包含 AI 回填。",
+      "commonPositiveReference": 92,
+      "commonPositiveCounts": {
+        "1": 5,
+        "2": 51,
+        "3": 23,
+        "1d": 1,
+        "2d": 1,
+        "3d": 1,
+        "d": 8,
+        "12d": 0,
+        "13d": 1,
+        "23d": 1
+      },
+      "semanticPositiveReference": 94,
+      "semanticPositiveCounts": {
+        "1": 5,
+        "2": 53,
+        "3": 23,
+        "1d": 1,
+        "2d": 1,
+        "3d": 1,
+        "d": 8,
+        "12d": 0,
+        "13d": 1,
+        "23d": 1
+      },
+      "issues": []
+    }
+  ],
+  "limitations": [
+    "这里只评估本地纯规则解析器，没有调用付费模型。",
+    "pending 不是有效票，也不代表模型已经确认。",
+    "扩展语义参考不是应强制全部识别的要求。",
+    "有限标注集不能证明真实直播中不会误判。",
+    "0.3 仅对 14 条已确认的新动作语义使用人工覆盖，不能将其当作原始 0.2 结果。",
+    "0.2 必须使用旧六动作解析器与旧金标；新十动作解析器不能复现其语义。",
+    "历史回放窗口计数不能证明平台弹幕全量送达、游戏画面同步或长期连接稳定。",
+    "精确字面基线仅做 NFKC、首尾空白和大小写处理，不等于全部自然语言覆盖。"
+  ]
+}

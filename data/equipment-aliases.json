@@ -1,0 +1,1960 @@
+{
+  "game": "英雄联盟",
+  "scope": "依据 Riot Data Dragon 16.19.1 的正式装备目录，含组件、消耗品和正常变形装备，不判断当前模式可购买性。",
+  "officialSource": {
+    "url": "https://ddragon.leagueoflegends.com/cdn/16.19.1/data/zh_CN/item.json",
+    "version": "16.19.1",
+    "method": [
+      "按正式名称去重。",
+      "剔除空名称、HTML 标签、任务、奖励、占位项及已明确识别的伪物品。",
+      "具有正总价格的正式装备保留；零价格且标为地图可用 Trinket 的视野物品保留。物品标签可缺失，不作为有价格装备的必要条件。",
+      "不以 purchasable 为过滤条件，以保留魔切、炽天使之拥等正常变形物。",
+      "不按地图过滤有价格的正式装备，不声称它们在当前海克斯模式中均可购买。"
+    ]
+  },
+  "ambiguousAliases": [
+    {
+      "alias": "蓝甲",
+      "reason": "颜色称呼不能唯一指向装备。"
+    },
+    {
+      "alias": "绿鞋",
+      "reason": "未找到在当前端游上下文中唯一对应的可靠依据。"
+    },
+    {
+      "alias": "大穿",
+      "reason": "可能泛指不同成装穿甲弓。"
+    },
+    {
+      "alias": "大轻语",
+      "reason": "成装穿甲弓存在多个选择。"
+    },
+    {
+      "alias": "轻语",
+      "reason": "可能指最后的轻语或其不同成装。"
+    },
+    {
+      "alias": "面具",
+      "reason": "不同法系和抗性装备均可能被称为面具。"
+    },
+    {
+      "alias": "大面具",
+      "reason": "当前目录同时包含兰德里的折磨和兰德里的苦楚。"
+    },
+    {
+      "alias": "兰德里",
+      "reason": "当前目录同时包含兰德里的折磨和兰德里的苦楚。"
+    },
+    {
+      "alias": "饮魔刀",
+      "reason": "海克斯饮魔刀与玛莫提乌斯之噬须区分。"
+    },
+    {
+      "alias": "吸血刀",
+      "reason": "可能泛指饮血剑、吸血鬼节杖或其他吸血装备。"
+    },
+    {
+      "alias": "皇冠",
+      "reason": "舒瑞娅的战歌和破碎王后之冕等称呼可能混用。"
+    },
+    {
+      "alias": "九头蛇",
+      "reason": "存在贪欲、巨型、亵渎等不同装备。"
+    },
+    {
+      "alias": "小绿甲",
+      "reason": "不能从绿甲子串推断为振奋盔甲。"
+    }
+  ],
+  "nicknameSources": [
+    {
+      "url": "https://www.bilibili.com/video/BV1HF411V7wu/",
+      "aliases": [
+        "绿甲"
+      ],
+      "note": "原创装备分析以振奋盔甲标签和绿甲标题说明同一名称，只引用简称对应关系。"
+    },
+    {
+      "url": "https://jingyan.baidu.com/article/e3c78d644334ea3c4c85f5e3.html",
+      "aliases": [
+        "蓝盾"
+      ],
+      "note": "作者原创出装分析在兰顿之兆段落使用蓝盾简称，只引用名称关系。"
+    },
+    {
+      "url": "https://www.bilibili.com/video/BV1M6421w7p6/",
+      "aliases": [
+        "青龙刀",
+        "黑切"
+      ],
+      "note": "原创装备对比，标签包含朔极之矛与黑色切割者。"
+    },
+    {
+      "url": "https://www.bilibili.com/video/BV1Dz421q7XK",
+      "aliases": [
+        "羊刀"
+      ],
+      "note": "原创装备讨论，标题羊刀与鬼索的狂暴之刃标签对应。"
+    },
+    {
+      "url": "https://www.bilibili.com/video/BV1FV4y1n7B5/",
+      "aliases": [
+        "绿叉"
+      ],
+      "note": "原创端游视频标题直接讨论幻影之舞为何称为绿叉。"
+    },
+    {
+      "url": "https://www.bilibili.com/video/BV17K4y167W7/",
+      "aliases": [
+        "峡谷制造者"
+      ],
+      "note": "原创装备解读说明旧称与裂隙制造者的更名关系。"
+    },
+    {
+      "url": "https://www.bilibili.com/opus/232549397924818585",
+      "aliases": [
+        "血手"
+      ],
+      "note": "原创端游分析明确斯特拉克的挑战护手简称血手。"
+    },
+    {
+      "url": "https://www.bilibili.com/video/BV1oC4y1o72T/",
+      "aliases": [
+        "杀人书"
+      ],
+      "note": "原创视频标题明确梅贾的窃魂卷与杀人书对应，只借助名称关系，不引用手游装备属性。"
+    },
+    {
+      "url": "https://www.bilibili.com/video/BV1bM411f78q/",
+      "aliases": [
+        "多蓝盾"
+      ],
+      "note": "原创剑魔教学使用出门多蓝盾，应避免被蓝盾子串误匹配。"
+    }
+  ],
+  "items": [
+    {
+      "name": "鞋子",
+      "aliases": [
+        "草鞋"
+      ]
+    },
+    {
+      "name": "仙女护符",
+      "aliases": []
+    },
+    {
+      "name": "治疗宝珠",
+      "aliases": []
+    },
+    {
+      "name": "巨人腰带",
+      "aliases": []
+    },
+    {
+      "name": "灵巧披风",
+      "aliases": []
+    },
+    {
+      "name": "爆裂魔杖",
+      "aliases": []
+    },
+    {
+      "name": "蓝水晶",
+      "aliases": []
+    },
+    {
+      "name": "红水晶",
+      "aliases": []
+    },
+    {
+      "name": "布甲",
+      "aliases": []
+    },
+    {
+      "name": "锁子甲",
+      "aliases": []
+    },
+    {
+      "name": "抗魔斗篷",
+      "aliases": []
+    },
+    {
+      "name": "灰烬小刀",
+      "aliases": []
+    },
+    {
+      "name": "长剑",
+      "aliases": []
+    },
+    {
+      "name": "十字镐",
+      "aliases": []
+    },
+    {
+      "name": "暴风之剑",
+      "aliases": []
+    },
+    {
+      "name": "冰雹刀刃",
+      "aliases": []
+    },
+    {
+      "name": "黑曜石锋刃",
+      "aliases": []
+    },
+    {
+      "name": "短剑",
+      "aliases": []
+    },
+    {
+      "name": "反曲之弓",
+      "aliases": []
+    },
+    {
+      "name": "增幅典籍",
+      "aliases": []
+    },
+    {
+      "name": "吸血鬼节杖",
+      "aliases": []
+    },
+    {
+      "name": "多兰之盾",
+      "aliases": [
+        "多兰盾",
+        "多蓝盾"
+      ]
+    },
+    {
+      "name": "多兰之刃",
+      "aliases": [
+        "多兰剑"
+      ]
+    },
+    {
+      "name": "多兰之戒",
+      "aliases": [
+        "多兰戒"
+      ]
+    },
+    {
+      "name": "负极斗篷",
+      "aliases": []
+    },
+    {
+      "name": "无用大棒",
+      "aliases": [
+        "大棒"
+      ]
+    },
+    {
+      "name": "黑暗封印",
+      "aliases": []
+    },
+    {
+      "name": "萃取",
+      "aliases": []
+    },
+    {
+      "name": "多兰之弓",
+      "aliases": []
+    },
+    {
+      "name": "焰爪猫幼崽",
+      "aliases": []
+    },
+    {
+      "name": "风行狐幼体",
+      "aliases": []
+    },
+    {
+      "name": "踏苔蜥幼苗",
+      "aliases": []
+    },
+    {
+      "name": "嘉文一世之靴",
+      "aliases": []
+    },
+    {
+      "name": "多兰之盔",
+      "aliases": []
+    },
+    {
+      "name": "生命药水",
+      "aliases": []
+    },
+    {
+      "name": "永续意志夹心饼干",
+      "aliases": []
+    },
+    {
+      "name": "吉尔菲艾斯碎片",
+      "aliases": []
+    },
+    {
+      "name": "钢铁印章",
+      "aliases": []
+    },
+    {
+      "name": "残暴之力",
+      "aliases": []
+    },
+    {
+      "name": "掘道钻头",
+      "aliases": []
+    },
+    {
+      "name": "荧尘",
+      "aliases": []
+    },
+    {
+      "name": "复用型药水",
+      "aliases": []
+    },
+    {
+      "name": "腐败药水",
+      "aliases": []
+    },
+    {
+      "name": "守护者护符",
+      "aliases": []
+    },
+    {
+      "name": "守护者法衣",
+      "aliases": []
+    },
+    {
+      "name": "守护者号角",
+      "aliases": []
+    },
+    {
+      "name": "控制守卫",
+      "aliases": []
+    },
+    {
+      "name": "侦察守卫",
+      "aliases": []
+    },
+    {
+      "name": "舒瑞娅的战歌",
+      "aliases": []
+    },
+    {
+      "name": "钢铁合剂",
+      "aliases": []
+    },
+    {
+      "name": "巫术合剂",
+      "aliases": []
+    },
+    {
+      "name": "愤怒合剂",
+      "aliases": []
+    },
+    {
+      "name": "帽子饮品",
+      "aliases": []
+    },
+    {
+      "name": "威能饮品",
+      "aliases": []
+    },
+    {
+      "name": "活力饮品",
+      "aliases": []
+    },
+    {
+      "name": "急速饮品",
+      "aliases": []
+    },
+    {
+      "name": "贪财合剂",
+      "aliases": []
+    },
+    {
+      "name": "原力合剂",
+      "aliases": []
+    },
+    {
+      "name": "班德尔威能饮品",
+      "aliases": []
+    },
+    {
+      "name": "班德尔活力饮品",
+      "aliases": []
+    },
+    {
+      "name": "班德尔急速饮品",
+      "aliases": []
+    },
+    {
+      "name": "探索者的护臂",
+      "aliases": []
+    },
+    {
+      "name": "碎裂的护臂",
+      "aliases": []
+    },
+    {
+      "name": "有点神奇之鞋",
+      "aliases": []
+    },
+    {
+      "name": "霸王血铠",
+      "aliases": []
+    },
+    {
+      "name": "无终恨意",
+      "aliases": [
+        "无终"
+      ]
+    },
+    {
+      "name": "黯炎火炬",
+      "aliases": []
+    },
+    {
+      "name": "败魔",
+      "aliases": []
+    },
+    {
+      "name": "命定灰烬",
+      "aliases": []
+    },
+    {
+      "name": "黄昏与黎明",
+      "aliases": []
+    },
+    {
+      "name": "猎魔人弩箭",
+      "aliases": []
+    },
+    {
+      "name": "无穷饥渴",
+      "aliases": []
+    },
+    {
+      "name": "破垒者",
+      "aliases": []
+    },
+    {
+      "name": "实现器",
+      "aliases": []
+    },
+    {
+      "name": "海克斯镜片 C44",
+      "aliases": []
+    },
+    {
+      "name": "班德尔音管",
+      "aliases": []
+    },
+    {
+      "name": "原生质护带",
+      "aliases": []
+    },
+    {
+      "name": "耳语头环",
+      "aliases": []
+    },
+    {
+      "name": "歌之权冠",
+      "aliases": []
+    },
+    {
+      "name": "薄暮法袍",
+      "aliases": []
+    },
+    {
+      "name": "引路者",
+      "aliases": []
+    },
+    {
+      "name": "大天使之杖",
+      "aliases": [
+        "大天使"
+      ]
+    },
+    {
+      "name": "魔宗",
+      "aliases": []
+    },
+    {
+      "name": "鬼蟹",
+      "aliases": []
+    },
+    {
+      "name": "狂战士胫甲",
+      "aliases": [
+        "攻速鞋"
+      ]
+    },
+    {
+      "name": "暴食胫甲",
+      "aliases": [
+        "暴食鞋"
+      ]
+    },
+    {
+      "name": "轻灵之靴",
+      "aliases": [
+        "三速鞋",
+        "轻灵鞋"
+      ]
+    },
+    {
+      "name": "共生鞋鱼",
+      "aliases": []
+    },
+    {
+      "name": "炼金科技纯化器",
+      "aliases": []
+    },
+    {
+      "name": "祝福圣杯",
+      "aliases": []
+    },
+    {
+      "name": "灵犀众魂",
+      "aliases": []
+    },
+    {
+      "name": "法师之靴",
+      "aliases": [
+        "法穿鞋"
+      ]
+    },
+    {
+      "name": "生命水井坠饰",
+      "aliases": []
+    },
+    {
+      "name": "冰川圆盾",
+      "aliases": []
+    },
+    {
+      "name": "守护天使",
+      "aliases": [
+        "复活甲"
+      ]
+    },
+    {
+      "name": "无尽之刃",
+      "aliases": [
+        "无尽"
+      ]
+    },
+    {
+      "name": "育恩塔尔荒野箭",
+      "aliases": []
+    },
+    {
+      "name": "凡性的提醒",
+      "aliases": []
+    },
+    {
+      "name": "最后的轻语",
+      "aliases": [
+        "小轻语"
+      ]
+    },
+    {
+      "name": "多米尼克领主的致意",
+      "aliases": [
+        "多米尼克"
+      ]
+    },
+    {
+      "name": "阿塔玛的清算",
+      "aliases": []
+    },
+    {
+      "name": "炽天使之拥",
+      "aliases": [
+        "炽天使"
+      ]
+    },
+    {
+      "name": "梅贾的窃魂卷",
+      "aliases": [
+        "杀人书"
+      ]
+    },
+    {
+      "name": "魔切",
+      "aliases": []
+    },
+    {
+      "name": "净蚀",
+      "aliases": []
+    },
+    {
+      "name": "幻影之舞",
+      "aliases": [
+        "绿叉"
+      ]
+    },
+    {
+      "name": "铁板靴",
+      "aliases": [
+        "布甲鞋",
+        "护甲鞋",
+        "铁板鞋"
+      ]
+    },
+    {
+      "name": "基克的聚合",
+      "aliases": []
+    },
+    {
+      "name": "缚炉之斧",
+      "aliases": []
+    },
+    {
+      "name": "斯特拉克的挑战护手",
+      "aliases": [
+        "血手"
+      ]
+    },
+    {
+      "name": "耀光",
+      "aliases": []
+    },
+    {
+      "name": "振奋盔甲",
+      "aliases": [
+        "绿甲",
+        "振奋"
+      ]
+    },
+    {
+      "name": "带翼的月板甲",
+      "aliases": []
+    },
+    {
+      "name": "燃烧宝石",
+      "aliases": []
+    },
+    {
+      "name": "日炎圣盾",
+      "aliases": [
+        "日炎"
+      ]
+    },
+    {
+      "name": "女神之泪",
+      "aliases": [
+        "眼泪"
+      ]
+    },
+    {
+      "name": "黑色切割者",
+      "aliases": [
+        "黑切"
+      ]
+    },
+    {
+      "name": "饮血剑",
+      "aliases": [
+        "饮血"
+      ]
+    },
+    {
+      "name": "海克斯注力刚壁",
+      "aliases": [
+        "刚壁"
+      ]
+    },
+    {
+      "name": "贪欲九头蛇",
+      "aliases": [
+        "贪欲"
+      ]
+    },
+    {
+      "name": "荆棘之甲",
+      "aliases": [
+        "反甲",
+        "反伤甲"
+      ]
+    },
+    {
+      "name": "棘刺背心",
+      "aliases": [
+        "小反甲"
+      ]
+    },
+    {
+      "name": "提亚马特",
+      "aliases": []
+    },
+    {
+      "name": "三相之力",
+      "aliases": [
+        "三相"
+      ]
+    },
+    {
+      "name": "守望者铠甲",
+      "aliases": []
+    },
+    {
+      "name": "狂徒铠甲",
+      "aliases": [
+        "狂徒"
+      ]
+    },
+    {
+      "name": "心之钢",
+      "aliases": [
+        "心之刚"
+      ]
+    },
+    {
+      "name": "卢安娜的飓风",
+      "aliases": [
+        "飓风",
+        "分裂弓"
+      ]
+    },
+    {
+      "name": "狂热",
+      "aliases": []
+    },
+    {
+      "name": "斯塔缇克电刃",
+      "aliases": []
+    },
+    {
+      "name": "灭世者的死亡之帽",
+      "aliases": [
+        "帽子",
+        "大帽",
+        "大帽子",
+        "死亡之帽"
+      ]
+    },
+    {
+      "name": "智慧末刃",
+      "aliases": []
+    },
+    {
+      "name": "疾射火炮",
+      "aliases": [
+        "火炮"
+      ]
+    },
+    {
+      "name": "岚切",
+      "aliases": []
+    },
+    {
+      "name": "巫妖之祸",
+      "aliases": [
+        "巫妖"
+      ]
+    },
+    {
+      "name": "女妖面纱",
+      "aliases": [
+        "女妖"
+      ]
+    },
+    {
+      "name": "军团圣盾",
+      "aliases": []
+    },
+    {
+      "name": "救赎",
+      "aliases": []
+    },
+    {
+      "name": "恶魔法典",
+      "aliases": []
+    },
+    {
+      "name": "骑士之誓",
+      "aliases": []
+    },
+    {
+      "name": "冰霜之心",
+      "aliases": [
+        "冰心"
+      ]
+    },
+    {
+      "name": "水银之靴",
+      "aliases": [
+        "水银鞋"
+      ]
+    },
+    {
+      "name": "守护者法球",
+      "aliases": []
+    },
+    {
+      "name": "以太精魂",
+      "aliases": []
+    },
+    {
+      "name": "禁忌雕像",
+      "aliases": []
+    },
+    {
+      "name": "纳什之牙",
+      "aliases": []
+    },
+    {
+      "name": "瑞莱的冰晶节杖",
+      "aliases": [
+        "冰杖",
+        "冰仗"
+      ]
+    },
+    {
+      "name": "疾行之靴",
+      "aliases": [
+        "五速鞋"
+      ]
+    },
+    {
+      "name": "残疫",
+      "aliases": []
+    },
+    {
+      "name": "凛冬之临",
+      "aliases": []
+    },
+    {
+      "name": "末日寒冬",
+      "aliases": []
+    },
+    {
+      "name": "死刑宣告",
+      "aliases": [
+        "小重伤刀"
+      ]
+    },
+    {
+      "name": "鬼索的狂暴之刃",
+      "aliases": [
+        "羊刀",
+        "鬼索"
+      ]
+    },
+    {
+      "name": "冥火之拥",
+      "aliases": []
+    },
+    {
+      "name": "神圣之剑",
+      "aliases": []
+    },
+    {
+      "name": "考尔菲德的战锤",
+      "aliases": []
+    },
+    {
+      "name": "锯齿短匕",
+      "aliases": []
+    },
+    {
+      "name": "虚空之杖",
+      "aliases": [
+        "法穿棒",
+        "虚空杖"
+      ]
+    },
+    {
+      "name": "蜕生",
+      "aliases": []
+    },
+    {
+      "name": "水银弯刀",
+      "aliases": []
+    },
+    {
+      "name": "水银饰带",
+      "aliases": []
+    },
+    {
+      "name": "幽梦之灵",
+      "aliases": [
+        "幽梦"
+      ]
+    },
+    {
+      "name": "兰顿之兆",
+      "aliases": [
+        "兰顿",
+        "蓝盾"
+      ]
+    },
+    {
+      "name": "斥候弹弓",
+      "aliases": []
+    },
+    {
+      "name": "海克斯科技发电机",
+      "aliases": []
+    },
+    {
+      "name": "海克斯科技枪刃",
+      "aliases": [
+        "科技枪"
+      ]
+    },
+    {
+      "name": "幽魂面具",
+      "aliases": []
+    },
+    {
+      "name": "海克斯科技火箭腰带",
+      "aliases": [
+        "推推棒",
+        "火箭腰带"
+      ]
+    },
+    {
+      "name": "破败王者之刃",
+      "aliases": [
+        "破败",
+        "破败王"
+      ]
+    },
+    {
+      "name": "海克斯饮魔刀",
+      "aliases": []
+    },
+    {
+      "name": "玛莫提乌斯之噬",
+      "aliases": []
+    },
+    {
+      "name": "中娅沙漏",
+      "aliases": [
+        "金身",
+        "中亚",
+        "中娅",
+        "沙漏"
+      ]
+    },
+    {
+      "name": "明朗之靴",
+      "aliases": [
+        "cd鞋",
+        "冷却鞋",
+        "明朗鞋"
+      ]
+    },
+    {
+      "name": "朔极之矛",
+      "aliases": [
+        "青龙刀"
+      ]
+    },
+    {
+      "name": "莫雷洛秘典",
+      "aliases": [
+        "鬼书"
+      ]
+    },
+    {
+      "name": "不朽之路",
+      "aliases": []
+    },
+    {
+      "name": "迅速进军",
+      "aliases": []
+    },
+    {
+      "name": "猩红明朗",
+      "aliases": []
+    },
+    {
+      "name": "炮铜胫甲",
+      "aliases": []
+    },
+    {
+      "name": "带链碾碎者",
+      "aliases": []
+    },
+    {
+      "name": "装甲战靴",
+      "aliases": []
+    },
+    {
+      "name": "灵能使之靴",
+      "aliases": []
+    },
+    {
+      "name": "永远前进",
+      "aliases": []
+    },
+    {
+      "name": "守护者之刃",
+      "aliases": []
+    },
+    {
+      "name": "黯影阔剑",
+      "aliases": [
+        "排眼刀"
+      ]
+    },
+    {
+      "name": "破舰者",
+      "aliases": [
+        "破舰"
+      ]
+    },
+    {
+      "name": "守护者战锤",
+      "aliases": []
+    },
+    {
+      "name": "钢铁烈阳之匣",
+      "aliases": [
+        "鸟盾"
+      ]
+    },
+    {
+      "name": "石像鬼石板甲",
+      "aliases": []
+    },
+    {
+      "name": "幽魂斗篷",
+      "aliases": []
+    },
+    {
+      "name": "米凯尔的祝福",
+      "aliases": []
+    },
+    {
+      "name": "界弓",
+      "aliases": []
+    },
+    {
+      "name": "草间人",
+      "aliases": []
+    },
+    {
+      "name": "奥术探测器",
+      "aliases": []
+    },
+    {
+      "name": "远见改造",
+      "aliases": []
+    },
+    {
+      "name": "神谕透镜",
+      "aliases": []
+    },
+    {
+      "name": "毁坏仪式",
+      "aliases": []
+    },
+    {
+      "name": "炽热香炉",
+      "aliases": [
+        "香炉"
+      ]
+    },
+    {
+      "name": "夺萃之镰",
+      "aliases": [
+        "吸蓝刀",
+        "夺萃"
+      ]
+    },
+    {
+      "name": "亡者的板甲",
+      "aliases": []
+    },
+    {
+      "name": "巨型九头蛇",
+      "aliases": [
+        "巨九"
+      ]
+    },
+    {
+      "name": "晶体护腕",
+      "aliases": []
+    },
+    {
+      "name": "遗失的章节",
+      "aliases": []
+    },
+    {
+      "name": "万世催化石",
+      "aliases": []
+    },
+    {
+      "name": "夜之锋刃",
+      "aliases": [
+        "夜刃"
+      ]
+    },
+    {
+      "name": "窃法之刃",
+      "aliases": []
+    },
+    {
+      "name": "冰霜之牙",
+      "aliases": []
+    },
+    {
+      "name": "极冰碎片",
+      "aliases": []
+    },
+    {
+      "name": "钢铁护肩",
+      "aliases": []
+    },
+    {
+      "name": "符钢肩甲",
+      "aliases": []
+    },
+    {
+      "name": "白岩肩铠",
+      "aliases": []
+    },
+    {
+      "name": "圣物之盾",
+      "aliases": []
+    },
+    {
+      "name": "巨神峰圆盾",
+      "aliases": []
+    },
+    {
+      "name": "山脉壁垒",
+      "aliases": []
+    },
+    {
+      "name": "幽魂镰刀",
+      "aliases": []
+    },
+    {
+      "name": "鬼影新月",
+      "aliases": []
+    },
+    {
+      "name": "黑雾巨镰",
+      "aliases": []
+    },
+    {
+      "name": "云游图鉴",
+      "aliases": []
+    },
+    {
+      "name": "符文罗盘",
+      "aliases": []
+    },
+    {
+      "name": "异世珍藏",
+      "aliases": []
+    },
+    {
+      "name": "星界据守",
+      "aliases": []
+    },
+    {
+      "name": "圆梦使者",
+      "aliases": []
+    },
+    {
+      "name": "扎兹沙克的溃口",
+      "aliases": []
+    },
+    {
+      "name": "摩天雪橇",
+      "aliases": []
+    },
+    {
+      "name": "血鸣",
+      "aliases": []
+    },
+    {
+      "name": "湮灭宝珠",
+      "aliases": [
+        "重伤球"
+      ]
+    },
+    {
+      "name": "救生索",
+      "aliases": []
+    },
+    {
+      "name": "幽魂弯刀",
+      "aliases": []
+    },
+    {
+      "name": "帝国指令",
+      "aliases": [
+        "帝国"
+      ]
+    },
+    {
+      "name": "放血者的诅咒",
+      "aliases": []
+    },
+    {
+      "name": "花晓之剑",
+      "aliases": []
+    },
+    {
+      "name": "食罪者",
+      "aliases": []
+    },
+    {
+      "name": "闪电穗带",
+      "aliases": []
+    },
+    {
+      "name": "冰霜之锤",
+      "aliases": []
+    },
+    {
+      "name": "困惑",
+      "aliases": []
+    },
+    {
+      "name": "无言承诺",
+      "aliases": []
+    },
+    {
+      "name": "恶火小斧",
+      "aliases": []
+    },
+    {
+      "name": "自然之力",
+      "aliases": []
+    },
+    {
+      "name": "激发之匣",
+      "aliases": []
+    },
+    {
+      "name": "金铲铲",
+      "aliases": []
+    },
+    {
+      "name": "视界专注",
+      "aliases": []
+    },
+    {
+      "name": "星界驱驰",
+      "aliases": []
+    },
+    {
+      "name": "枯萎珠宝",
+      "aliases": []
+    },
+    {
+      "name": "翠绿屏障",
+      "aliases": []
+    },
+    {
+      "name": "裂隙制造者",
+      "aliases": [
+        "峡谷制造者"
+      ]
+    },
+    {
+      "name": "榨血睥睨",
+      "aliases": []
+    },
+    {
+      "name": "暗夜收割者",
+      "aliases": []
+    },
+    {
+      "name": "恶魔之拥",
+      "aliases": []
+    },
+    {
+      "name": "戒备眼石",
+      "aliases": []
+    },
+    {
+      "name": "萌动眼石",
+      "aliases": []
+    },
+    {
+      "name": "班德尔玻璃镜",
+      "aliases": []
+    },
+    {
+      "name": "警觉眼石",
+      "aliases": []
+    },
+    {
+      "name": "破碎王后之冕",
+      "aliases": []
+    },
+    {
+      "name": "影焰",
+      "aliases": [
+        "影烟",
+        "影炎"
+      ]
+    },
+    {
+      "name": "风暴狂涌",
+      "aliases": []
+    },
+    {
+      "name": "铁刺鞭",
+      "aliases": []
+    },
+    {
+      "name": "密银黎明",
+      "aliases": []
+    },
+    {
+      "name": "死亡之舞",
+      "aliases": [
+        "死舞"
+      ]
+    },
+    {
+      "name": "炼金朋克链锯剑",
+      "aliases": []
+    },
+    {
+      "name": "焚天",
+      "aliases": []
+    },
+    {
+      "name": "流水法杖",
+      "aliases": [
+        "流水"
+      ]
+    },
+    {
+      "name": "月石再生器",
+      "aliases": [
+        "月石"
+      ]
+    },
+    {
+      "name": "海力亚的回响",
+      "aliases": []
+    },
+    {
+      "name": "黎明核心",
+      "aliases": []
+    },
+    {
+      "name": "渴血战斧",
+      "aliases": []
+    },
+    {
+      "name": "挺进破坏者",
+      "aliases": [
+        "挺进"
+      ]
+    },
+    {
+      "name": "神圣分离者",
+      "aliases": []
+    },
+    {
+      "name": "兰德里的折磨",
+      "aliases": []
+    },
+    {
+      "name": "卢登的回声",
+      "aliases": [
+        "卢登"
+      ]
+    },
+    {
+      "name": "永霜",
+      "aliases": []
+    },
+    {
+      "name": "时光之杖",
+      "aliases": [
+        "时光"
+      ]
+    },
+    {
+      "name": "斑比的熔渣",
+      "aliases": []
+    },
+    {
+      "name": "冰脉护手",
+      "aliases": [
+        "冰拳",
+        "冰脉"
+      ]
+    },
+    {
+      "name": "璀璨回响",
+      "aliases": []
+    },
+    {
+      "name": "千变者贾修",
+      "aliases": [
+        "贾修"
+      ]
+    },
+    {
+      "name": "辉耀美德",
+      "aliases": []
+    },
+    {
+      "name": "正午箭袋",
+      "aliases": []
+    },
+    {
+      "name": "狂风之力",
+      "aliases": []
+    },
+    {
+      "name": "海妖杀手",
+      "aliases": [
+        "海妖"
+      ]
+    },
+    {
+      "name": "不朽盾弓",
+      "aliases": [
+        "盾弓"
+      ]
+    },
+    {
+      "name": "纳沃利烁刃",
+      "aliases": []
+    },
+    {
+      "name": "收集者",
+      "aliases": []
+    },
+    {
+      "name": "狂怒小刀",
+      "aliases": []
+    },
+    {
+      "name": "剑翎",
+      "aliases": []
+    },
+    {
+      "name": "德拉克萨的暮刃",
+      "aliases": []
+    },
+    {
+      "name": "星蚀",
+      "aliases": []
+    },
+    {
+      "name": "暗行者之爪",
+      "aliases": []
+    },
+    {
+      "name": "赛瑞尔达的怨恨",
+      "aliases": []
+    },
+    {
+      "name": "巨蛇之牙",
+      "aliases": [
+        "蛇牙"
+      ]
+    },
+    {
+      "name": "公理圆弧",
+      "aliases": [
+        "圆弧",
+        "公理"
+      ]
+    },
+    {
+      "name": "狂妄",
+      "aliases": []
+    },
+    {
+      "name": "亵渎九头蛇",
+      "aliases": [
+        "亵渎"
+      ]
+    },
+    {
+      "name": "电震涡流剑",
+      "aliases": []
+    },
+    {
+      "name": "拉阔尔之盾",
+      "aliases": []
+    },
+    {
+      "name": "禁忌时机",
+      "aliases": []
+    },
+    {
+      "name": "厌恨锁链",
+      "aliases": []
+    },
+    {
+      "name": "深渊面具",
+      "aliases": []
+    },
+    {
+      "name": "碎片之刃",
+      "aliases": []
+    },
+    {
+      "name": "虚空献祭",
+      "aliases": []
+    },
+    {
+      "name": "灵风",
+      "aliases": []
+    },
+    {
+      "name": "守护者短匕",
+      "aliases": []
+    },
+    {
+      "name": "兰德里的苦楚",
+      "aliases": []
+    },
+    {
+      "name": "终极九头蛇",
+      "aliases": []
+    },
+    {
+      "name": "沃格勒特的巫师帽",
+      "aliases": []
+    },
+    {
+      "name": "死亡之刃",
+      "aliases": []
+    },
+    {
+      "name": "适应性头盔",
+      "aliases": []
+    },
+    {
+      "name": "黑曜切割者",
+      "aliases": []
+    },
+    {
+      "name": "血色之刃",
+      "aliases": []
+    },
+    {
+      "name": "符文阔剑",
+      "aliases": []
+    },
+    {
+      "name": "多功能工具",
+      "aliases": []
+    },
+    {
+      "name": "暗钢利爪",
+      "aliases": []
+    },
+    {
+      "name": "爆鸣",
+      "aliases": []
+    },
+    {
+      "name": "魔王之冕",
+      "aliases": []
+    },
+    {
+      "name": "熔石之盾",
+      "aliases": []
+    },
+    {
+      "name": "星夜斗篷",
+      "aliases": []
+    },
+    {
+      "name": "熵之力",
+      "aliases": []
+    },
+    {
+      "name": "血色赠礼",
+      "aliases": []
+    },
+    {
+      "name": "艾莉莎的奇迹",
+      "aliases": []
+    },
+    {
+      "name": "飞升护符",
+      "aliases": []
+    },
+    {
+      "name": "断筋者",
+      "aliases": []
+    },
+    {
+      "name": "涡轮炼金罐",
+      "aliases": []
+    },
+    {
+      "name": "双生面具",
+      "aliases": []
+    },
+    {
+      "name": "海克斯弹丸配枪",
+      "aliases": []
+    },
+    {
+      "name": "收割者的过路费",
+      "aliases": []
+    },
+    {
+      "name": "幻境之刃",
+      "aliases": []
+    },
+    {
+      "name": "投机者之刃",
+      "aliases": []
+    },
+    {
+      "name": "实界裂缝",
+      "aliases": []
+    },
+    {
+      "name": "血术师之盔",
+      "aliases": []
+    },
+    {
+      "name": "至高天诺言",
+      "aliases": []
+    },
+    {
+      "name": "龙心",
+      "aliases": []
+    },
+    {
+      "name": "斩首者",
+      "aliases": []
+    },
+    {
+      "name": "符文雕刻者",
+      "aliases": []
+    },
+    {
+      "name": "残忍",
+      "aliases": []
+    },
+    {
+      "name": "月华咒刃",
+      "aliases": []
+    },
+    {
+      "name": "食肉斧剑",
+      "aliases": []
+    },
+    {
+      "name": "爆炸之球",
+      "aliases": []
+    },
+    {
+      "name": "混响之刃",
+      "aliases": []
+    },
+    {
+      "name": "弑王",
+      "aliases": []
+    },
+    {
+      "name": "均衡十手",
+      "aliases": []
+    },
+    {
+      "name": "炎术师的披风",
+      "aliases": []
+    },
+    {
+      "name": "闪电杖",
+      "aliases": []
+    },
+    {
+      "name": "钻头长矛",
+      "aliases": []
+    },
+    {
+      "name": "暮色之锋",
+      "aliases": []
+    },
+    {
+      "name": "黑洞护手",
+      "aliases": []
+    },
+    {
+      "name": "傀儡操纵器",
+      "aliases": []
+    },
+    {
+      "name": "维迦的飞升护符",
+      "aliases": []
+    },
+    {
+      "name": "速度之靴",
+      "aliases": []
+    },
+    {
+      "name": "猎人的宽刃刀",
+      "aliases": []
+    },
+    {
+      "name": "格斗手套",
+      "aliases": []
+    },
+    {
+      "name": "精魄之石",
+      "aliases": []
+    },
+    {
+      "name": "法力药水",
+      "aliases": []
+    },
+    {
+      "name": "活力夹心饼干",
+      "aliases": []
+    },
+    {
+      "name": "坚韧合剂",
+      "aliases": []
+    },
+    {
+      "name": "灵巧合剂",
+      "aliases": []
+    },
+    {
+      "name": "智慧合剂",
+      "aliases": []
+    },
+    {
+      "name": "水晶瓶",
+      "aliases": []
+    },
+    {
+      "name": "先知药剂",
+      "aliases": []
+    },
+    {
+      "name": "真视守卫",
+      "aliases": []
+    },
+    {
+      "name": "侦查守卫",
+      "aliases": []
+    },
+    {
+      "name": "洞察红宝石",
+      "aliases": []
+    },
+    {
+      "name": "洞察之石",
+      "aliases": []
+    },
+    {
+      "name": "探索者守卫",
+      "aliases": []
+    },
+    {
+      "name": "深渊权杖",
+      "aliases": []
+    },
+    {
+      "name": "阿塔玛之戟",
+      "aliases": []
+    },
+    {
+      "name": "催化神石",
+      "aliases": []
+    },
+    {
+      "name": "双生暗影",
+      "aliases": []
+    },
+    {
+      "name": "冰川护甲",
+      "aliases": []
+    },
+    {
+      "name": "和谐圣杯",
+      "aliases": []
+    },
+    {
+      "name": "御魔之器",
+      "aliases": []
+    },
+    {
+      "name": "忍者足具",
+      "aliases": []
+    },
+    {
+      "name": "斯塔克的狂热",
+      "aliases": []
+    },
+    {
+      "name": "英勇纹章",
+      "aliases": []
+    },
+    {
+      "name": "干扰水晶",
+      "aliases": []
+    },
+    {
+      "name": "号令之旗",
+      "aliases": []
+    },
+    {
+      "name": "灵魂法衣",
+      "aliases": []
+    },
+    {
+      "name": "日炎斗篷",
+      "aliases": []
+    },
+    {
+      "name": "舒瑞娅的狂想曲",
+      "aliases": []
+    },
+    {
+      "name": "日炎斗篷之堆叠",
+      "aliases": []
+    },
+    {
+      "name": "贪婪之刃",
+      "aliases": []
+    },
+    {
+      "name": "贤者之石",
+      "aliases": []
+    },
+    {
+      "name": "幸运手",
+      "aliases": []
+    },
+    {
+      "name": "蜂刺",
+      "aliases": []
+    },
+    {
+      "name": "麦瑞德之爪",
+      "aliases": []
+    },
+    {
+      "name": "符文壁垒",
+      "aliases": []
+    },
+    {
+      "name": "麦瑞德裂血手套",
+      "aliases": []
+    },
+    {
+      "name": "腐蚀之刃",
+      "aliases": []
+    },
+    {
+      "name": "黄金之心",
+      "aliases": []
+    },
+    {
+      "name": "利维坦之甲",
+      "aliases": []
+    },
+    {
+      "name": "神秘之剑",
+      "aliases": []
+    },
+    {
+      "name": "比尔吉沃特弯刀",
+      "aliases": []
+    },
+    {
+      "name": "海克斯科技左轮枪",
+      "aliases": []
+    },
+    {
+      "name": "远古意志",
+      "aliases": []
+    },
+    {
+      "name": "瑞格之灯",
+      "aliases": []
+    },
+    {
+      "name": "烈焰之炬",
+      "aliases": []
+    },
+    {
+      "name": "斗篷与短剑",
+      "aliases": []
+    },
+    {
+      "name": "Shushei的法力壶",
+      "aliases": []
+    },
+    {
+      "name": "离子火花",
+      "aliases": []
+    },
+    {
+      "name": "破碎幽灵之精魄",
+      "aliases": []
+    },
+    {
+      "name": "远古魔像之精魄",
+      "aliases": []
+    },
+    {
+      "name": "蜥蜴长老之精魄",
+      "aliases": []
+    },
+    {
+      "name": "米凯尔的坩埚",
+      "aliases": []
+    },
+    {
+      "name": "黄色饰品",
+      "aliases": []
+    },
+    {
+      "name": "红色饰品",
+      "aliases": []
+    },
+    {
+      "name": "兹若特传送门",
+      "aliases": []
+    },
+    {
+      "name": "海克斯核心原型",
+      "aliases": []
+    },
+    {
+      "name": "海克斯核心mk-1型",
+      "aliases": []
+    },
+    {
+      "name": "海克斯核心mk-2型",
+      "aliases": []
+    },
+    {
+      "name": "完美海克斯核心",
+      "aliases": []
+    },
+    {
+      "name": "蛋酒",
+      "aliases": []
+    },
+    {
+      "name": "茶袋",
+      "aliases": []
+    },
+    {
+      "name": "玉米糖",
+      "aliases": []
+    }
+  ]
+}

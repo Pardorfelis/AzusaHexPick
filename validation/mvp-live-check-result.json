@@ -1,0 +1,39 @@
+{
+  "scope": "最小应用实际直播接入模块只读检查，不是目标海克斯场景或长期稳定性测试。",
+  "room": 21452505,
+  "startedAt": "2026-09-30T19:00:37.934Z",
+  "elapsedMs": 40013,
+  "statuses": [
+    {
+      "state": "connecting",
+      "atMs": 12,
+      "attempt": 0
+    },
+    {
+      "state": "live",
+      "atMs": 486,
+      "attempt": 0
+    },
+    {
+      "state": "stopped",
+      "atMs": 40012,
+      "attempt": 0
+    }
+  ],
+  "authenticated": true,
+  "messages": 9,
+  "anonymousMessages": 9,
+  "exactCommands": {
+    "1": 0,
+    "2": 0,
+    "3": 0,
+    "1d": 0,
+    "2d": 0,
+    "3d": 0
+  },
+  "stopCallMs": 1,
+  "chatSent": false,
+  "rawTextSaved": false,
+  "loginCredentialsRead": false,
+  "paidApiCalls": 0
+}

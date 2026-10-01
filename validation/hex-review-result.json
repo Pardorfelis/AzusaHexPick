@@ -1,0 +1,656 @@
+{
+  "schemaVersion": 1,
+  "cases": 501,
+  "status": "no-unsafe-result-observed",
+  "directFailures": 0,
+  "candidateTypeFailures": 0,
+  "rejectionPendingFailures": 0,
+  "criticalFailures": 0,
+  "qualityFailures": 0,
+  "invalidOutputs": [],
+  "wrongVotes": [],
+  "falseVotes": [],
+  "unsafePending": [],
+  "validatorFailures": [],
+  "tiers": {
+    "rejection": {
+      "cases": 230,
+      "positives": 0,
+      "accepted": 0,
+      "deferred": 0,
+      "rejected": 0,
+      "falseVotes": 0
+    },
+    "exact": {
+      "cases": 75,
+      "positives": 75,
+      "accepted": 75,
+      "deferred": 0,
+      "rejected": 0,
+      "falseVotes": 0
+    },
+    "repeated": {
+      "cases": 121,
+      "positives": 121,
+      "accepted": 121,
+      "deferred": 0,
+      "rejected": 0,
+      "falseVotes": 0
+    },
+    "common": {
+      "cases": 57,
+      "positives": 57,
+      "accepted": 39,
+      "deferred": 7,
+      "rejected": 11,
+      "falseVotes": 0
+    },
+    "contextual": {
+      "cases": 18,
+      "positives": 18,
+      "accepted": 4,
+      "deferred": 11,
+      "rejected": 3,
+      "falseVotes": 0
+    }
+  },
+  "categories": {
+    "chat": {
+      "cases": 67,
+      "falseVotes": 0,
+      "unsafePending": 0
+    },
+    "positive": {
+      "cases": 271,
+      "falseVotes": 0,
+      "unsafePending": 0
+    },
+    "multiple": {
+      "cases": 23,
+      "falseVotes": 0,
+      "unsafePending": 0
+    },
+    "unmapped-skill": {
+      "cases": 24,
+      "falseVotes": 0,
+      "unsafePending": 0
+    },
+    "negative": {
+      "cases": 34,
+      "falseVotes": 0,
+      "unsafePending": 0
+    },
+    "ambiguous-refresh": {
+      "cases": 15,
+      "falseVotes": 0,
+      "unsafePending": 0
+    },
+    "ambiguous": {
+      "cases": 2,
+      "falseVotes": 0,
+      "unsafePending": 0
+    },
+    "retrospective": {
+      "cases": 13,
+      "falseVotes": 0,
+      "unsafePending": 0
+    },
+    "multiple-refresh": {
+      "cases": 14,
+      "falseVotes": 0,
+      "unsafePending": 0
+    },
+    "conditional": {
+      "cases": 4,
+      "falseVotes": 0,
+      "unsafePending": 0
+    },
+    "ordinary-number": {
+      "cases": 20,
+      "falseVotes": 0,
+      "unsafePending": 0
+    },
+    "future": {
+      "cases": 4,
+      "falseVotes": 0,
+      "unsafePending": 0
+    },
+    "question": {
+      "cases": 5,
+      "falseVotes": 0,
+      "unsafePending": 0
+    },
+    "injection": {
+      "cases": 5,
+      "falseVotes": 0,
+      "unsafePending": 0
+    }
+  },
+  "missedCommon": [
+    {
+      "id": "real-azusa-p4-41fbcd7ee4d68ae8264bedf8",
+      "text": "d2啊",
+      "source": {
+        "kind": "replay",
+        "dataset": "azusa-p4",
+        "messageId": "41fbcd7ee4d68ae8264bedf8",
+        "at": 3482.922
+      },
+      "expectedKey": "2d",
+      "category": "positive",
+      "coverageTier": "common",
+      "actualCommand": null,
+      "pending": false,
+      "candidate": null,
+      "reason": "multi"
+    },
+    {
+      "id": "synthetic-024",
+      "text": "选第3个",
+      "source": {
+        "kind": "synthetic"
+      },
+      "expectedKey": "3",
+      "category": "positive",
+      "coverageTier": "common",
+      "actualCommand": null,
+      "pending": false,
+      "candidate": null,
+      "reason": "ordinary"
+    },
+    {
+      "id": "synthetic-025",
+      "text": "选二",
+      "source": {
+        "kind": "synthetic"
+      },
+      "expectedKey": "2",
+      "category": "positive",
+      "coverageTier": "common",
+      "actualCommand": null,
+      "pending": false,
+      "candidate": null,
+      "reason": "ordinary"
+    },
+    {
+      "id": "synthetic-026",
+      "text": "拿第三个",
+      "source": {
+        "kind": "synthetic"
+      },
+      "expectedKey": "3",
+      "category": "positive",
+      "coverageTier": "common",
+      "actualCommand": null,
+      "pending": false,
+      "candidate": null,
+      "reason": "ordinary"
+    },
+    {
+      "id": "synthetic-027",
+      "text": "选第一个",
+      "source": {
+        "kind": "synthetic"
+      },
+      "expectedKey": "1",
+      "category": "positive",
+      "coverageTier": "common",
+      "actualCommand": null,
+      "pending": false,
+      "candidate": null,
+      "reason": "ordinary"
+    },
+    {
+      "id": "synthetic-039",
+      "text": "别选1，选2",
+      "source": {
+        "kind": "synthetic"
+      },
+      "expectedKey": "2",
+      "category": "positive",
+      "coverageTier": "common",
+      "actualCommand": null,
+      "pending": false,
+      "candidate": null,
+      "reason": "multi"
+    },
+    {
+      "id": "synthetic-040",
+      "text": "不选3，直接2",
+      "source": {
+        "kind": "synthetic"
+      },
+      "expectedKey": "2",
+      "category": "positive",
+      "coverageTier": "common",
+      "actualCommand": null,
+      "pending": false,
+      "candidate": null,
+      "reason": "multi"
+    },
+    {
+      "id": "synthetic-043",
+      "text": "d3",
+      "source": {
+        "kind": "synthetic"
+      },
+      "expectedKey": "3d",
+      "category": "positive",
+      "coverageTier": "common",
+      "actualCommand": null,
+      "pending": false,
+      "candidate": null,
+      "reason": "multi"
+    },
+    {
+      "id": "synthetic-045",
+      "text": "d2啊",
+      "source": {
+        "kind": "synthetic"
+      },
+      "expectedKey": "2d",
+      "category": "positive",
+      "coverageTier": "common",
+      "actualCommand": null,
+      "pending": false,
+      "candidate": null,
+      "reason": "multi"
+    },
+    {
+      "id": "synthetic-046",
+      "text": "刷新第二个",
+      "source": {
+        "kind": "synthetic"
+      },
+      "expectedKey": "2d",
+      "category": "positive",
+      "coverageTier": "common",
+      "actualCommand": null,
+      "pending": false,
+      "candidate": null,
+      "reason": "ordinary"
+    },
+    {
+      "id": "synthetic-047",
+      "text": "第3个刷新",
+      "source": {
+        "kind": "synthetic"
+      },
+      "expectedKey": "3d",
+      "category": "positive",
+      "coverageTier": "common",
+      "actualCommand": null,
+      "pending": false,
+      "candidate": null,
+      "reason": "ordinary"
+    }
+  ],
+  "windows": [
+    {
+      "id": "p3-original-10s",
+      "dataset": "azusa-p3",
+      "start": 1480,
+      "end": 1490,
+      "totalMessages": 45,
+      "baselineVotes": 17,
+      "baselineCounts": {
+        "1": 6,
+        "2": 11,
+        "3": 0,
+        "1d": 0,
+        "2d": 0,
+        "3d": 0
+      },
+      "repeatedOnlyAdditionalVotes": 16,
+      "repeatedOnlyAdditionalCounts": {
+        "1": 4,
+        "2": 11,
+        "3": 1,
+        "1d": 0,
+        "2d": 0,
+        "3d": 0
+      },
+      "directVotes": 35,
+      "directCounts": {
+        "1": 12,
+        "2": 22,
+        "3": 1,
+        "1d": 0,
+        "2d": 0,
+        "3d": 0
+      },
+      "pendingMessages": 1,
+      "pendingCounts": {
+        "1": 1,
+        "2": 0,
+        "3": 0,
+        "1d": 0,
+        "2d": 0,
+        "3d": 0
+      },
+      "anonymousDirectVotes": 32,
+      "anonymousDirectCounts": {
+        "1": 11,
+        "2": 20,
+        "3": 1,
+        "1d": 0,
+        "2d": 0,
+        "3d": 0
+      },
+      "anonymousReferenceNote": "当前本地规则与明确反对撤回语义下的匿名标识参考，不是精确人数，也未包含 AI 回填。",
+      "commonPositiveReference": 36,
+      "commonPositiveCounts": {
+        "1": 13,
+        "2": 22,
+        "3": 1,
+        "1d": 0,
+        "2d": 0,
+        "3d": 0
+      },
+      "semanticPositiveReference": 36,
+      "semanticPositiveCounts": {
+        "1": 13,
+        "2": 22,
+        "3": 1,
+        "1d": 0,
+        "2d": 0,
+        "3d": 0
+      },
+      "issues": []
+    },
+    {
+      "id": "p3-user-30s",
+      "dataset": "azusa-p3",
+      "start": 6830,
+      "end": 6860,
+      "totalMessages": 94,
+      "baselineVotes": 20,
+      "baselineCounts": {
+        "1": 2,
+        "2": 14,
+        "3": 3,
+        "1d": 1,
+        "2d": 0,
+        "3d": 0
+      },
+      "repeatedOnlyAdditionalVotes": 38,
+      "repeatedOnlyAdditionalCounts": {
+        "1": 7,
+        "2": 24,
+        "3": 7,
+        "1d": 0,
+        "2d": 0,
+        "3d": 0
+      },
+      "directVotes": 64,
+      "directCounts": {
+        "1": 9,
+        "2": 44,
+        "3": 10,
+        "1d": 1,
+        "2d": 0,
+        "3d": 0
+      },
+      "pendingMessages": 1,
+      "pendingCounts": {
+        "1": 0,
+        "2": 1,
+        "3": 0,
+        "1d": 0,
+        "2d": 0,
+        "3d": 0
+      },
+      "anonymousDirectVotes": 42,
+      "anonymousDirectCounts": {
+        "1": 4,
+        "2": 30,
+        "3": 7,
+        "1d": 1,
+        "2d": 0,
+        "3d": 0
+      },
+      "anonymousReferenceNote": "当前本地规则与明确反对撤回语义下的匿名标识参考，不是精确人数，也未包含 AI 回填。",
+      "commonPositiveReference": 64,
+      "commonPositiveCounts": {
+        "1": 9,
+        "2": 44,
+        "3": 10,
+        "1d": 1,
+        "2d": 0,
+        "3d": 0
+      },
+      "semanticPositiveReference": 65,
+      "semanticPositiveCounts": {
+        "1": 9,
+        "2": 45,
+        "3": 10,
+        "1d": 1,
+        "2d": 0,
+        "3d": 0
+      },
+      "issues": []
+    },
+    {
+      "id": "p3-user-60s",
+      "dataset": "azusa-p3",
+      "start": 6830,
+      "end": 6890,
+      "totalMessages": 150,
+      "baselineVotes": 24,
+      "baselineCounts": {
+        "1": 2,
+        "2": 17,
+        "3": 3,
+        "1d": 2,
+        "2d": 0,
+        "3d": 0
+      },
+      "repeatedOnlyAdditionalVotes": 53,
+      "repeatedOnlyAdditionalCounts": {
+        "1": 10,
+        "2": 35,
+        "3": 8,
+        "1d": 0,
+        "2d": 0,
+        "3d": 0
+      },
+      "directVotes": 89,
+      "directCounts": {
+        "1": 12,
+        "2": 64,
+        "3": 11,
+        "1d": 2,
+        "2d": 0,
+        "3d": 0
+      },
+      "pendingMessages": 6,
+      "pendingCounts": {
+        "1": 0,
+        "2": 6,
+        "3": 0,
+        "1d": 0,
+        "2d": 0,
+        "3d": 0
+      },
+      "anonymousDirectVotes": 54,
+      "anonymousDirectCounts": {
+        "1": 6,
+        "2": 41,
+        "3": 6,
+        "1d": 1,
+        "2d": 0,
+        "3d": 0
+      },
+      "anonymousReferenceNote": "当前本地规则与明确反对撤回语义下的匿名标识参考，不是精确人数，也未包含 AI 回填。",
+      "commonPositiveReference": 87,
+      "commonPositiveCounts": {
+        "1": 12,
+        "2": 62,
+        "3": 11,
+        "1d": 2,
+        "2d": 0,
+        "3d": 0
+      },
+      "semanticPositiveReference": 95,
+      "semanticPositiveCounts": {
+        "1": 12,
+        "2": 70,
+        "3": 11,
+        "1d": 2,
+        "2d": 0,
+        "3d": 0
+      },
+      "issues": []
+    },
+    {
+      "id": "p4-original-10s",
+      "dataset": "azusa-p4",
+      "start": 3450,
+      "end": 3460,
+      "totalMessages": 45,
+      "baselineVotes": 15,
+      "baselineCounts": {
+        "1": 1,
+        "2": 10,
+        "3": 4,
+        "1d": 0,
+        "2d": 0,
+        "3d": 0
+      },
+      "repeatedOnlyAdditionalVotes": 17,
+      "repeatedOnlyAdditionalCounts": {
+        "1": 2,
+        "2": 14,
+        "3": 1,
+        "1d": 0,
+        "2d": 0,
+        "3d": 0
+      },
+      "directVotes": 33,
+      "directCounts": {
+        "1": 3,
+        "2": 24,
+        "3": 6,
+        "1d": 0,
+        "2d": 0,
+        "3d": 0
+      },
+      "pendingMessages": 0,
+      "pendingCounts": {
+        "1": 0,
+        "2": 0,
+        "3": 0,
+        "1d": 0,
+        "2d": 0,
+        "3d": 0
+      },
+      "anonymousDirectVotes": 27,
+      "anonymousDirectCounts": {
+        "1": 3,
+        "2": 19,
+        "3": 5,
+        "1d": 0,
+        "2d": 0,
+        "3d": 0
+      },
+      "anonymousReferenceNote": "当前本地规则与明确反对撤回语义下的匿名标识参考，不是精确人数，也未包含 AI 回填。",
+      "commonPositiveReference": 33,
+      "commonPositiveCounts": {
+        "1": 3,
+        "2": 24,
+        "3": 6,
+        "1d": 0,
+        "2d": 0,
+        "3d": 0
+      },
+      "semanticPositiveReference": 33,
+      "semanticPositiveCounts": {
+        "1": 3,
+        "2": 24,
+        "3": 6,
+        "1d": 0,
+        "2d": 0,
+        "3d": 0
+      },
+      "issues": []
+    },
+    {
+      "id": "p4-review-40s",
+      "dataset": "azusa-p4",
+      "start": 3450,
+      "end": 3490,
+      "totalMessages": 153,
+      "baselineVotes": 28,
+      "baselineCounts": {
+        "1": 1,
+        "2": 15,
+        "3": 10,
+        "1d": 1,
+        "2d": 0,
+        "3d": 1
+      },
+      "repeatedOnlyAdditionalVotes": 46,
+      "repeatedOnlyAdditionalCounts": {
+        "1": 4,
+        "2": 33,
+        "3": 9,
+        "1d": 0,
+        "2d": 0,
+        "3d": 0
+      },
+      "directVotes": 79,
+      "directCounts": {
+        "1": 5,
+        "2": 50,
+        "3": 22,
+        "1d": 1,
+        "2d": 0,
+        "3d": 1
+      },
+      "pendingMessages": 3,
+      "pendingCounts": {
+        "1": 0,
+        "2": 2,
+        "3": 1,
+        "1d": 0,
+        "2d": 0,
+        "3d": 0
+      },
+      "anonymousDirectVotes": 51,
+      "anonymousDirectCounts": {
+        "1": 5,
+        "2": 29,
+        "3": 16,
+        "1d": 1,
+        "2d": 0,
+        "3d": 0
+      },
+      "anonymousReferenceNote": "当前本地规则与明确反对撤回语义下的匿名标识参考，不是精确人数，也未包含 AI 回填。",
+      "commonPositiveReference": 82,
+      "commonPositiveCounts": {
+        "1": 5,
+        "2": 51,
+        "3": 23,
+        "1d": 1,
+        "2d": 1,
+        "3d": 1
+      },
+      "semanticPositiveReference": 84,
+      "semanticPositiveCounts": {
+        "1": 5,
+        "2": 53,
+        "3": 23,
+        "1d": 1,
+        "2d": 1,
+        "3d": 1
+      },
+      "issues": []
+    }
+  ],
+  "limitations": [
+    "这里只评估本地纯规则解析器，没有调用付费模型。",
+    "pending 不是有效票，也不代表模型已经确认。",
+    "扩展语义参考不是应强制全部识别的要求。",
+    "有限标注集不能证明真实直播中不会误判。"
+  ]
+}

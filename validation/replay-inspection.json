@@ -1,0 +1,1293 @@
+{
+  "scope": "用户提供的 P3／P4 回放弹幕文件导入与候选时间段检查，不是完整直播采集或 AI 准确率测试。",
+  "bvid": "BV13Yaf6qEBW",
+  "networkRequestsDuringImport": 0,
+  "originalFilesModified": false,
+  "identitySaltSaved": false,
+  "datasets": [
+    {
+      "id": "azusa-p3",
+      "page": 3,
+      "cid": 42346482280,
+      "sourceBytes": 693518,
+      "datasetBytes": 833236,
+      "coverage": {
+        "kind": "user-provided-jijidown-xml",
+        "sourceRows": 7328,
+        "retainedMessages": 7328,
+        "skippedRows": 0,
+        "truncated": false,
+        "firstAtSeconds": 2.587,
+        "lastAtSeconds": 7198.641,
+        "xmlHeaderMaxlimit": "8000",
+        "missingAnonymousIdentity": 0,
+        "fallbackMessageIds": 0,
+        "description": "解析用户提供的弹幕文件，时间相对各自分 P；不代表全部直播原始弹幕。",
+        "limitations": [
+          "文件可能包含回放观看弹幕或直播弹幕转存，无法据此保证原始直播全量覆盖。",
+          "XML 的 maxlimit 仅作为原始元数据保留，不解释为实际条数或抓取方式。",
+          "匿名标识依据文件中的匿名来源再次加盐哈希，不能据此保证精确观众人数。",
+          "每次重新导入使用新盐；不同导入之间的匿名标识不能关联。",
+          "各分 P 的时间独立；切换分 P 或回放跳转时应清空当前轮次。"
+        ]
+      },
+      "exactVoteMessages": 291,
+      "commandCounts": {
+        "1": 70,
+        "2": 119,
+        "3": 96,
+        "1d": 4,
+        "3d": 2
+      },
+      "equipmentKeywordMessages": 243,
+      "equipmentTermCounts": {
+        "出装": 8,
+        "中亚": 8,
+        "帽子": 33,
+        "冰杖": 7,
+        "法穿棒": 9,
+        "无尽": 27,
+        "装备": 10,
+        "卢登": 13,
+        "心之刚": 2,
+        "大天使": 11,
+        "破败": 97,
+        "金身": 23,
+        "冰拳": 1,
+        "心之钢": 1
+      },
+      "dense10SecondBins": [
+        {
+          "startAtSeconds": 5270,
+          "endAtSeconds": 5280,
+          "messages": 80,
+          "exactVoteMessages": 1,
+          "commandCounts": {
+            "1": 1
+          },
+          "equipmentKeywordMessages": 0
+        },
+        {
+          "startAtSeconds": 5180,
+          "endAtSeconds": 5190,
+          "messages": 61,
+          "exactVoteMessages": 0,
+          "commandCounts": {},
+          "equipmentKeywordMessages": 0
+        },
+        {
+          "startAtSeconds": 5100,
+          "endAtSeconds": 5110,
+          "messages": 53,
+          "exactVoteMessages": 0,
+          "commandCounts": {},
+          "equipmentKeywordMessages": 0
+        },
+        {
+          "startAtSeconds": 5380,
+          "endAtSeconds": 5390,
+          "messages": 53,
+          "exactVoteMessages": 2,
+          "commandCounts": {
+            "3": 1,
+            "2": 1
+          },
+          "equipmentKeywordMessages": 0
+        },
+        {
+          "startAtSeconds": 6560,
+          "endAtSeconds": 6570,
+          "messages": 53,
+          "exactVoteMessages": 0,
+          "commandCounts": {},
+          "equipmentKeywordMessages": 0
+        },
+        {
+          "startAtSeconds": 6700,
+          "endAtSeconds": 6710,
+          "messages": 50,
+          "exactVoteMessages": 0,
+          "commandCounts": {},
+          "equipmentKeywordMessages": 0
+        },
+        {
+          "startAtSeconds": 1240,
+          "endAtSeconds": 1250,
+          "messages": 48,
+          "exactVoteMessages": 0,
+          "commandCounts": {},
+          "equipmentKeywordMessages": 0
+        },
+        {
+          "startAtSeconds": 5370,
+          "endAtSeconds": 5380,
+          "messages": 48,
+          "exactVoteMessages": 9,
+          "commandCounts": {
+            "2": 8,
+            "3": 1
+          },
+          "equipmentKeywordMessages": 0
+        },
+        {
+          "startAtSeconds": 1480,
+          "endAtSeconds": 1490,
+          "messages": 45,
+          "exactVoteMessages": 17,
+          "commandCounts": {
+            "1": 6,
+            "2": 11
+          },
+          "equipmentKeywordMessages": 0
+        },
+        {
+          "startAtSeconds": 4870,
+          "endAtSeconds": 4880,
+          "messages": 45,
+          "exactVoteMessages": 8,
+          "commandCounts": {
+            "3": 6,
+            "1": 1,
+            "2": 1
+          },
+          "equipmentKeywordMessages": 1
+        }
+      ],
+      "voteDense10SecondBins": [
+        {
+          "startAtSeconds": 1480,
+          "endAtSeconds": 1490,
+          "messages": 45,
+          "exactVoteMessages": 17,
+          "commandCounts": {
+            "1": 6,
+            "2": 11
+          },
+          "equipmentKeywordMessages": 0
+        },
+        {
+          "startAtSeconds": 80,
+          "endAtSeconds": 90,
+          "messages": 24,
+          "exactVoteMessages": 12,
+          "commandCounts": {
+            "2": 9,
+            "1": 2,
+            "3": 1
+          },
+          "equipmentKeywordMessages": 0
+        },
+        {
+          "startAtSeconds": 6830,
+          "endAtSeconds": 6840,
+          "messages": 25,
+          "exactVoteMessages": 10,
+          "commandCounts": {
+            "2": 6,
+            "1": 2,
+            "3": 2
+          },
+          "equipmentKeywordMessages": 0
+        },
+        {
+          "startAtSeconds": 4880,
+          "endAtSeconds": 4890,
+          "messages": 28,
+          "exactVoteMessages": 9,
+          "commandCounts": {
+            "3": 6,
+            "1": 3
+          },
+          "equipmentKeywordMessages": 0
+        },
+        {
+          "startAtSeconds": 5370,
+          "endAtSeconds": 5380,
+          "messages": 48,
+          "exactVoteMessages": 9,
+          "commandCounts": {
+            "2": 8,
+            "3": 1
+          },
+          "equipmentKeywordMessages": 0
+        },
+        {
+          "startAtSeconds": 2660,
+          "endAtSeconds": 2670,
+          "messages": 29,
+          "exactVoteMessages": 8,
+          "commandCounts": {
+            "3": 7,
+            "1d": 1
+          },
+          "equipmentKeywordMessages": 1
+        },
+        {
+          "startAtSeconds": 4870,
+          "endAtSeconds": 4880,
+          "messages": 45,
+          "exactVoteMessages": 8,
+          "commandCounts": {
+            "3": 6,
+            "1": 1,
+            "2": 1
+          },
+          "equipmentKeywordMessages": 1
+        },
+        {
+          "startAtSeconds": 300,
+          "endAtSeconds": 310,
+          "messages": 38,
+          "exactVoteMessages": 6,
+          "commandCounts": {
+            "3": 4,
+            "2": 1,
+            "1": 1
+          },
+          "equipmentKeywordMessages": 0
+        },
+        {
+          "startAtSeconds": 1500,
+          "endAtSeconds": 1510,
+          "messages": 24,
+          "exactVoteMessages": 6,
+          "commandCounts": {
+            "2": 3,
+            "1": 2,
+            "3": 1
+          },
+          "equipmentKeywordMessages": 0
+        },
+        {
+          "startAtSeconds": 2400,
+          "endAtSeconds": 2410,
+          "messages": 23,
+          "exactVoteMessages": 6,
+          "commandCounts": {
+            "3": 6
+          },
+          "equipmentKeywordMessages": 0
+        }
+      ],
+      "equipmentDense10SecondBins": [
+        {
+          "startAtSeconds": 5010,
+          "endAtSeconds": 5020,
+          "messages": 25,
+          "exactVoteMessages": 0,
+          "commandCounts": {},
+          "equipmentKeywordMessages": 11
+        },
+        {
+          "startAtSeconds": 4990,
+          "endAtSeconds": 5000,
+          "messages": 30,
+          "exactVoteMessages": 0,
+          "commandCounts": {},
+          "equipmentKeywordMessages": 10
+        },
+        {
+          "startAtSeconds": 4210,
+          "endAtSeconds": 4220,
+          "messages": 24,
+          "exactVoteMessages": 0,
+          "commandCounts": {},
+          "equipmentKeywordMessages": 9
+        },
+        {
+          "startAtSeconds": 4890,
+          "endAtSeconds": 4900,
+          "messages": 16,
+          "exactVoteMessages": 0,
+          "commandCounts": {},
+          "equipmentKeywordMessages": 9
+        },
+        {
+          "startAtSeconds": 1880,
+          "endAtSeconds": 1890,
+          "messages": 18,
+          "exactVoteMessages": 0,
+          "commandCounts": {},
+          "equipmentKeywordMessages": 6
+        },
+        {
+          "startAtSeconds": 5830,
+          "endAtSeconds": 5840,
+          "messages": 18,
+          "exactVoteMessages": 0,
+          "commandCounts": {},
+          "equipmentKeywordMessages": 6
+        },
+        {
+          "startAtSeconds": 2610,
+          "endAtSeconds": 2620,
+          "messages": 13,
+          "exactVoteMessages": 0,
+          "commandCounts": {},
+          "equipmentKeywordMessages": 5
+        },
+        {
+          "startAtSeconds": 4640,
+          "endAtSeconds": 4650,
+          "messages": 28,
+          "exactVoteMessages": 0,
+          "commandCounts": {},
+          "equipmentKeywordMessages": 5
+        },
+        {
+          "startAtSeconds": 4650,
+          "endAtSeconds": 4660,
+          "messages": 25,
+          "exactVoteMessages": 0,
+          "commandCounts": {},
+          "equipmentKeywordMessages": 5
+        },
+        {
+          "startAtSeconds": 4900,
+          "endAtSeconds": 4910,
+          "messages": 33,
+          "exactVoteMessages": 0,
+          "commandCounts": {},
+          "equipmentKeywordMessages": 5
+        }
+      ],
+      "sameAnonymousCommandRepeatsWithin10Seconds": 10,
+      "repeatExamples": [
+        {
+          "anonymousId": "dc4b69d08c23261aa88fccb3",
+          "command": "2",
+          "earlierAtSeconds": 85.618,
+          "laterAtSeconds": 92.832
+        },
+        {
+          "anonymousId": "9970d94e884ed6176f5a7760",
+          "command": "2",
+          "earlierAtSeconds": 6870.589,
+          "laterAtSeconds": 6876.427
+        },
+        {
+          "anonymousId": "fa81e078c3b1d0822c389bd6",
+          "command": "3",
+          "earlierAtSeconds": 300.465,
+          "laterAtSeconds": 306.384
+        },
+        {
+          "anonymousId": "d02291aa436295a07ecf45e6",
+          "command": "2",
+          "earlierAtSeconds": 1483.326,
+          "laterAtSeconds": 1488.115
+        },
+        {
+          "anonymousId": "4b9ca2c3816d79caf86c874f",
+          "command": "3",
+          "earlierAtSeconds": 2405.609,
+          "laterAtSeconds": 2412.364
+        },
+        {
+          "anonymousId": "4b9ca2c3816d79caf86c874f",
+          "command": "3",
+          "earlierAtSeconds": 2412.364,
+          "laterAtSeconds": 2418.763
+        },
+        {
+          "anonymousId": "4b9ca2c3816d79caf86c874f",
+          "command": "1",
+          "earlierAtSeconds": 2670.14,
+          "laterAtSeconds": 2676.819
+        },
+        {
+          "anonymousId": "7bb5372c58f18281136a60fc",
+          "command": "3",
+          "earlierAtSeconds": 4862.858,
+          "laterAtSeconds": 4870.257
+        },
+        {
+          "anonymousId": "f48e0cd0ce231330d7d57524",
+          "command": "2",
+          "earlierAtSeconds": 6849.187,
+          "laterAtSeconds": 6854.114
+        },
+        {
+          "anonymousId": "b6bdc4dd6031e628bfeea7f8",
+          "command": "3",
+          "earlierAtSeconds": 6839.862,
+          "laterAtSeconds": 6847.324
+        }
+      ],
+      "sameMessageIdRepeats": 0,
+      "equipmentTextExamples": [
+        {
+          "at": 33.507,
+          "text": "回去出装",
+          "keywordHits": [
+            "出装"
+          ]
+        },
+        {
+          "at": 35.48,
+          "text": "出装对了还行",
+          "keywordHits": [
+            "出装"
+          ]
+        },
+        {
+          "at": 499.914,
+          "text": "冰杖要出的",
+          "keywordHits": [
+            "冰杖"
+          ]
+        },
+        {
+          "at": 510.191,
+          "text": "出个冰杖啊",
+          "keywordHits": [
+            "冰杖"
+          ]
+        },
+        {
+          "at": 666.16,
+          "text": "先做法穿再做帽子",
+          "keywordHits": [
+            "帽子"
+          ]
+        },
+        {
+          "at": 826.064,
+          "text": "梓神检查一下队友出装，感觉没有人类",
+          "keywordHits": [
+            "出装"
+          ]
+        },
+        {
+          "at": 861.681,
+          "text": "尤里卡得出帽子吧",
+          "keywordHits": [
+            "帽子"
+          ]
+        },
+        {
+          "at": 871.591,
+          "text": "出冰杖吧",
+          "keywordHits": [
+            "冰杖"
+          ]
+        },
+        {
+          "at": 871.816,
+          "text": "主播主播，你这个要出冰杖",
+          "keywordHits": [
+            "冰杖"
+          ]
+        },
+        {
+          "at": 905.029,
+          "text": "眼泪出魔切，鞋子换帽子",
+          "keywordHits": [
+            "帽子"
+          ]
+        },
+        {
+          "at": 1008.158,
+          "text": "卖鞋子出帽子",
+          "keywordHits": [
+            "帽子"
+          ]
+        },
+        {
+          "at": 1315.49,
+          "text": "别卢登",
+          "keywordHits": [
+            "卢登"
+          ]
+        },
+        {
+          "at": 1620.843,
+          "text": "先出重伤和法穿棒",
+          "keywordHits": [
+            "法穿棒"
+          ]
+        },
+        {
+          "at": 1695.97,
+          "text": "我就很喜欢心之刚",
+          "keywordHits": [
+            "心之刚"
+          ]
+        },
+        {
+          "at": 1877.688,
+          "text": "不用出大天使了",
+          "keywordHits": [
+            "大天使"
+          ]
+        },
+        {
+          "at": 1881.781,
+          "text": "法穿 别大天使 没输出了",
+          "keywordHits": [
+            "大天使"
+          ]
+        },
+        {
+          "at": 1883.098,
+          "text": "不要大天使 眼泪挂着",
+          "keywordHits": [
+            "大天使"
+          ]
+        },
+        {
+          "at": 1886.189,
+          "text": "出法穿棒",
+          "keywordHits": [
+            "法穿棒"
+          ]
+        },
+        {
+          "at": 1893.289,
+          "text": "别出大天使",
+          "keywordHits": [
+            "大天使"
+          ]
+        },
+        {
+          "at": 2178.057,
+          "text": "最后再补个冰杖吧",
+          "keywordHits": [
+            "冰杖"
+          ]
+        },
+        {
+          "at": 2200.11,
+          "text": "要是有海克斯能多出第七件装备就好了",
+          "keywordHits": [
+            "装备"
+          ]
+        },
+        {
+          "at": 2564.617,
+          "text": "不用双烧，影烟帽子出起来，雪球伤害就很高了",
+          "keywordHits": [
+            "帽子"
+          ]
+        },
+        {
+          "at": 2596.531,
+          "text": "出破败",
+          "keywordHits": [
+            "破败"
+          ]
+        },
+        {
+          "at": 2618.155,
+          "text": "永远都不出卢登",
+          "keywordHits": [
+            "卢登"
+          ]
+        },
+        {
+          "at": 2630.17,
+          "text": "任何情况都不出卢登",
+          "keywordHits": [
+            "卢登"
+          ]
+        },
+        {
+          "at": 2633.005,
+          "text": "卢登这个装备只有回响卡牌出",
+          "keywordHits": [
+            "卢登",
+            "装备"
+          ]
+        },
+        {
+          "at": 2643.887,
+          "text": "永不出卢登 除了回响Q卡牌",
+          "keywordHits": [
+            "卢登"
+          ]
+        },
+        {
+          "at": 2660.314,
+          "text": "卡牌必出卢登",
+          "keywordHits": [
+            "卢登"
+          ]
+        },
+        {
+          "at": 2725.456,
+          "text": "拿法爆，出影炎法穿大帽子打爆炸aoe",
+          "keywordHits": [
+            "帽子"
+          ]
+        },
+        {
+          "at": 2800.975,
+          "text": "正常出装",
+          "keywordHits": [
+            "出装"
+          ]
+        }
+      ],
+      "classificationNote": "字词命中和精确数字指令属于候选筛选，不是人工语义标签，也不能证明对应主播提问。"
+    },
+    {
+      "id": "azusa-p4",
+      "page": 4,
+      "cid": 42346482449,
+      "sourceBytes": 880887,
+      "datasetBytes": 1060188,
+      "coverage": {
+        "kind": "user-provided-jijidown-xml",
+        "sourceRows": 9430,
+        "retainedMessages": 9430,
+        "skippedRows": 0,
+        "truncated": false,
+        "firstAtSeconds": 1.335,
+        "lastAtSeconds": 7199.79,
+        "xmlHeaderMaxlimit": "8000",
+        "missingAnonymousIdentity": 0,
+        "fallbackMessageIds": 0,
+        "description": "解析用户提供的弹幕文件，时间相对各自分 P；不代表全部直播原始弹幕。",
+        "limitations": [
+          "文件可能包含回放观看弹幕或直播弹幕转存，无法据此保证原始直播全量覆盖。",
+          "XML 的 maxlimit 仅作为原始元数据保留，不解释为实际条数或抓取方式。",
+          "匿名标识依据文件中的匿名来源再次加盐哈希，不能据此保证精确观众人数。",
+          "每次重新导入使用新盐；不同导入之间的匿名标识不能关联。",
+          "各分 P 的时间独立；切换分 P 或回放跳转时应清空当前轮次。"
+        ]
+      },
+      "exactVoteMessages": 369,
+      "commandCounts": {
+        "1": 143,
+        "2": 111,
+        "3": 102,
+        "3d": 7,
+        "2d": 3,
+        "1d": 3
+      },
+      "equipmentKeywordMessages": 219,
+      "equipmentTermCounts": {
+        "无尽": 88,
+        "出装": 17,
+        "帽子": 44,
+        "装备": 6,
+        "法穿棒": 7,
+        "卢登": 11,
+        "冰杖": 18,
+        "大天使": 1,
+        "金身": 15,
+        "心之钢": 4,
+        "心之刚": 2,
+        "中亚": 2,
+        "破败": 1,
+        "饮血": 6
+      },
+      "dense10SecondBins": [
+        {
+          "startAtSeconds": 2490,
+          "endAtSeconds": 2500,
+          "messages": 109,
+          "exactVoteMessages": 7,
+          "commandCounts": {
+            "1": 5,
+            "2": 2
+          },
+          "equipmentKeywordMessages": 0
+        },
+        {
+          "startAtSeconds": 6300,
+          "endAtSeconds": 6310,
+          "messages": 97,
+          "exactVoteMessages": 0,
+          "commandCounts": {},
+          "equipmentKeywordMessages": 0
+        },
+        {
+          "startAtSeconds": 2500,
+          "endAtSeconds": 2510,
+          "messages": 87,
+          "exactVoteMessages": 8,
+          "commandCounts": {
+            "2": 3,
+            "1": 4,
+            "3d": 1
+          },
+          "equipmentKeywordMessages": 0
+        },
+        {
+          "startAtSeconds": 2510,
+          "endAtSeconds": 2520,
+          "messages": 81,
+          "exactVoteMessages": 11,
+          "commandCounts": {
+            "1": 8,
+            "2": 3
+          },
+          "equipmentKeywordMessages": 0
+        },
+        {
+          "startAtSeconds": 2610,
+          "endAtSeconds": 2620,
+          "messages": 74,
+          "exactVoteMessages": 0,
+          "commandCounts": {},
+          "equipmentKeywordMessages": 0
+        },
+        {
+          "startAtSeconds": 1640,
+          "endAtSeconds": 1650,
+          "messages": 71,
+          "exactVoteMessages": 0,
+          "commandCounts": {},
+          "equipmentKeywordMessages": 0
+        },
+        {
+          "startAtSeconds": 2020,
+          "endAtSeconds": 2030,
+          "messages": 71,
+          "exactVoteMessages": 6,
+          "commandCounts": {
+            "1": 3,
+            "3": 3
+          },
+          "equipmentKeywordMessages": 0
+        },
+        {
+          "startAtSeconds": 2250,
+          "endAtSeconds": 2260,
+          "messages": 71,
+          "exactVoteMessages": 4,
+          "commandCounts": {
+            "1": 4
+          },
+          "equipmentKeywordMessages": 0
+        },
+        {
+          "startAtSeconds": 2240,
+          "endAtSeconds": 2250,
+          "messages": 64,
+          "exactVoteMessages": 7,
+          "commandCounts": {
+            "1": 7
+          },
+          "equipmentKeywordMessages": 0
+        },
+        {
+          "startAtSeconds": 6310,
+          "endAtSeconds": 6320,
+          "messages": 58,
+          "exactVoteMessages": 0,
+          "commandCounts": {},
+          "equipmentKeywordMessages": 0
+        }
+      ],
+      "voteDense10SecondBins": [
+        {
+          "startAtSeconds": 3450,
+          "endAtSeconds": 3460,
+          "messages": 45,
+          "exactVoteMessages": 15,
+          "commandCounts": {
+            "2": 10,
+            "3": 4,
+            "1": 1
+          },
+          "equipmentKeywordMessages": 0
+        },
+        {
+          "startAtSeconds": 4170,
+          "endAtSeconds": 4180,
+          "messages": 57,
+          "exactVoteMessages": 13,
+          "commandCounts": {
+            "3": 10,
+            "1d": 1,
+            "1": 1,
+            "2": 1
+          },
+          "equipmentKeywordMessages": 0
+        },
+        {
+          "startAtSeconds": 2510,
+          "endAtSeconds": 2520,
+          "messages": 81,
+          "exactVoteMessages": 11,
+          "commandCounts": {
+            "1": 8,
+            "2": 3
+          },
+          "equipmentKeywordMessages": 0
+        },
+        {
+          "startAtSeconds": 5820,
+          "endAtSeconds": 5830,
+          "messages": 32,
+          "exactVoteMessages": 10,
+          "commandCounts": {
+            "3": 8,
+            "2": 2
+          },
+          "equipmentKeywordMessages": 0
+        },
+        {
+          "startAtSeconds": 4050,
+          "endAtSeconds": 4060,
+          "messages": 57,
+          "exactVoteMessages": 9,
+          "commandCounts": {
+            "3": 4,
+            "2": 5
+          },
+          "equipmentKeywordMessages": 1
+        },
+        {
+          "startAtSeconds": 5840,
+          "endAtSeconds": 5850,
+          "messages": 45,
+          "exactVoteMessages": 9,
+          "commandCounts": {
+            "1": 6,
+            "2": 2,
+            "3": 1
+          },
+          "equipmentKeywordMessages": 0
+        },
+        {
+          "startAtSeconds": 700,
+          "endAtSeconds": 710,
+          "messages": 44,
+          "exactVoteMessages": 8,
+          "commandCounts": {
+            "1": 7,
+            "3": 1
+          },
+          "equipmentKeywordMessages": 0
+        },
+        {
+          "startAtSeconds": 1190,
+          "endAtSeconds": 1200,
+          "messages": 28,
+          "exactVoteMessages": 8,
+          "commandCounts": {
+            "3": 5,
+            "1": 2,
+            "3d": 1
+          },
+          "equipmentKeywordMessages": 0
+        },
+        {
+          "startAtSeconds": 2500,
+          "endAtSeconds": 2510,
+          "messages": 87,
+          "exactVoteMessages": 8,
+          "commandCounts": {
+            "2": 3,
+            "1": 4,
+            "3d": 1
+          },
+          "equipmentKeywordMessages": 0
+        },
+        {
+          "startAtSeconds": 4370,
+          "endAtSeconds": 4380,
+          "messages": 27,
+          "exactVoteMessages": 8,
+          "commandCounts": {
+            "3": 6,
+            "2": 1,
+            "1": 1
+          },
+          "equipmentKeywordMessages": 0
+        }
+      ],
+      "equipmentDense10SecondBins": [
+        {
+          "startAtSeconds": 1580,
+          "endAtSeconds": 1590,
+          "messages": 40,
+          "exactVoteMessages": 1,
+          "commandCounts": {
+            "1": 1
+          },
+          "equipmentKeywordMessages": 24
+        },
+        {
+          "startAtSeconds": 1590,
+          "endAtSeconds": 1600,
+          "messages": 22,
+          "exactVoteMessages": 0,
+          "commandCounts": {},
+          "equipmentKeywordMessages": 10
+        },
+        {
+          "startAtSeconds": 300,
+          "endAtSeconds": 310,
+          "messages": 17,
+          "exactVoteMessages": 0,
+          "commandCounts": {},
+          "equipmentKeywordMessages": 7
+        },
+        {
+          "startAtSeconds": 1570,
+          "endAtSeconds": 1580,
+          "messages": 19,
+          "exactVoteMessages": 0,
+          "commandCounts": {},
+          "equipmentKeywordMessages": 7
+        },
+        {
+          "startAtSeconds": 5070,
+          "endAtSeconds": 5080,
+          "messages": 40,
+          "exactVoteMessages": 0,
+          "commandCounts": {},
+          "equipmentKeywordMessages": 7
+        },
+        {
+          "startAtSeconds": 5380,
+          "endAtSeconds": 5390,
+          "messages": 13,
+          "exactVoteMessages": 0,
+          "commandCounts": {},
+          "equipmentKeywordMessages": 6
+        },
+        {
+          "startAtSeconds": 4030,
+          "endAtSeconds": 4040,
+          "messages": 41,
+          "exactVoteMessages": 2,
+          "commandCounts": {
+            "1": 2
+          },
+          "equipmentKeywordMessages": 5
+        },
+        {
+          "startAtSeconds": 370,
+          "endAtSeconds": 380,
+          "messages": 22,
+          "exactVoteMessages": 0,
+          "commandCounts": {},
+          "equipmentKeywordMessages": 4
+        },
+        {
+          "startAtSeconds": 2870,
+          "endAtSeconds": 2880,
+          "messages": 28,
+          "exactVoteMessages": 0,
+          "commandCounts": {},
+          "equipmentKeywordMessages": 4
+        },
+        {
+          "startAtSeconds": 5540,
+          "endAtSeconds": 5550,
+          "messages": 20,
+          "exactVoteMessages": 0,
+          "commandCounts": {},
+          "equipmentKeywordMessages": 4
+        }
+      ],
+      "sameAnonymousCommandRepeatsWithin10Seconds": 14,
+      "repeatExamples": [
+        {
+          "anonymousId": "edb6cbcd1e96fcc7cdc11820",
+          "command": "1",
+          "earlierAtSeconds": 6959.065,
+          "laterAtSeconds": 6966.621
+        },
+        {
+          "anonymousId": "9970d94e884ed6176f5a7760",
+          "command": "3",
+          "earlierAtSeconds": 3484.153,
+          "laterAtSeconds": 3490.115
+        },
+        {
+          "anonymousId": "f1d70744a77d0b544a2f4fc8",
+          "command": "3",
+          "earlierAtSeconds": 3028.288,
+          "laterAtSeconds": 3035.562
+        },
+        {
+          "anonymousId": "52e2c9e94507f616f3df7a08",
+          "command": "2",
+          "earlierAtSeconds": 3453.257,
+          "laterAtSeconds": 3460.37
+        },
+        {
+          "anonymousId": "1f9885e2906abc688a50d633",
+          "command": "3",
+          "earlierAtSeconds": 3455.513,
+          "laterAtSeconds": 3463.687
+        },
+        {
+          "anonymousId": "1f9885e2906abc688a50d633",
+          "command": "3",
+          "earlierAtSeconds": 3463.687,
+          "laterAtSeconds": 3473.099
+        },
+        {
+          "anonymousId": "29e4903e4b69189538c4eecd",
+          "command": "2",
+          "earlierAtSeconds": 4053.456,
+          "laterAtSeconds": 4061.614
+        },
+        {
+          "anonymousId": "29e4903e4b69189538c4eecd",
+          "command": "3",
+          "earlierAtSeconds": 4172.865,
+          "laterAtSeconds": 4177.239
+        },
+        {
+          "anonymousId": "29e4903e4b69189538c4eecd",
+          "command": "3",
+          "earlierAtSeconds": 4177.239,
+          "laterAtSeconds": 4182.228
+        },
+        {
+          "anonymousId": "29e4903e4b69189538c4eecd",
+          "command": "3",
+          "earlierAtSeconds": 4182.228,
+          "laterAtSeconds": 4187.235
+        },
+        {
+          "anonymousId": "1987003b179cafec2a6e7cc5",
+          "command": "1",
+          "earlierAtSeconds": 5016.658,
+          "laterAtSeconds": 5023.33
+        },
+        {
+          "anonymousId": "534fdefdc364d66ad1f48d15",
+          "command": "2",
+          "earlierAtSeconds": 5646.542,
+          "laterAtSeconds": 5655.66
+        },
+        {
+          "anonymousId": "b0a888b849de4a6558b84da0",
+          "command": "2",
+          "earlierAtSeconds": 5356.713,
+          "laterAtSeconds": 5366.448
+        },
+        {
+          "anonymousId": "edb6cbcd1e96fcc7cdc11820",
+          "command": "3",
+          "earlierAtSeconds": 7160.122,
+          "laterAtSeconds": 7166.461
+        }
+      ],
+      "sameMessageIdRepeats": 0,
+      "equipmentTextExamples": [
+        {
+          "at": 22.687,
+          "text": "无尽大穿了梓宝，狂妄可以不出了",
+          "keywordHits": [
+            "无尽"
+          ]
+        },
+        {
+          "at": 82.691,
+          "text": "出大穿无尽无敌了资深",
+          "keywordHits": [
+            "无尽"
+          ]
+        },
+        {
+          "at": 112.359,
+          "text": "先无尽",
+          "keywordHits": [
+            "无尽"
+          ]
+        },
+        {
+          "at": 444.241,
+          "text": "不该出狂妄的，直接收集者大穿无尽",
+          "keywordHits": [
+            "无尽"
+          ]
+        },
+        {
+          "at": 469.26,
+          "text": "收集者狂妄什么段位的出装",
+          "keywordHits": [
+            "出装"
+          ]
+        },
+        {
+          "at": 689.785,
+          "text": "你现在知道咋出装了不",
+          "keywordHits": [
+            "出装"
+          ]
+        },
+        {
+          "at": 1111.241,
+          "text": "什么出装",
+          "keywordHits": [
+            "出装"
+          ]
+        },
+        {
+          "at": 1588.114,
+          "text": "尤里卡就来个帽子",
+          "keywordHits": [
+            "帽子"
+          ]
+        },
+        {
+          "at": 1589.069,
+          "text": "那就帽子",
+          "keywordHits": [
+            "帽子"
+          ]
+        },
+        {
+          "at": 1598.18,
+          "text": "买个装备找不到说是",
+          "keywordHits": [
+            "装备"
+          ]
+        },
+        {
+          "at": 2879.64,
+          "text": "海斗不要出卢登",
+          "keywordHits": [
+            "卢登"
+          ]
+        },
+        {
+          "at": 2889.382,
+          "text": "除了回响卡牌出卢登，其他无脑火炬",
+          "keywordHits": [
+            "卢登"
+          ]
+        },
+        {
+          "at": 2894.626,
+          "text": "纯纯就是卢登太拉了",
+          "keywordHits": [
+            "卢登"
+          ]
+        },
+        {
+          "at": 2906.726,
+          "text": "海斗路灯拉的一，宁愿出火炬也不出卢登啊",
+          "keywordHits": [
+            "卢登"
+          ]
+        },
+        {
+          "at": 2907.309,
+          "text": "海斗只有回响q的卡牌会出卢登",
+          "keywordHits": [
+            "卢登"
+          ]
+        },
+        {
+          "at": 3088.842,
+          "text": "当金身用，别人追你就丢自己",
+          "keywordHits": [
+            "金身"
+          ]
+        },
+        {
+          "at": 3523.062,
+          "text": "出心之钢啊",
+          "keywordHits": [
+            "心之钢"
+          ]
+        },
+        {
+          "at": 3666.885,
+          "text": "出的什么玩意，时光心之钢啊",
+          "keywordHits": [
+            "心之钢"
+          ]
+        },
+        {
+          "at": 3681.61,
+          "text": "不跟你手大哥学出装",
+          "keywordHits": [
+            "出装"
+          ]
+        },
+        {
+          "at": 3728.733,
+          "text": "怎么不出心之钢",
+          "keywordHits": [
+            "心之钢"
+          ]
+        },
+        {
+          "at": 3786.028,
+          "text": "冰仗金身别烧了",
+          "keywordHits": [
+            "金身"
+          ]
+        },
+        {
+          "at": 3882.046,
+          "text": "出冰杖",
+          "keywordHits": [
+            "冰杖"
+          ]
+        },
+        {
+          "at": 4038.046,
+          "text": "1出冰杖",
+          "keywordHits": [
+            "冰杖"
+          ]
+        },
+        {
+          "at": 4040.08,
+          "text": "出冰杖",
+          "keywordHits": [
+            "冰杖"
+          ]
+        },
+        {
+          "at": 4066.629,
+          "text": "你不出法穿棒 第一个法穿性价比很高",
+          "keywordHits": [
+            "法穿棒"
+          ]
+        },
+        {
+          "at": 4108.806,
+          "text": "出个金身防暴毙",
+          "keywordHits": [
+            "金身"
+          ]
+        },
+        {
+          "at": 4507.437,
+          "text": "下次可以大棒出门 不容易卡装备",
+          "keywordHits": [
+            "装备"
+          ]
+        },
+        {
+          "at": 4921.509,
+          "text": "队友都不会出装",
+          "keywordHits": [
+            "出装"
+          ]
+        },
+        {
+          "at": 5035.151,
+          "text": "不会出装能叫会玩吗[dog]",
+          "keywordHits": [
+            "出装"
+          ]
+        },
+        {
+          "at": 5054.834,
+          "text": "ad无脑收集大穿无尽破败就行了",
+          "keywordHits": [
+            "无尽",
+            "破败"
+          ]
+        }
+      ],
+      "classificationNote": "字词命中和精确数字指令属于候选筛选，不是人工语义标签，也不能证明对应主播提问。"
+    }
+  ]
+}

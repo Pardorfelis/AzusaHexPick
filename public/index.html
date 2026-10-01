@@ -1,0 +1,121 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="dark">
+  <title>梓有妙选｜Azusa HexPick</title>
+  <link rel="stylesheet" href="/style.css">
+  <script src="/app.js" defer></script>
+</head>
+<body>
+  <div class="app-shell">
+    <header class="app-header operator-only">
+      <div>
+        <div class="eyebrow">Azusa HexPick <span class="version-tag">本机验证版</span></div>
+        <h1>梓有妙选</h1>
+        <p class="muted">从真实回放开始验证，也可以接入正在开播的直播间。</p>
+      </div>
+      <div class="header-actions">
+        <span class="service-status"><span id="service-dot" class="status-dot"></span><span id="service-text">正在连接</span></span>
+        <a id="panel-link" class="button secondary" href="/panel" target="_blank" rel="noopener noreferrer">打开只读副屏页 <span aria-hidden="true">↗</span></a>
+      </div>
+    </header>
+
+    <div id="page-error" class="error-notice" role="alert" hidden></div>
+
+    <main class="workspace">
+      <section class="operator-only controls-column" aria-label="建议台操作">
+        <section class="control-card">
+          <div class="section-heading"><span class="step-number">01</span><h2>选择弹幕来源</h2></div>
+          <div class="source-tabs" role="group" aria-label="弹幕来源">
+            <button type="button" id="replay-tab" class="source-tab active" aria-pressed="true">回放验证</button>
+            <button type="button" id="live-tab" class="source-tab" aria-pressed="false">直播间</button>
+          </div>
+          <div id="replay-controls">
+            <label class="field-label" for="dataset-select">阿梓回放</label>
+            <select id="dataset-select" disabled><option value="">正在读取回放</option></select>
+            <p id="dataset-description" class="field-hint">仅统计提供的回放弹幕文件。</p>
+            <div class="field-row">
+              <div class="field-grow"><label class="field-label" for="replay-position">开始位置</label><input id="replay-position" type="text" value="00:24:40" inputmode="numeric" placeholder="00:24:40" autocomplete="off" aria-describedby="time-format-hint"></div>
+              <div><label class="field-label" for="replay-speed">回放速度</label><select id="replay-speed"><option value="0.5">0.5 倍</option><option value="1" selected>1 倍</option><option value="2">2 倍</option><option value="4">4 倍</option></select></div>
+            </div>
+            <p id="time-format-hint" class="field-hint">时：分：秒，例如 00:24:40。位置相对当前分 P。</p>
+            <div class="candidate-heading">快速体验候选片段</div>
+            <div id="candidate-windows" class="candidate-windows" aria-label="候选回放片段"></div>
+            <p class="field-hint">点击片段会跳转、播放并开始新轮。候选按弹幕密度筛选。</p>
+            <div class="button-row">
+              <button id="replay-play" class="button primary" type="button">播放并开始新轮</button>
+              <button id="replay-load" class="button secondary" type="button">仅载入位置</button>
+              <button id="replay-pause" class="button ghost" type="button">暂停</button>
+            </div>
+          </div>
+          <div id="live-controls" hidden>
+            <label class="field-label" for="room-input">直播间号</label>
+            <input id="room-input" type="text" value="510" inputmode="numeric" autocomplete="off" placeholder="510">
+            <p class="field-hint">阿梓：510。七海：21452505。接入后再开始一轮建议。</p>
+            <button id="live-connect" class="button primary" type="button">接入直播间</button>
+          </div>
+          <div class="source-bottom"><span id="source-progress">尚未选择来源</span><button id="stop-source" type="button" class="text-button">停止来源</button></div>
+        </section>
+
+        <section class="control-card">
+          <div class="section-heading"><span class="step-number">02</span><h2>本轮怎么统计</h2></div>
+          <div class="field-row">
+            <div class="field-grow"><label class="field-label" for="mode-select">建议类型</label><select id="mode-select"><option value="hex">海克斯技能</option><option value="equipment">出装建议</option></select></div>
+            <div><label class="field-label" for="round-seconds">收集时长</label><select id="round-seconds"><option value="10">10 秒</option><option value="15">15 秒</option><option value="20" selected>20 秒</option><option value="30">30 秒</option><option value="60">60 秒</option></select></div>
+          </div>
+          <label class="field-label" for="counting-select">计票口径</label>
+          <select id="counting-select"><option value="messages">按有效弹幕条数</option><option value="anonymous">按匿名标识去重（实验）</option></select>
+          <p class="field-hint">去重模式取同一匿名标识的最新建议，不能称为精确观众人数。</p>
+          <div class="button-row"><button id="new-round" class="button primary" type="button">清空并开始新轮</button><button id="lock-round" class="button secondary" type="button">锁定结果</button></div>
+          <p class="field-hint round-note">刷新技能后请开始新轮。延迟到达的旧建议仍可能混入。</p>
+          <p id="hex-rule-summary" class="field-hint">重复数字每条一票，明确推荐短句即时识别。</p>
+          <button id="hex-audit-refresh" class="text-button" type="button">查看最近识别依据</button>
+          <div id="hex-audit-area" class="hex-audit-area" hidden><p id="hex-audit-status" class="field-hint"></p><ul id="hex-audit-list" class="hex-audit-list"></ul></div>
+          <div class="shortcut-area">
+            <div class="shortcut-title"><span>不切出游戏的快捷键</span><span id="helper-status" class="small-badge">助手未启动</span></div>
+            <div class="shortcut-list"><span><kbd>Ctrl</kbd>＋<kbd>Alt</kbd>＋<kbd>F7</kbd> 海克斯新轮</span><span><kbd>Ctrl</kbd>＋<kbd>Alt</kbd>＋<kbd>F8</kbd> 装备新轮</span><span><kbd>Ctrl</kbd>＋<kbd>Alt</kbd>＋<kbd>F9</kbd> 锁定</span></div>
+          </div>
+        </section>
+
+        <section class="control-card ai-card">
+          <div class="section-heading"><span class="step-number">03</span><h2>整理复杂建议</h2><span class="optional-tag">可选</span></div>
+          <div class="ai-topline"><label class="toggle-label" for="ai-enabled"><input id="ai-enabled" type="checkbox"><span>启用装备 AI</span></label><span id="key-status" class="small-badge">正在检查配置</span></div>
+          <label class="toggle-label" for="hex-ai-enabled"><input id="hex-ai-enabled" type="checkbox"><span>启用海克斯 AI，仅建议较少时</span></label>
+          <label class="field-label" for="ai-model">使用模型</label><select id="ai-model"><option value="deepseek-v4-pro">DeepSeek V4 Pro</option><option value="deepseek-flash">DeepSeek Flash</option></select>
+          <p class="field-hint">两个开关默认关闭。海克斯明确建议不足 20 条时，仅在最后 7 秒补充近期复杂表达；不映射无编号技能名。启用后会产生 API 费用。</p>
+          <p id="hex-ai-policy" class="field-hint">海克斯 AI 已关闭。</p>
+          <p id="equipment-ai-policy" class="field-hint">装备明确建议先由本地识别，复杂表达可由 AI 补充。</p>
+          <p id="equipment-ai-diagnostics" class="field-hint" hidden></p>
+          <div id="ai-summary" class="ai-summary">AI 已关闭</div>
+          <p id="ai-error" class="inline-error" hidden></p>
+        </section>
+        <section class="control-card phone-card">
+          <div class="section-heading"><span class="step-number">04</span><h2>手机只读展示</h2><span class="optional-tag">可选</span></div>
+          <p id="phone-status" class="field-hint">正在检查手机模式。</p>
+          <div id="phone-links" class="phone-links"></div>
+          <p id="phone-note" class="field-hint" hidden>手机与电脑需在同一网络。地址仅供这次运行使用，页面只能查看结果。</p>
+        </section>
+      </section>
+
+      <aside class="results-column" aria-label="当前建议结果">
+        <section id="result-card" class="result-card">
+          <header class="result-header"><div><div class="eyebrow result-eyebrow">梓有妙选｜Azusa HexPick</div><h2 id="result-title">海克斯技能</h2></div><span id="round-status" class="round-status"><span class="status-dot"></span><span id="round-status-text">尚未开始</span></span></header>
+          <div class="result-meta"><span id="round-label">尚未开始一轮</span><span id="result-source">未接入来源</span></div>
+          <div id="flow-counts" class="flow-counts">收到 0 · 计入 0 · 未决 0</div>
+          <div id="result-warning" class="result-warning" role="status" hidden></div>
+
+          <div class="leader-area"><div id="leader-caption" class="leader-caption">等待弹幕建议</div><div id="leader-name" class="leader-name" aria-live="polite">—</div><div id="leader-detail" class="leader-detail">开始一轮后，结果会在这里更新。</div></div>
+          <div id="hex-results" class="hex-results" aria-label="技能选择及刷新动作票数"></div>
+          <div id="equipment-results" class="equipment-results" hidden><div id="equipment-ranking" class="equipment-ranking" aria-label="装备建议前三项"></div><div id="against-area" class="against-area" hidden><div class="against-heading">反对当前购买</div><div id="against-list" class="against-list"></div></div><div id="unknown-area" class="unknown-area" hidden><div class="unknown-heading">重复出现的待确认名称</div><div id="unknown-list" class="unknown-list"></div><p class="equipment-scope">尚未确定对应装备，不计入支持票。</p></div><div class="pending-row"><span>待识别的复杂建议</span><span id="pending-count">0</span></div><p id="equipment-scope" class="equipment-scope">正在读取装备目录。</p></div>
+
+          <footer class="result-footer"><div class="counting-line"><span id="counting-label">有效弹幕条数</span><span id="valid-count">0 条有效建议</span></div><div class="result-health"><span><span id="connection-dot" class="status-dot"></span><span id="connection-label">未接入</span></span><span id="freshness-label">等待更新</span></div><p id="identity-warning" class="identity-warning" hidden></p><p id="capacity-warning" class="identity-warning" hidden>本轮数据达到上限，结果可能不完整。</p><p class="panel-credit">溣符雨 · 维护</p></footer>
+        </section>
+        <p class="panel-caption operator-only">副屏页仅显示这张结果卡，可自行摆放到预留位置。</p>
+        <div class="read-only-caption" hidden>只读展示 · 请在操作台控制轮次</div>
+      </aside>
+    </main>
+  </div>
+</body>
+</html>

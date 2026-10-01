@@ -1,0 +1,292 @@
+{
+  "version": "0.3.0",
+  "checkedAt": "2026-10-01T11:43:51.648Z",
+  "scope": "只重判已保存的相关历史原文，不重建原始 420 条流，不合并为一轮，不代表用户此前收到 37 条的场景。",
+  "historySha256": "8d21c4cb43202bbaf349b5b93a7d83fca929409b581edec2e33859d679750dfa",
+  "weightedMessages": 12,
+  "previousCurrentMessages": 1,
+  "previousPendingMessages": 11,
+  "currentCurrentMessages": 4,
+  "currentPendingMessages": 6,
+  "currentIgnoredMessages": 2,
+  "paidApiCalls": 0,
+  "additionalLiveConnections": 0,
+  "rows": [
+    {
+      "text": "梦魇伤害靠平a，直接大穿+无尽，打起来先等塔姆上了你再飞后排",
+      "observations": 1,
+      "historical": {
+        "current": [],
+        "pending": true,
+        "reason": "ambiguous-expression"
+      },
+      "current": {
+        "current": [],
+        "later": [],
+        "alternatives": [],
+        "against": [],
+        "conditional": [],
+        "uncertain": true,
+        "pending": true,
+        "recognized": false,
+        "reason": "ambiguous-expression"
+      },
+      "candidates": [
+        "无尽之刃"
+      ],
+      "unknownTerms": [
+        "大穿"
+      ]
+    },
+    {
+      "text": "破败打塔姆好点",
+      "observations": 1,
+      "historical": {
+        "current": [],
+        "pending": true,
+        "reason": "ambiguous-expression"
+      },
+      "current": {
+        "current": [],
+        "later": [],
+        "alternatives": [],
+        "against": [],
+        "conditional": [],
+        "uncertain": true,
+        "pending": true,
+        "recognized": false,
+        "reason": "ambiguous-expression"
+      },
+      "candidates": [
+        "破败王者之刃"
+      ],
+      "unknownTerms": []
+    },
+    {
+      "text": "其实都差不多，出装没啥问题",
+      "observations": 1,
+      "historical": {
+        "current": [],
+        "pending": true,
+        "reason": "unknown-expression"
+      },
+      "current": {
+        "current": [],
+        "later": [],
+        "alternatives": [],
+        "against": [],
+        "conditional": [],
+        "uncertain": false,
+        "pending": false,
+        "recognized": false,
+        "reason": "descriptive-chat"
+      },
+      "candidates": [],
+      "unknownTerms": []
+    },
+    {
+      "text": "出大穿然后鍛体就行了阿梓",
+      "observations": 1,
+      "historical": {
+        "current": [],
+        "pending": true,
+        "reason": "unknown-expression"
+      },
+      "current": {
+        "current": [],
+        "later": [],
+        "alternatives": [],
+        "against": [],
+        "conditional": [],
+        "uncertain": true,
+        "pending": true,
+        "recognized": false,
+        "reason": "unknown-expression"
+      },
+      "candidates": [],
+      "unknownTerms": [
+        "大穿"
+      ]
+    },
+    {
+      "text": "鞋子换无尽",
+      "observations": 1,
+      "historical": {
+        "current": [],
+        "pending": true,
+        "reason": "ambiguous-expression"
+      },
+      "current": {
+        "current": [
+          "无尽之刃"
+        ],
+        "later": [],
+        "alternatives": [],
+        "against": [],
+        "conditional": [],
+        "uncertain": false,
+        "pending": false,
+        "recognized": true,
+        "reason": "local-rules"
+      },
+      "candidates": [
+        "鞋子",
+        "无尽之刃"
+      ],
+      "unknownTerms": []
+    },
+    {
+      "text": "梓神比我唐比队友玩的好，出装主打听劝",
+      "observations": 1,
+      "historical": {
+        "current": [],
+        "pending": true,
+        "reason": "unknown-expression"
+      },
+      "current": {
+        "current": [],
+        "later": [],
+        "alternatives": [],
+        "against": [],
+        "conditional": [],
+        "uncertain": false,
+        "pending": false,
+        "recognized": false,
+        "reason": "descriptive-chat"
+      },
+      "candidates": [],
+      "unknownTerms": []
+    },
+    {
+      "text": "圆弧换无尽",
+      "observations": 1,
+      "historical": {
+        "current": [],
+        "pending": true,
+        "reason": "ambiguous-expression"
+      },
+      "current": {
+        "current": [
+          "无尽之刃"
+        ],
+        "later": [],
+        "alternatives": [],
+        "against": [],
+        "conditional": [],
+        "uncertain": false,
+        "pending": false,
+        "recognized": true,
+        "reason": "local-rules"
+      },
+      "candidates": [
+        "公理圆弧",
+        "无尽之刃"
+      ],
+      "unknownTerms": []
+    },
+    {
+      "text": "整个无尽呗",
+      "observations": 1,
+      "historical": {
+        "current": [
+          "无尽之刃"
+        ],
+        "pending": false,
+        "reason": "local-rules"
+      },
+      "current": {
+        "current": [
+          "无尽之刃"
+        ],
+        "later": [],
+        "alternatives": [],
+        "against": [],
+        "conditional": [],
+        "uncertain": false,
+        "pending": false,
+        "recognized": true,
+        "reason": "local-rules"
+      },
+      "candidates": [
+        "无尽之刃"
+      ],
+      "unknownTerms": []
+    },
+    {
+      "text": "穿甲",
+      "observations": 2,
+      "historical": {
+        "current": [],
+        "pending": true,
+        "reason": "unknown-expression"
+      },
+      "current": {
+        "current": [],
+        "later": [],
+        "alternatives": [],
+        "against": [],
+        "conditional": [],
+        "uncertain": true,
+        "pending": true,
+        "recognized": false,
+        "reason": "unknown-expression"
+      },
+      "candidates": [],
+      "unknownTerms": [
+        "穿甲"
+      ]
+    },
+    {
+      "text": "别断了干净换装备啊？要收集者要鞋子有什么用？",
+      "observations": 1,
+      "historical": {
+        "current": [],
+        "pending": true,
+        "reason": "unknown-expression"
+      },
+      "current": {
+        "current": [],
+        "later": [],
+        "alternatives": [],
+        "against": [],
+        "conditional": [],
+        "uncertain": true,
+        "pending": true,
+        "recognized": false,
+        "reason": "question-or-ambiguity"
+      },
+      "candidates": [
+        "收集者",
+        "鞋子"
+      ],
+      "unknownTerms": []
+    },
+    {
+      "text": "收集者换无尽",
+      "observations": 1,
+      "historical": {
+        "current": [],
+        "pending": true,
+        "reason": "ambiguous-expression"
+      },
+      "current": {
+        "current": [
+          "无尽之刃"
+        ],
+        "later": [],
+        "alternatives": [],
+        "against": [],
+        "conditional": [],
+        "uncertain": false,
+        "pending": false,
+        "recognized": true,
+        "reason": "local-rules"
+      },
+      "candidates": [
+        "收集者",
+        "无尽之刃"
+      ],
+      "unknownTerms": []
+    }
+  ]
+}

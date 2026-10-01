@@ -1,0 +1,1864 @@
+{
+  "scope": "本项目独立 Windows 原生 fixture 视觉检查，不访问主服务、直播或模型。",
+  "captureMethod": "仅调用 WinPanelAPI.capture 的 PrintWindow；捕获前确认 HWND 属于自身测试 PID。",
+  "scenarioResults": [
+    {
+      "id": "hex-360",
+      "width": 360,
+      "height": 520,
+      "passed": true,
+      "elapsedMs": 1813,
+      "exitCode": 0,
+      "smoke": {
+        "foregroundUnchanged": true,
+        "hotkeysActive": false,
+        "serverConnected": true,
+        "canvasMapped": true,
+        "windowVisible": true,
+        "registeredHotkeys": 0,
+        "releasedHotkeys": 0,
+        "hotkeysReleased": true,
+        "captureSucceeded": true
+      },
+      "ownWindow": {
+        "event": "own-window-content",
+        "ownPid": 58040,
+        "canvasText": [
+          {
+            "text": "阿梓弹幕建议",
+            "coords": [
+              16.0,
+              12.0
+            ],
+            "bbox": [
+              15,
+              12,
+              143,
+              40
+            ]
+          },
+          {
+            "text": "×",
+            "coords": [
+              341.0,
+              12.0
+            ],
+            "bbox": [
+              322,
+              12,
+              342,
+              43
+            ]
+          },
+          {
+            "text": "海克斯选择 · 第 7 轮",
+            "coords": [
+              16.0,
+              49.0
+            ],
+            "bbox": [
+              15,
+              49,
+              135,
+              68
+            ]
+          },
+          {
+            "text": "回放验证",
+            "coords": [
+              344.0,
+              49.0
+            ],
+            "bbox": [
+              291,
+              49,
+              345,
+              68
+            ]
+          },
+          {
+            "text": "收集中 · 剩余 30 秒",
+            "coords": [
+              28.0,
+              87.0
+            ],
+            "bbox": [
+              27,
+              87,
+              142,
+              106
+            ]
+          },
+          {
+            "text": "并列：刷新 1＋2／刷新 1＋3",
+            "coords": [
+              28.0,
+              113.0
+            ],
+            "bbox": [
+              27,
+              113,
+              279,
+              139
+            ]
+          },
+          {
+            "text": "27 票",
+            "coords": [
+              332.0,
+              158.0
+            ],
+            "bbox": [
+              290,
+              158,
+              333,
+              180
+            ]
+          },
+          {
+            "text": "选择与刷新支持",
+            "coords": [
+              16.0,
+              194.0
+            ],
+            "bbox": [
+              15,
+              194,
+              108,
+              213
+            ]
+          },
+          {
+            "text": "选 1",
+            "coords": [
+              67.33333333333334,
+              220.0
+            ],
+            "bbox": [
+              54,
+              220,
+              81,
+              239
+            ]
+          },
+          {
+            "text": "9",
+            "coords": [
+              67.33333333333334,
+              239.0
+            ],
+            "bbox": [
+              59,
+              239,
+              75,
+              270
+            ]
+          },
+          {
+            "text": "选 2",
+            "coords": [
+              180.00000000000003,
+              220.0
+            ],
+            "bbox": [
+              167,
+              220,
+              194,
+              239
+            ]
+          },
+          {
+            "text": "6",
+            "coords": [
+              180.00000000000003,
+              239.0
+            ],
+            "bbox": [
+              172,
+              239,
+              188,
+              270
+            ]
+          },
+          {
+            "text": "选 3",
+            "coords": [
+              292.6666666666667,
+              220.0
+            ],
+            "bbox": [
+              280,
+              220,
+              307,
+              239
+            ]
+          },
+          {
+            "text": "4",
+            "coords": [
+              292.6666666666667,
+              239.0
+            ],
+            "bbox": [
+              285,
+              239,
+              301,
+              270
+            ]
+          },
+          {
+            "text": "刷新 1",
+            "coords": [
+              67.33333333333334,
+              282.0
+            ],
+            "bbox": [
+              47,
+              282,
+              87,
+              301
+            ]
+          },
+          {
+            "text": "3",
+            "coords": [
+              67.33333333333334,
+              301.0
+            ],
+            "bbox": [
+              59,
+              301,
+              75,
+              332
+            ]
+          },
+          {
+            "text": "刷新 2",
+            "coords": [
+              180.00000000000003,
+              282.0
+            ],
+            "bbox": [
+              160,
+              282,
+              200,
+              301
+            ]
+          },
+          {
+            "text": "0",
+            "coords": [
+              180.00000000000003,
+              301.0
+            ],
+            "bbox": [
+              172,
+              301,
+              188,
+              332
+            ]
+          },
+          {
+            "text": "刷新 3",
+            "coords": [
+              292.6666666666667,
+              282.0
+            ],
+            "bbox": [
+              273,
+              282,
+              313,
+              301
+            ]
+          },
+          {
+            "text": "1",
+            "coords": [
+              292.6666666666667,
+              301.0
+            ],
+            "bbox": [
+              285,
+              301,
+              301,
+              332
+            ]
+          },
+          {
+            "text": "刷新 1＋2",
+            "coords": [
+              54.0,
+              343.0
+            ],
+            "bbox": [
+              26,
+              343,
+              82,
+              360
+            ]
+          },
+          {
+            "text": "27",
+            "coords": [
+              54.0,
+              360.0
+            ],
+            "bbox": [
+              40,
+              360,
+              68,
+              388
+            ]
+          },
+          {
+            "text": "刷新 1＋3",
+            "coords": [
+              138.0,
+              343.0
+            ],
+            "bbox": [
+              110,
+              343,
+              166,
+              360
+            ]
+          },
+          {
+            "text": "27",
+            "coords": [
+              138.0,
+              360.0
+            ],
+            "bbox": [
+              124,
+              360,
+              152,
+              388
+            ]
+          },
+          {
+            "text": "刷新 2＋3",
+            "coords": [
+              222.0,
+              343.0
+            ],
+            "bbox": [
+              194,
+              343,
+              250,
+              360
+            ]
+          },
+          {
+            "text": "5",
+            "coords": [
+              222.0,
+              360.0
+            ],
+            "bbox": [
+              215,
+              360,
+              230,
+              388
+            ]
+          },
+          {
+            "text": "全部刷新",
+            "coords": [
+              306.0,
+              343.0
+            ],
+            "bbox": [
+              281,
+              343,
+              331,
+              360
+            ]
+          },
+          {
+            "text": "0",
+            "coords": [
+              306.0,
+              360.0
+            ],
+            "bbox": [
+              299,
+              360,
+              314,
+              388
+            ]
+          },
+          {
+            "text": "有效弹幕条数",
+            "coords": [
+              16.0,
+              402.0
+            ],
+            "bbox": [
+              15,
+              402,
+              95,
+              421
+            ]
+          },
+          {
+            "text": "收到 120 · 计入 82 · 未决 5",
+            "coords": [
+              16.0,
+              425.0
+            ],
+            "bbox": [
+              15,
+              425,
+              177,
+              444
+            ]
+          },
+          {
+            "text": "快捷键未启用。",
+            "coords": [
+              16.0,
+              452.0
+            ],
+            "bbox": [
+              15,
+              452,
+              101,
+              469
+            ]
+          },
+          {
+            "text": "Ctrl + Alt + F7：新海克斯轮",
+            "coords": [
+              16.0,
+              480.0
+            ],
+            "bbox": [
+              15,
+              480,
+              171,
+              497
+            ]
+          },
+          {
+            "text": "F8：新出装轮　F9：锁定（均需 Ctrl + Alt）",
+            "coords": [
+              16.0,
+              498.0
+            ],
+            "bbox": [
+              15,
+              498,
+              255,
+              515
+            ]
+          }
+        ],
+        "canvasSize": [
+          360,
+          520
+        ],
+        "noActivateStyle": true,
+        "toolWindowStyle": true,
+        "ownerChecks": 2,
+        "captureOwnerPidMatches": true,
+        "normalWindowDestroyCompleted": true
+      },
+      "missingExpectedText": [],
+      "outsideCanvasText": [],
+      "textBoundingBoxOverlaps": [],
+      "unknownLines": 0,
+      "screenshot": "validation\\desktop-v03-hex-360.bmp",
+      "stderr": "",
+      "fixture": {
+        "snapshot": {
+          "mode": "hex",
+          "connection": "connected",
+          "status": "collecting",
+          "roundId": 7,
+          "remainingMs": 30000,
+          "source": "replay:desktop-v03-fixture",
+          "countingLabel": "有效弹幕条数",
+          "receivedMessages": 120,
+          "validMessages": 82,
+          "pendingCount": 5,
+          "pendingTotal": 5,
+          "hex": [
+            {
+              "key": "1",
+              "label": "选 1",
+              "votes": 9
+            },
+            {
+              "key": "2",
+              "label": "选 2",
+              "votes": 6
+            },
+            {
+              "key": "3",
+              "label": "选 3",
+              "votes": 4
+            },
+            {
+              "key": "1d",
+              "label": "刷新 1",
+              "votes": 3
+            },
+            {
+              "key": "2d",
+              "label": "刷新 2",
+              "votes": 0
+            },
+            {
+              "key": "3d",
+              "label": "刷新 3",
+              "votes": 1
+            },
+            {
+              "key": "12d",
+              "label": "刷新 1＋2",
+              "votes": 27
+            },
+            {
+              "key": "13d",
+              "label": "刷新 1＋3",
+              "votes": 27
+            },
+            {
+              "key": "23d",
+              "label": "刷新 2＋3",
+              "votes": 5
+            },
+            {
+              "key": "d",
+              "label": "全部刷新",
+              "votes": 0
+            }
+          ],
+          "equipment": {
+            "top3": [],
+            "against": [],
+            "unknown": []
+          }
+        },
+        "sourceKind": "replay"
+      },
+      "imageVisualReview": "passed",
+      "visualNotes": "十动作和零票全部可见，双刷新长并列标题完整显示，格子、统计和快捷键均无裁切。"
+    },
+    {
+      "id": "hex-380",
+      "width": 380,
+      "height": 520,
+      "passed": true,
+      "elapsedMs": 1797,
+      "exitCode": 0,
+      "smoke": {
+        "foregroundUnchanged": true,
+        "hotkeysActive": false,
+        "serverConnected": true,
+        "canvasMapped": true,
+        "windowVisible": true,
+        "registeredHotkeys": 0,
+        "releasedHotkeys": 0,
+        "hotkeysReleased": true,
+        "captureSucceeded": true
+      },
+      "ownWindow": {
+        "event": "own-window-content",
+        "ownPid": 47756,
+        "canvasText": [
+          {
+            "text": "阿梓弹幕建议",
+            "coords": [
+              16.0,
+              12.0
+            ],
+            "bbox": [
+              15,
+              12,
+              143,
+              40
+            ]
+          },
+          {
+            "text": "×",
+            "coords": [
+              361.0,
+              12.0
+            ],
+            "bbox": [
+              342,
+              12,
+              362,
+              43
+            ]
+          },
+          {
+            "text": "海克斯选择 · 第 7 轮",
+            "coords": [
+              16.0,
+              49.0
+            ],
+            "bbox": [
+              15,
+              49,
+              135,
+              68
+            ]
+          },
+          {
+            "text": "回放验证",
+            "coords": [
+              364.0,
+              49.0
+            ],
+            "bbox": [
+              311,
+              49,
+              365,
+              68
+            ]
+          },
+          {
+            "text": "收集中 · 剩余 30 秒",
+            "coords": [
+              28.0,
+              87.0
+            ],
+            "bbox": [
+              27,
+              87,
+              142,
+              106
+            ]
+          },
+          {
+            "text": "全部刷新",
+            "coords": [
+              28.0,
+              113.0
+            ],
+            "bbox": [
+              27,
+              113,
+              145,
+              152
+            ]
+          },
+          {
+            "text": "26 票",
+            "coords": [
+              352.0,
+              158.0
+            ],
+            "bbox": [
+              310,
+              158,
+              353,
+              180
+            ]
+          },
+          {
+            "text": "选择与刷新支持",
+            "coords": [
+              16.0,
+              194.0
+            ],
+            "bbox": [
+              15,
+              194,
+              108,
+              213
+            ]
+          },
+          {
+            "text": "选 1",
+            "coords": [
+              70.66666666666666,
+              220.0
+            ],
+            "bbox": [
+              58,
+              220,
+              85,
+              239
+            ]
+          },
+          {
+            "text": "3",
+            "coords": [
+              70.66666666666666,
+              239.0
+            ],
+            "bbox": [
+              63,
+              239,
+              79,
+              270
+            ]
+          },
+          {
+            "text": "选 2",
+            "coords": [
+              189.99999999999997,
+              220.0
+            ],
+            "bbox": [
+              177,
+              220,
+              204,
+              239
+            ]
+          },
+          {
+            "text": "10",
+            "coords": [
+              189.99999999999997,
+              239.0
+            ],
+            "bbox": [
+              175,
+              239,
+              205,
+              270
+            ]
+          },
+          {
+            "text": "选 3",
+            "coords": [
+              309.3333333333333,
+              220.0
+            ],
+            "bbox": [
+              296,
+              220,
+              323,
+              239
+            ]
+          },
+          {
+            "text": "8",
+            "coords": [
+              309.3333333333333,
+              239.0
+            ],
+            "bbox": [
+              301,
+              239,
+              317,
+              270
+            ]
+          },
+          {
+            "text": "刷新 1",
+            "coords": [
+              70.66666666666666,
+              282.0
+            ],
+            "bbox": [
+              51,
+              282,
+              91,
+              301
+            ]
+          },
+          {
+            "text": "0",
+            "coords": [
+              70.66666666666666,
+              301.0
+            ],
+            "bbox": [
+              63,
+              301,
+              79,
+              332
+            ]
+          },
+          {
+            "text": "刷新 2",
+            "coords": [
+              189.99999999999997,
+              282.0
+            ],
+            "bbox": [
+              170,
+              282,
+              210,
+              301
+            ]
+          },
+          {
+            "text": "2",
+            "coords": [
+              189.99999999999997,
+              301.0
+            ],
+            "bbox": [
+              182,
+              301,
+              198,
+              332
+            ]
+          },
+          {
+            "text": "刷新 3",
+            "coords": [
+              309.3333333333333,
+              282.0
+            ],
+            "bbox": [
+              289,
+              282,
+              329,
+              301
+            ]
+          },
+          {
+            "text": "0",
+            "coords": [
+              309.3333333333333,
+              301.0
+            ],
+            "bbox": [
+              301,
+              301,
+              317,
+              332
+            ]
+          },
+          {
+            "text": "刷新 1＋2",
+            "coords": [
+              56.5,
+              343.0
+            ],
+            "bbox": [
+              29,
+              343,
+              85,
+              360
+            ]
+          },
+          {
+            "text": "0",
+            "coords": [
+              56.5,
+              360.0
+            ],
+            "bbox": [
+              50,
+              360,
+              65,
+              388
+            ]
+          },
+          {
+            "text": "刷新 1＋3",
+            "coords": [
+              145.5,
+              343.0
+            ],
+            "bbox": [
+              118,
+              343,
+              174,
+              360
+            ]
+          },
+          {
+            "text": "4",
+            "coords": [
+              145.5,
+              360.0
+            ],
+            "bbox": [
+              139,
+              360,
+              154,
+              388
+            ]
+          },
+          {
+            "text": "刷新 2＋3",
+            "coords": [
+              234.5,
+              343.0
+            ],
+            "bbox": [
+              207,
+              343,
+              263,
+              360
+            ]
+          },
+          {
+            "text": "9",
+            "coords": [
+              234.5,
+              360.0
+            ],
+            "bbox": [
+              228,
+              360,
+              243,
+              388
+            ]
+          },
+          {
+            "text": "全部刷新",
+            "coords": [
+              323.5,
+              343.0
+            ],
+            "bbox": [
+              299,
+              343,
+              349,
+              360
+            ]
+          },
+          {
+            "text": "26",
+            "coords": [
+              323.5,
+              360.0
+            ],
+            "bbox": [
+              310,
+              360,
+              338,
+              388
+            ]
+          },
+          {
+            "text": "有效弹幕条数",
+            "coords": [
+              16.0,
+              402.0
+            ],
+            "bbox": [
+              15,
+              402,
+              95,
+              421
+            ]
+          },
+          {
+            "text": "收到 97 · 计入 62 · 未决 9",
+            "coords": [
+              16.0,
+              425.0
+            ],
+            "bbox": [
+              15,
+              425,
+              169,
+              444
+            ]
+          },
+          {
+            "text": "快捷键未启用。",
+            "coords": [
+              16.0,
+              452.0
+            ],
+            "bbox": [
+              15,
+              452,
+              101,
+              469
+            ]
+          },
+          {
+            "text": "Ctrl + Alt + F7：新海克斯轮",
+            "coords": [
+              16.0,
+              480.0
+            ],
+            "bbox": [
+              15,
+              480,
+              171,
+              497
+            ]
+          },
+          {
+            "text": "F8：新出装轮　F9：锁定（均需 Ctrl + Alt）",
+            "coords": [
+              16.0,
+              498.0
+            ],
+            "bbox": [
+              15,
+              498,
+              255,
+              515
+            ]
+          }
+        ],
+        "canvasSize": [
+          380,
+          520
+        ],
+        "noActivateStyle": true,
+        "toolWindowStyle": true,
+        "ownerChecks": 2,
+        "captureOwnerPidMatches": true,
+        "normalWindowDestroyCompleted": true
+      },
+      "missingExpectedText": [],
+      "outsideCanvasText": [],
+      "textBoundingBoxOverlaps": [],
+      "unknownLines": 0,
+      "screenshot": "validation\\desktop-v03-hex-380.bmp",
+      "stderr": "",
+      "fixture": {
+        "snapshot": {
+          "mode": "hex",
+          "connection": "connected",
+          "status": "collecting",
+          "roundId": 7,
+          "remainingMs": 30000,
+          "source": "replay:desktop-v03-fixture",
+          "countingLabel": "有效弹幕条数",
+          "receivedMessages": 97,
+          "validMessages": 62,
+          "pendingCount": 9,
+          "pendingTotal": 9,
+          "hex": [
+            {
+              "key": "1",
+              "label": "选 1",
+              "votes": 3
+            },
+            {
+              "key": "2",
+              "label": "选 2",
+              "votes": 10
+            },
+            {
+              "key": "3",
+              "label": "选 3",
+              "votes": 8
+            },
+            {
+              "key": "1d",
+              "label": "刷新 1",
+              "votes": 0
+            },
+            {
+              "key": "2d",
+              "label": "刷新 2",
+              "votes": 2
+            },
+            {
+              "key": "3d",
+              "label": "刷新 3",
+              "votes": 0
+            },
+            {
+              "key": "12d",
+              "label": "刷新 1＋2",
+              "votes": 0
+            },
+            {
+              "key": "13d",
+              "label": "刷新 1＋3",
+              "votes": 4
+            },
+            {
+              "key": "23d",
+              "label": "刷新 2＋3",
+              "votes": 9
+            },
+            {
+              "key": "d",
+              "label": "全部刷新",
+              "votes": 26
+            }
+          ],
+          "equipment": {
+            "top3": [],
+            "against": [],
+            "unknown": []
+          }
+        },
+        "sourceKind": "replay"
+      },
+      "imageVisualReview": "passed",
+      "visualNotes": "全部刷新独立领先，双刷新和单项刷新清楚区分，十动作完整显示。"
+    },
+    {
+      "id": "equipment-360",
+      "width": 360,
+      "height": 520,
+      "passed": true,
+      "elapsedMs": 1765,
+      "exitCode": 0,
+      "smoke": {
+        "foregroundUnchanged": true,
+        "hotkeysActive": false,
+        "serverConnected": true,
+        "canvasMapped": true,
+        "windowVisible": true,
+        "registeredHotkeys": 0,
+        "releasedHotkeys": 0,
+        "hotkeysReleased": true,
+        "captureSucceeded": true
+      },
+      "ownWindow": {
+        "event": "own-window-content",
+        "ownPid": 42316,
+        "canvasText": [
+          {
+            "text": "阿梓弹幕建议",
+            "coords": [
+              16.0,
+              12.0
+            ],
+            "bbox": [
+              15,
+              12,
+              143,
+              40
+            ]
+          },
+          {
+            "text": "×",
+            "coords": [
+              341.0,
+              12.0
+            ],
+            "bbox": [
+              322,
+              12,
+              342,
+              43
+            ]
+          },
+          {
+            "text": "出装建议 · 第 7 轮",
+            "coords": [
+              16.0,
+              49.0
+            ],
+            "bbox": [
+              15,
+              49,
+              122,
+              68
+            ]
+          },
+          {
+            "text": "回放验证",
+            "coords": [
+              344.0,
+              49.0
+            ],
+            "bbox": [
+              291,
+              49,
+              345,
+              68
+            ]
+          },
+          {
+            "text": "收集中 · 剩余 30 秒",
+            "coords": [
+              28.0,
+              87.0
+            ],
+            "bbox": [
+              27,
+              87,
+              142,
+              106
+            ]
+          },
+          {
+            "text": "多米尼克领主的致意",
+            "coords": [
+              28.0,
+              113.0
+            ],
+            "bbox": [
+              27,
+              113,
+              218,
+              141
+            ]
+          },
+          {
+            "text": "28 票",
+            "coords": [
+              332.0,
+              158.0
+            ],
+            "bbox": [
+              290,
+              158,
+              333,
+              180
+            ]
+          },
+          {
+            "text": "当前推荐前三项",
+            "coords": [
+              16.0,
+              194.0
+            ],
+            "bbox": [
+              15,
+              194,
+              108,
+              213
+            ]
+          },
+          {
+            "text": "多米尼克领主的致意",
+            "coords": [
+              27.0,
+              222.0
+            ],
+            "bbox": [
+              26,
+              222,
+              172,
+              243
+            ]
+          },
+          {
+            "text": "28",
+            "coords": [
+              332.0,
+              221.0
+            ],
+            "bbox": [
+              307,
+              221,
+              333,
+              247
+            ]
+          },
+          {
+            "text": "无尽之刃",
+            "coords": [
+              27.0,
+              266.0
+            ],
+            "bbox": [
+              26,
+              266,
+              92,
+              287
+            ]
+          },
+          {
+            "text": "17",
+            "coords": [
+              332.0,
+              265.0
+            ],
+            "bbox": [
+              307,
+              265,
+              333,
+              291
+            ]
+          },
+          {
+            "text": "凡性的提醒",
+            "coords": [
+              27.0,
+              310.0
+            ],
+            "bbox": [
+              26,
+              310,
+              108,
+              331
+            ]
+          },
+          {
+            "text": "5",
+            "coords": [
+              332.0,
+              309.0
+            ],
+            "bbox": [
+              319,
+              309,
+              333,
+              335
+            ]
+          },
+          {
+            "text": "待确认：绿甲 7",
+            "coords": [
+              16.0,
+              344.0
+            ],
+            "bbox": [
+              15,
+              344,
+              100,
+              361
+            ]
+          },
+          {
+            "text": "待确认：蓝盾 3",
+            "coords": [
+              16.0,
+              362.0
+            ],
+            "bbox": [
+              15,
+              362,
+              100,
+              379
+            ]
+          },
+          {
+            "text": "反对：中娅沙漏 3、灭世者的死亡之帽 4",
+            "coords": [
+              16.0,
+              381.0
+            ],
+            "bbox": [
+              15,
+              381,
+              231,
+              398
+            ]
+          },
+          {
+            "text": "有效弹幕条数",
+            "coords": [
+              16.0,
+              402.0
+            ],
+            "bbox": [
+              15,
+              402,
+              95,
+              421
+            ]
+          },
+          {
+            "text": "收到 120 · 计入 50 · 未决 20",
+            "coords": [
+              16.0,
+              425.0
+            ],
+            "bbox": [
+              15,
+              425,
+              185,
+              444
+            ]
+          },
+          {
+            "text": "快捷键未启用。",
+            "coords": [
+              16.0,
+              452.0
+            ],
+            "bbox": [
+              15,
+              452,
+              101,
+              469
+            ]
+          },
+          {
+            "text": "Ctrl + Alt + F7：新海克斯轮",
+            "coords": [
+              16.0,
+              480.0
+            ],
+            "bbox": [
+              15,
+              480,
+              171,
+              497
+            ]
+          },
+          {
+            "text": "F8：新出装轮　F9：锁定（均需 Ctrl + Alt）",
+            "coords": [
+              16.0,
+              498.0
+            ],
+            "bbox": [
+              15,
+              498,
+              255,
+              515
+            ]
+          }
+        ],
+        "canvasSize": [
+          360,
+          520
+        ],
+        "noActivateStyle": true,
+        "toolWindowStyle": true,
+        "ownerChecks": 2,
+        "captureOwnerPidMatches": true,
+        "normalWindowDestroyCompleted": true
+      },
+      "missingExpectedText": [],
+      "outsideCanvasText": [],
+      "textBoundingBoxOverlaps": [],
+      "unknownLines": 2,
+      "screenshot": "validation\\desktop-v03-equipment-360.bmp",
+      "stderr": "",
+      "fixture": {
+        "snapshot": {
+          "mode": "equipment",
+          "connection": "connected",
+          "status": "collecting",
+          "roundId": 7,
+          "remainingMs": 30000,
+          "source": "replay:desktop-v03-fixture",
+          "countingLabel": "有效弹幕条数",
+          "receivedMessages": 120,
+          "validMessages": 50,
+          "pendingCount": 20,
+          "pendingTotal": 20,
+          "hex": [],
+          "equipment": {
+            "top3": [
+              {
+                "name": "多米尼克领主的致意",
+                "votes": 28
+              },
+              {
+                "name": "无尽之刃",
+                "votes": 17
+              },
+              {
+                "name": "凡性的提醒",
+                "votes": 5
+              }
+            ],
+            "unknown": [
+              {
+                "term": "绿甲",
+                "mentions": 7
+              },
+              {
+                "term": "蓝盾",
+                "mentions": 3
+              },
+              {
+                "term": "圆弧",
+                "mentions": 4
+              }
+            ],
+            "against": [
+              {
+                "name": "中娅沙漏",
+                "votes": 3
+              },
+              {
+                "name": "灭世者的死亡之帽",
+                "votes": 4
+              }
+            ]
+          }
+        },
+        "sourceKind": "replay"
+      },
+      "imageVisualReview": "passed",
+      "visualNotes": "三个确定推荐、两行待确认原词和完整反对意见同时可读，未侵入统计或快捷键区域。"
+    },
+    {
+      "id": "equipment-380",
+      "width": 380,
+      "height": 520,
+      "passed": true,
+      "elapsedMs": 1813,
+      "exitCode": 0,
+      "smoke": {
+        "foregroundUnchanged": true,
+        "hotkeysActive": false,
+        "serverConnected": true,
+        "canvasMapped": true,
+        "windowVisible": true,
+        "registeredHotkeys": 0,
+        "releasedHotkeys": 0,
+        "hotkeysReleased": true,
+        "captureSucceeded": true
+      },
+      "ownWindow": {
+        "event": "own-window-content",
+        "ownPid": 44812,
+        "canvasText": [
+          {
+            "text": "阿梓弹幕建议",
+            "coords": [
+              16.0,
+              12.0
+            ],
+            "bbox": [
+              15,
+              12,
+              143,
+              40
+            ]
+          },
+          {
+            "text": "×",
+            "coords": [
+              361.0,
+              12.0
+            ],
+            "bbox": [
+              342,
+              12,
+              362,
+              43
+            ]
+          },
+          {
+            "text": "出装建议 · 第 7 轮",
+            "coords": [
+              16.0,
+              49.0
+            ],
+            "bbox": [
+              15,
+              49,
+              122,
+              68
+            ]
+          },
+          {
+            "text": "回放验证",
+            "coords": [
+              364.0,
+              49.0
+            ],
+            "bbox": [
+              311,
+              49,
+              365,
+              68
+            ]
+          },
+          {
+            "text": "收集中 · 剩余 30 秒",
+            "coords": [
+              28.0,
+              87.0
+            ],
+            "bbox": [
+              27,
+              87,
+              142,
+              106
+            ]
+          },
+          {
+            "text": "等待有效建议",
+            "coords": [
+              28.0,
+              113.0
+            ],
+            "bbox": [
+              27,
+              113,
+              203,
+              152
+            ]
+          },
+          {
+            "text": "当前推荐前三项",
+            "coords": [
+              16.0,
+              194.0
+            ],
+            "bbox": [
+              15,
+              194,
+              108,
+              213
+            ]
+          },
+          {
+            "text": "等待建议",
+            "coords": [
+              27.0,
+              222.0
+            ],
+            "bbox": [
+              26,
+              222,
+              92,
+              243
+            ]
+          },
+          {
+            "text": "0",
+            "coords": [
+              352.0,
+              221.0
+            ],
+            "bbox": [
+              339,
+              221,
+              353,
+              247
+            ]
+          },
+          {
+            "text": "等待建议",
+            "coords": [
+              27.0,
+              266.0
+            ],
+            "bbox": [
+              26,
+              266,
+              92,
+              287
+            ]
+          },
+          {
+            "text": "0",
+            "coords": [
+              352.0,
+              265.0
+            ],
+            "bbox": [
+              339,
+              265,
+              353,
+              291
+            ]
+          },
+          {
+            "text": "等待建议",
+            "coords": [
+              27.0,
+              310.0
+            ],
+            "bbox": [
+              26,
+              310,
+              92,
+              331
+            ]
+          },
+          {
+            "text": "0",
+            "coords": [
+              352.0,
+              309.0
+            ],
+            "bbox": [
+              339,
+              309,
+              353,
+              335
+            ]
+          },
+          {
+            "text": "待确认：蓝甲 9",
+            "coords": [
+              16.0,
+              344.0
+            ],
+            "bbox": [
+              15,
+              344,
+              100,
+              361
+            ]
+          },
+          {
+            "text": "待确认：绿鞋 6",
+            "coords": [
+              16.0,
+              362.0
+            ],
+            "bbox": [
+              15,
+              362,
+              100,
+              379
+            ]
+          },
+          {
+            "text": "反对：中娅沙漏 3、灭世者的死亡之帽 3",
+            "coords": [
+              16.0,
+              381.0
+            ],
+            "bbox": [
+              15,
+              381,
+              231,
+              398
+            ]
+          },
+          {
+            "text": "有效弹幕条数",
+            "coords": [
+              16.0,
+              402.0
+            ],
+            "bbox": [
+              15,
+              402,
+              95,
+              421
+            ]
+          },
+          {
+            "text": "收到 37 · 计入 6 · 未决 15",
+            "coords": [
+              16.0,
+              425.0
+            ],
+            "bbox": [
+              15,
+              425,
+              169,
+              444
+            ]
+          },
+          {
+            "text": "快捷键未启用。",
+            "coords": [
+              16.0,
+              452.0
+            ],
+            "bbox": [
+              15,
+              452,
+              101,
+              469
+            ]
+          },
+          {
+            "text": "Ctrl + Alt + F7：新海克斯轮",
+            "coords": [
+              16.0,
+              480.0
+            ],
+            "bbox": [
+              15,
+              480,
+              171,
+              497
+            ]
+          },
+          {
+            "text": "F8：新出装轮　F9：锁定（均需 Ctrl + Alt）",
+            "coords": [
+              16.0,
+              498.0
+            ],
+            "bbox": [
+              15,
+              498,
+              255,
+              515
+            ]
+          }
+        ],
+        "canvasSize": [
+          380,
+          520
+        ],
+        "noActivateStyle": true,
+        "toolWindowStyle": true,
+        "ownerChecks": 2,
+        "captureOwnerPidMatches": true,
+        "normalWindowDestroyCompleted": true
+      },
+      "missingExpectedText": [],
+      "outsideCanvasText": [],
+      "textBoundingBoxOverlaps": [],
+      "unknownLines": 2,
+      "screenshot": "validation\\desktop-v03-equipment-380.bmp",
+      "stderr": "",
+      "fixture": {
+        "snapshot": {
+          "mode": "equipment",
+          "connection": "connected",
+          "status": "collecting",
+          "roundId": 7,
+          "remainingMs": 30000,
+          "source": "replay:desktop-v03-fixture",
+          "countingLabel": "有效弹幕条数",
+          "receivedMessages": 37,
+          "validMessages": 6,
+          "pendingCount": 15,
+          "pendingTotal": 15,
+          "hex": [],
+          "equipment": {
+            "top3": [],
+            "unknown": [
+              {
+                "term": "蓝甲",
+                "mentions": 9
+              },
+              {
+                "term": "绿鞋",
+                "mentions": 6
+              },
+              {
+                "term": "圆弧",
+                "mentions": 6
+              }
+            ],
+            "against": [
+              {
+                "name": "中娅沙漏",
+                "votes": 3
+              },
+              {
+                "name": "灭世者的死亡之帽",
+                "votes": 3
+              }
+            ]
+          }
+        },
+        "sourceKind": "replay"
+      },
+      "imageVisualReview": "passed",
+      "visualNotes": "确定首选为零时仍呈现蓝甲／绿鞋两条待确认线索；未知词没有成为领先项或确定票，反对意见、统计和快捷键完整可读。"
+    }
+  ],
+  "allStructuralChecksPassed": true,
+  "fixtureCleaned": true,
+  "onlyStateGetRequests": true,
+  "globalHotkeysEnabled": false,
+  "keyboardInputSent": false,
+  "mainServiceControlled": false,
+  "otherWindowContentRead": false,
+  "imageVisualReview": {
+    "status": "passed",
+    "reviewedAt": "2026-10-01T11:54:19.091547+00:00",
+    "method": "本次仅重新查看 equipment-380 自身窗口截图，其余 3 场景保留此前已完成的视觉复核。"
+  },
+  "lastRecapturedScenarios": [
+    "equipment-380"
+  ],
+  "previousScenesPreserved": [
+    "hex-360",
+    "hex-380",
+    "equipment-360"
+  ],
+  "limitations": [
+    "前台句柄始末相同是本次观察，不证明所有游戏和显示器环境。",
+    "原生文本边界框重叠需结合本程序截图复核，边界框包含字形外的留白。",
+    "所有数据均为合成 fixture，没有真实直播或付费模型请求。",
+    "fixture 仅验证显示能力，不证明当前分类器会把这些原词判断为未知。"
+  ]
+}
