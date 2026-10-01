@@ -5,20 +5,29 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="color-scheme" content="dark">
   <title>梓有妙选｜Azusa HexPick</title>
+  <link rel="preload" href="/assets/fonts/Manrope.ttf" as="font" type="font/ttf" crossorigin>
   <link rel="stylesheet" href="/style.css">
   <script src="/app.js" defer></script>
 </head>
 <body>
+  <svg class="icon-defs" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><defs>
+    <symbol id="icon-source" viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="13" rx="2"/><path d="M8 21h8M12 18v3M7 9h6M7 13h10"/></symbol>
+    <symbol id="icon-hex" viewBox="0 0 24 24"><path d="m12 3 8 4.5v9L12 21l-8-4.5v-9Z"/><path d="m12 8 3 4-3 4-3-4Z"/></symbol>
+    <symbol id="icon-song" viewBox="0 0 24 24"><path d="M10 17V5l10-2v12M10 9l10-2"/><ellipse cx="6.5" cy="17.5" rx="3.5" ry="2.5"/><ellipse cx="16.5" cy="15.5" rx="3.5" ry="2.5"/></symbol>
+    <symbol id="icon-tune" viewBox="0 0 24 24"><path d="M4 7h16M4 17h16"/><circle cx="9" cy="7" r="3"/><circle cx="15" cy="17" r="3"/></symbol>
+    <symbol id="icon-phone" viewBox="0 0 24 24"><rect x="6" y="2" width="12" height="20" rx="3"/><path d="M10 5h4M11 19h2"/></symbol>
+    <symbol id="icon-open" viewBox="0 0 24 24"><path d="M14 4h6v6M20 4 10 14M10 4H5a1 1 0 0 0-1 1v14a1 1 0 0 0 1 1h14a1 1 0 0 0 1-1v-5"/></symbol>
+  </defs></svg>
   <div class="app-shell">
     <header class="app-header operator-only">
-      <div>
-        <div class="eyebrow">Azusa HexPick <span class="version-tag">本机验证版</span></div>
-        <h1>梓有妙选</h1>
-        <p class="muted">从真实回放开始验证，也可以接入正在开播的直播间。</p>
+      <div class="brand-lockup">
+        <svg class="brand-art" viewBox="269 286 912 451" aria-hidden="true"><image href="/assets/azusa-brand.png" width="1439" height="1080"/></svg>
+        <div class="brand-copy"><div class="brand-title"><h1>梓有妙选</h1><span class="brand-english">Azusa HexPick</span><span class="version-tag">v0.5.0</span></div><p class="muted">从真实回放开始验证，也可以接入正在开播的直播间。</p></div>
       </div>
       <div class="header-actions">
         <span class="service-status"><span id="service-dot" class="status-dot"></span><span id="service-text">正在连接</span></span>
-        <a id="panel-link" class="button secondary" href="/panel" target="_blank" rel="noopener noreferrer">打开只读副屏页 <span aria-hidden="true">↗</span></a>
+        <a id="panel-link" class="button secondary" href="/panel" target="_blank" rel="noopener noreferrer">打开只读副屏页 <svg class="icon" aria-hidden="true"><use href="#icon-open"/></svg></a>
+        <div class="header-detail"><button id="motion-toggle" class="text-button motion-toggle" type="button" aria-pressed="false">暂停动图</button><span class="header-credit">溣符雨 · 维护</span></div>
       </div>
     </header>
 
@@ -26,8 +35,8 @@
 
     <main class="workspace">
       <section class="operator-only controls-column" aria-label="建议台操作">
-        <section class="control-card">
-          <div class="section-heading"><span class="step-number">01</span><h2>选择弹幕来源</h2></div>
+        <section class="control-card source-card">
+          <div class="section-heading"><svg class="section-icon icon" aria-hidden="true"><use href="#icon-source"/></svg><h2>选择弹幕来源</h2><img class="section-character" src="/assets/azusa-snack.jpg" width="40" height="40" alt=""></div>
           <div class="source-tabs" role="group" aria-label="弹幕来源">
             <button type="button" id="replay-tab" class="source-tab active" aria-pressed="true">回放验证</button>
             <button type="button" id="live-tab" class="source-tab" aria-pressed="false">直播间</button>
@@ -41,14 +50,14 @@
               <div><label class="field-label" for="replay-speed">回放速度</label><select id="replay-speed"><option value="0.5">0.5 倍</option><option value="1" selected>1 倍</option><option value="2">2 倍</option><option value="4">4 倍</option></select></div>
             </div>
             <p id="time-format-hint" class="field-hint">时：分：秒，例如 00:24:40。位置相对当前分 P。</p>
-            <div class="candidate-heading">快速体验候选片段</div>
-            <div id="candidate-windows" class="candidate-windows" aria-label="候选回放片段"></div>
-            <p class="field-hint">点击片段会跳转、播放并开始新轮。候选按弹幕密度筛选。</p>
             <div class="button-row">
               <button id="replay-play" class="button primary" type="button">播放并开始新轮</button>
               <button id="replay-load" class="button secondary" type="button">仅载入位置</button>
               <button id="replay-pause" class="button ghost" type="button">暂停</button>
             </div>
+            <div class="candidate-heading">快速体验候选片段</div>
+            <div id="candidate-windows" class="candidate-windows" aria-label="候选回放片段"></div>
+            <p class="field-hint">点击片段会跳转、播放并开始新轮。候选按弹幕密度筛选。</p>
           </div>
           <div id="live-controls" hidden>
             <label class="field-label" for="room-input">直播间号</label>
@@ -56,11 +65,11 @@
             <p class="field-hint">阿梓：510。七海：21452505。接入后再开始一轮建议。</p>
             <button id="live-connect" class="button primary" type="button">接入直播间</button>
           </div>
-          <div class="source-bottom"><span id="source-progress">尚未选择来源</span><button id="stop-source" type="button" class="text-button">停止来源</button></div>
+          <div class="source-bottom"><span class="source-character"><img class="motion-art" src="/assets/azusa-cheer.gif" width="40" height="40" alt=""><img class="motion-still" src="/assets/azusa-snack.jpg" width="40" height="40" alt=""></span><span id="source-progress">尚未选择来源</span><button id="stop-source" type="button" class="text-button">停止来源</button></div>
         </section>
 
-        <section class="control-card">
-          <div class="section-heading"><span class="step-number">02</span><h2>本轮怎么统计</h2></div>
+        <section class="control-card round-card">
+          <div class="section-heading"><svg class="section-icon icon" aria-hidden="true"><use href="#icon-hex"/></svg><h2>本轮怎么统计</h2></div>
           <div class="field-row">
             <div class="field-grow"><label class="field-label" for="mode-select">建议类型</label><select id="mode-select"><option value="hex">海克斯技能</option><option value="equipment">出装建议</option><option value="songs">弹幕点歌</option></select></div>
             <div><label class="field-label" for="round-seconds">收集时长</label><select id="round-seconds"><option value="10">10 秒</option><option value="15">15 秒</option><option value="20" selected>20 秒</option><option value="30">30 秒</option><option value="60">60 秒</option><option value="120" hidden disabled>120 秒</option><option value="180" hidden disabled>180 秒</option><option value="300" hidden disabled>300 秒</option></select></div>
@@ -80,7 +89,7 @@
         </section>
 
         <section id="song-management-card" class="control-card song-management-card" hidden>
-          <div class="section-heading"><span class="step-number">03</span><h2>本场歌回的名单</h2></div>
+          <div class="section-heading"><svg class="section-icon icon" aria-hidden="true"><use href="#icon-song"/></svg><h2>本场歌回的名单</h2><span class="song-character"><img class="motion-art" src="/assets/azusa-sing.gif" width="52" height="52" alt="" loading="lazy"><img class="motion-still" src="/assets/azusa-snack.jpg" width="40" height="40" alt=""></span></div>
           <p class="field-hint">歌曲旁点「本场不再显示」，本场已唱或不想唱的歌就会进入灰名单。开始新一轮会保留灰名单。</p>
           <div class="song-management-heading"><h3>本场灰名单</h3><button id="song-lists-refresh" class="text-button" type="button">刷新名单</button></div>
           <div id="song-gray-list" class="song-managed-list"></div>
@@ -96,7 +105,7 @@
           <p id="song-lists-status" class="field-hint" role="status">名单仅保存在本机。</p>
         </section>
         <section id="ai-card" class="control-card ai-card">
-          <div class="section-heading"><span class="step-number">03</span><h2>整理复杂建议</h2><span class="optional-tag">可选</span></div>
+          <div class="section-heading"><svg class="section-icon icon" aria-hidden="true"><use href="#icon-tune"/></svg><h2>整理复杂建议</h2><span class="optional-tag">可选</span></div>
           <div class="ai-topline"><label class="toggle-label" for="ai-enabled"><input id="ai-enabled" type="checkbox"><span>启用装备 AI</span></label><span id="key-status" class="small-badge">正在检查配置</span></div>
           <label class="toggle-label" for="hex-ai-enabled"><input id="hex-ai-enabled" type="checkbox"><span>启用海克斯 AI，仅建议较少时</span></label>
           <label class="field-label" for="ai-model">使用模型</label><select id="ai-model"><option value="deepseek-v4-pro">DeepSeek V4 Pro</option><option value="deepseek-flash">DeepSeek Flash</option></select>
@@ -108,7 +117,7 @@
           <p id="ai-error" class="inline-error" hidden></p>
         </section>
         <section class="control-card phone-card">
-          <div class="section-heading"><span class="step-number">04</span><h2>手机只读展示</h2><span class="optional-tag">可选</span></div>
+          <div class="section-heading"><svg class="section-icon icon" aria-hidden="true"><use href="#icon-phone"/></svg><h2>手机只读展示</h2><span class="optional-tag">可选</span></div>
           <p id="phone-status" class="field-hint">正在检查手机模式。</p>
           <div id="phone-links" class="phone-links"></div>
           <p id="phone-note" class="field-hint" hidden>手机与电脑需在同一网络。地址仅供这次运行使用，页面只能查看结果。</p>
@@ -117,12 +126,12 @@
 
       <aside class="results-column" aria-label="当前建议结果">
         <section id="result-card" class="result-card">
-          <header class="result-header"><div><div class="eyebrow result-eyebrow">梓有妙选｜Azusa HexPick</div><h2 id="result-title">海克斯技能</h2></div><span id="round-status" class="round-status"><span class="status-dot"></span><span id="round-status-text">尚未开始</span></span></header>
+          <header class="result-header"><div><h2 id="result-title">海克斯技能</h2><div class="result-brand">梓有妙选｜Azusa HexPick</div></div><span id="round-status" class="round-status"><span class="status-dot"></span><span id="round-status-text">尚未开始</span></span></header>
           <div class="result-meta"><span id="round-label">尚未开始一轮</span><span id="result-source">未接入来源</span></div>
           <div id="flow-counts" class="flow-counts">收到 0 · 计入 0 · 未决 0</div>
           <div id="result-warning" class="result-warning" role="status" hidden></div>
 
-          <div id="leader-area" class="leader-area"><div id="leader-caption" class="leader-caption">等待弹幕建议</div><div id="leader-name" class="leader-name" aria-live="polite">—</div><div id="leader-detail" class="leader-detail">开始一轮后，结果会在这里更新。</div></div>
+          <div id="leader-area" class="leader-area"><img class="empty-character" src="/assets/azusa-computer.png" width="96" height="96" alt=""><div id="leader-caption" class="leader-caption">等待弹幕建议</div><div id="leader-name" class="leader-name" aria-live="polite">—</div><div id="leader-detail" class="leader-detail">开始一轮后，结果会在这里更新。</div></div>
           <div id="hex-results" class="hex-results" aria-label="技能选择及刷新动作票数"></div>
           <div id="equipment-results" class="equipment-results" hidden><div id="equipment-ranking" class="equipment-ranking" aria-label="装备建议前三项"></div><div id="against-area" class="against-area" hidden><div class="against-heading">反对当前购买</div><div id="against-list" class="against-list"></div></div><div id="unknown-area" class="unknown-area" hidden><div class="unknown-heading">重复出现的待确认名称</div><div id="unknown-list" class="unknown-list"></div><p class="equipment-scope">尚未确定对应装备，不计入支持票。</p></div><div class="pending-row"><span>待识别的复杂建议</span><span id="pending-count">0</span></div><p id="equipment-scope" class="equipment-scope">正在读取装备目录。</p></div>
           <div id="song-results" class="song-results" hidden>

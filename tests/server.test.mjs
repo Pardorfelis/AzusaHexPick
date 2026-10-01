@@ -97,7 +97,19 @@ test('实际 HTTP 服务、回放与局域网只读权限集成', { timeout: 450
       for (const path of ['/', '/panel', '/app.js', '/style.css']) {
         assert.equal((await request(port, path)).status, 200);
       }
-      for (const path of ['/.env.local', '/server.mjs', '/src/ai-service.mjs', '/data/replays/azusa-p3.json', '/.git/config']) {
+      for (const [path, contentType] of [
+        ['/assets/azusa-snack.jpg', 'image/jpeg'],
+        ['/assets/azusa-brand.png', 'image/png'],
+        ['/assets/azusa-computer.png', 'image/png'],
+        ['/assets/azusa-cheer.gif', 'image/gif'],
+        ['/assets/azusa-sing.gif', 'image/gif'],
+        ['/assets/fonts/Manrope.ttf', 'font/ttf'],
+      ]) {
+        const asset = await request(port, path);
+        assert.equal(asset.status, 200);
+        assert.equal(asset.headers['content-type'], contentType);
+      }
+      for (const path of ['/.env.local', '/server.mjs', '/src/ai-service.mjs', '/data/replays/azusa-p3.json', '/.git/config', '/assets/private-screenshot.png', '/assets/README.md', '/assets/fonts/OFL.txt', '/assets/azusa-panel-brand.png']) {
         assert.equal((await request(port, path)).status, 404);
       }
       privateSnapshotCheck(await state());

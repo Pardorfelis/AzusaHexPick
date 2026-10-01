@@ -12,6 +12,7 @@ CLAUDE.md
 GEMINI.md
 .agents/
 .codex/
+.claude/
 /docs/plan.md
 
 # 运行数据与已脱敏回放。
@@ -65,3 +66,8 @@ GEMINI.md
 !/validation/song-replay-review-result.json
 !/validation/song-v04-check-result.json
 !/validation/package-0.4.0-smoke-result.json
+/.impeccable/
+/PRODUCT.md
+/DESIGN.md
+!/validation/frontend-v05-check-result.json
+!/validation/package-0.5.0-smoke-result.json

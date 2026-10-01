@@ -40,6 +40,8 @@ def capture_draw(view, width=380, return_panel=False):
     class Canvas:
         def delete(self, _tag):
             pass
+        def create_line(self, *_args, **_options):
+            pass
     panel = desktop.DesktopPanel.__new__(desktop.DesktopPanel)
     panel.width = width
     panel.metrics = desktop.layout(width)
@@ -56,6 +58,14 @@ def capture_draw(view, width=380, return_panel=False):
 
 
 class ViewTests(unittest.TestCase):
+    def test_artwork_fits_panel_bounds_without_changing_pixel_files(self):
+        for _name, crop, bounds in desktop.ARTWORK.values():
+            sample = desktop.artwork_sample(crop, bounds)
+            self.assertGreaterEqual(sample, 1)
+            self.assertLessEqual((crop[2] - crop[0] + sample - 1) // sample, bounds[0])
+            self.assertLessEqual((crop[3] - crop[1] + sample - 1) // sample, bounds[1])
+        self.assertEqual(desktop.artwork_sample((0, 0, 4, 4), (12, 12)), 1)
+
     def test_votes_are_finite_nonnegative_and_readable(self):
         for value in [None, {}, [], float("inf"), float("nan"), True, -3, "不是数字"]:
             self.assertEqual(desktop.format_votes(value), "0")
@@ -226,6 +236,8 @@ class ViewTests(unittest.TestCase):
                 return 340
         class Canvas:
             def delete(self, _tag):
+                pass
+            def create_line(self, *_args, **_options):
                 pass
         panel = desktop.DesktopPanel.__new__(desktop.DesktopPanel)
         panel.width = 360

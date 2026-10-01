@@ -24,7 +24,7 @@ class PackagingTests(unittest.TestCase):
     def test_unlisted_data_cannot_enter_archive(self):
         with tempfile.TemporaryDirectory() as folder:
             root = Path(folder)
-            for name in PACKAGE.TOP_FILES + PACKAGE.REPORT_FILES + PACKAGE.DATA_FILES:
+            for name in PACKAGE.TOP_FILES + PACKAGE.REPORT_FILES + PACKAGE.DATA_FILES + PACKAGE.ASSET_FILES:
                 target = root / name
                 target.parent.mkdir(parents=True, exist_ok=True)
                 target.write_text("fixture", encoding="utf-8")
@@ -33,21 +33,24 @@ class PackagingTests(unittest.TestCase):
             (root / "data" / "song-blacklist.json").write_text("synthetic-list", encoding="utf-8")
             (root / "data" / "song-blacklist.json.tmp").write_text("synthetic-list", encoding="utf-8")
             (root / ".env.local").write_text("synthetic-key", encoding="utf-8")
+            (root / "public" / "assets" / "private-screenshot.png").write_bytes(b"private fixture")
             names = {path.relative_to(root).as_posix() for path in PACKAGE.package_files(root)}
             self.assertNotIn("data/private-account.json", names)
             self.assertNotIn("data/song-blacklist.json", names)
             self.assertNotIn("data/song-blacklist.json.tmp", names)
             self.assertNotIn(".env.local", names)
+            self.assertNotIn("public/assets/private-screenshot.png", names)
+            self.assertTrue(set(PACKAGE.ASSET_FILES).issubset(names))
 
     def test_local_documents_are_excluded_from_distribution(self):
         with tempfile.TemporaryDirectory() as folder:
             root = Path(folder)
-            for name in PACKAGE.TOP_FILES + PACKAGE.REPORT_FILES + PACKAGE.DATA_FILES:
+            for name in PACKAGE.TOP_FILES + PACKAGE.REPORT_FILES + PACKAGE.DATA_FILES + PACKAGE.ASSET_FILES:
                 target = root / name
                 target.parent.mkdir(parents=True, exist_ok=True)
                 target.write_text("fixture", encoding="utf-8")
             local_names = ("AGENTS.md", "docs/AGENTS.md", "scripts/CLAUDE.md", "docs/plan.md",
-                           "src/.agents/instructions.mjs", "scripts/.codex/local.py")
+                           "src/.agents/instructions.mjs", "scripts/.codex/local.py", "src/.claude/local.json", "public/.impeccable/brief.json")
             for name in local_names:
                 target = root / name
                 target.parent.mkdir(parents=True, exist_ok=True)

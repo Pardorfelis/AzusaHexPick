@@ -17,7 +17,34 @@ from urllib.request import ProxyHandler, Request, build_opener
 
 from hotkeys import KEYS, HotkeyHelper, NoRedirect, ProjectMutex, ServerReachability, port_number, post_control
 
-COLORS = {"background": "#0e1125", "card": "#171a32", "border": "#30304d", "text": "#efedf8", "muted": "#b0abc8", "credit": "#868cac", "purple": "#a782ff", "teal": "#5eead4", "amber": "#fbbf24", "red": "#fb7185"}
+COLORS = {"background": "#11151d", "card": "#1b222e", "border": "#384455",
+          "text": "#f1f4fa", "muted": "#aab5c5", "credit": "#f6b6d5",
+          "purple": "#a1aaff", "brand": "#7d89fb", "selection": "#272f4d", "header": "#242e3e",
+          "teal": "#8bd4bc", "amber": "#e8bb86", "red": "#f1a4ae"}
+ARTWORK = {"logo": ("azusa-panel-brand.png", (56, 51, 988, 342), (104, 34)),
+           "computer": ("azusa-computer.png", (48, 15, 503, 487), (74, 74)),
+           "computer-small": ("azusa-computer.png", (48, 15, 503, 487), (42, 42))}
+
+
+def artwork_sample(crop, bounds):
+    width, height = crop[2] - crop[0], crop[3] - crop[1]
+    return max(1, math.ceil(max(width / bounds[0], height / bounds[1])))
+
+
+def load_artwork(root):
+    images = {}
+    assets = Path(__file__).resolve().parent.parent / "public" / "assets"
+    for key, (name, crop, bounds) in ARTWORK.items():
+        try:
+            original = tk.PhotoImage(master=root, file=str(assets / name))
+            content = tk.PhotoImage(master=root)
+            content.tk.call(str(content), "copy", str(original), "-from", *crop)
+            sample = artwork_sample(crop, bounds)
+            images[key] = content.subsample(sample, sample)
+        except (OSError, tk.TclError):
+            continue
+    return images
+
 HEX_PRIMARY_KEYS = ("1", "2", "3", "1d", "2d", "3d")
 HEX_EXTRA_KEYS = ("12d", "13d", "23d", "d")
 HEX_KEYS = HEX_PRIMARY_KEYS + HEX_EXTRA_KEYS
@@ -93,17 +120,17 @@ def choose_position(monitors, width=380, height=PANEL_HEIGHT):
 
 def layout(width=380):
     width = max(360, min(640, int(width)))
-    margin, gap = 16, 10
+    margin, gap = 16, 0
     cell = (width - margin * 2 - gap * 2) / 3
-    small_gap = 8
+    small_gap = 0
     small_cell = (width - margin * 2 - small_gap * 3) / 4
     return {
         "width": width, "height": PANEL_HEIGHT,
         "header": (0, 0, width, 44), "leader": (16, 76, width - 16, 182),
         "cards": [(margin + (index % 3) * (cell + gap), 214 + (index // 3) * 62,
-                   margin + (index % 3) * (cell + gap) + cell, 268 + (index // 3) * 62) for index in range(6)],
-        "extra_cards": [(margin + index * (small_cell + small_gap), 338,
-                         margin + index * (small_cell + small_gap) + small_cell, 386) for index in range(4)],
+                   margin + ((index % 3) + 1) * (width - margin * 2) / 3, 276 + (index // 3) * 62) for index in range(6)],
+        "extra_cards": [(margin + index * (small_cell + small_gap), 342,
+                         margin + index * (small_cell + small_gap) + small_cell, 390) for index in range(4)],
         "equipment": [(16, 214 + index * 44, width - 16, 250 + index * 44) for index in range(3)],
         "unknown_y": (344, 362), "against_y": 381,
         "song_summary": (16, 76, width - 16, 135),
@@ -387,6 +414,7 @@ class DesktopPanel:
         self.native = WinPanelAPI()
         self.before_foreground = self.native.foreground()
         self.root = tk.Tk()
+        self.root.title("梓有妙选｜Azusa HexPick")
         self.root.withdraw()
         self.root.overrideredirect(True)
         self.root.configure(background=COLORS["background"])
@@ -400,6 +428,7 @@ class DesktopPanel:
         self.root.geometry(f"{self.width}x{self.height}{x:+d}{y:+d}")
         self.canvas = tk.Canvas(self.root, width=self.width, height=self.height, highlightthickness=0, background=COLORS["background"])
         self.canvas.pack(fill="both", expand=True)
+        self.artwork_images = load_artwork(self.root)
         self.root.update_idletasks()
         self.hwnd = self.native.prepare(self.root.winfo_id())
         self.state = {}
@@ -521,37 +550,51 @@ class DesktopPanel:
     def box(self, rectangle, outline="border", fill="card"):
         return self.canvas.create_rectangle(*rectangle, fill=COLORS[fill], outline=COLORS[outline], width=1)
 
+    def artwork(self, key, x, y):
+        image = getattr(self, "artwork_images", {}).get(key)
+        if image is None:
+            return False
+        self.canvas.create_image(x, y, image=image, anchor="nw")
+        return True
+
     def draw(self, view):
         self.canvas.delete("all")
         self.last_view = view
         self.text(16, 13, "梓有妙选｜Azusa HexPick", 13, bold=True)
-        self.text(self.width - 19, 12, "×", 18, "muted", anchor="ne")
+        self.canvas.create_line(self.width - 28, 15, self.width - 16, 27, fill=COLORS["muted"], width=1.5)
+        self.canvas.create_line(self.width - 28, 27, self.width - 16, 15, fill=COLORS["muted"], width=1.5)
+        self.canvas.create_line(16, 39, self.width - 16, 39, fill=COLORS["border"])
+        self.artwork("logo", 16, 42)
         title = {"hex": "海克斯选择", "equipment": "出装建议", "songs": "弹幕点歌"}[view["mode"]]
-        self.text(16, 49, f"{title} · 第 {view['round']} 轮", 10, "muted")
+        title_line = fit_one_line(f"{title} · 第 {view['round']} 轮", self.width - 220, self.statistics_fonts[10].measure)
+        self.text(132, 49, title_line, 10, "text", bold=True)
         source_color = "amber" if view["source"] == "回放验证" else "teal"
         self.text(self.width - 16, 49, view["source"], 10, source_color, anchor="ne")
         if view["mode"] == "songs":
             self.draw_songs(view)
             self.draw_footer(view)
             return
-        self.box(self.metrics["leader"], "purple" if view["connected"] else "red")
+        self.box(self.metrics["leader"], "border")
         status_text = view["status"] + (f" · 剩余 {view['remaining']} 秒" if view["remaining"] is not None else "")
         self.text(28, 87, status_text, 10, "teal" if view["connected"] else "red")
-        leader_size = 22 if len(view["leader"]) <= 7 else 14 if len(view["leader"]) > 15 else 16
-        self.text(28, 113, view["leader"], leader_size, "text", bold=True, width=self.width - 56)
+        has_art = self.artwork("computer", 28, 109)
+        leader_x = 120 if has_art else 28
+        leader_width = self.width - leader_x - 28
+        leader_size = 32 if view["mode"] == "hex" and len(view["leader"]) <= 3 and view["leader_votes"] else 18 if len(view["leader"]) <= 7 else 12 if len(view["leader"]) > 15 else 14
+        self.text(leader_x, 112, view["leader"], leader_size, "purple" if view["leader_votes"] else "text", bold=True, width=leader_width)
         if view["leader_votes"]:
             self.text(self.width - 28, 158, format_votes(view["leader_votes"]) + " 票", 12, "purple", anchor="ne", bold=True)
         self.text(16, 194, "选择与刷新支持" if view["mode"] == "hex" else "当前推荐前三项", 10, "muted")
         if view["mode"] == "hex":
             for rectangle, item in zip(self.metrics["cards"], view["items"][:6]):
                 lead = item["label"] in view["leaders"]
-                self.box(rectangle, "purple" if lead else "border")
+                self.box(rectangle, "border", "selection" if lead else "card")
                 left, top, right, _bottom = rectangle
                 self.text((left + right) / 2, top + 6, item["label"], 10, "teal" if item["key"].endswith("d") else "text", anchor="n")
                 self.text((left + right) / 2, top + 25, format_votes(item["votes"]), 17, "purple" if lead else "text", anchor="n", bold=True)
             for rectangle, item in zip(self.metrics["extra_cards"], view["items"][6:]):
                 lead = item["label"] in view["leaders"]
-                self.box(rectangle, "purple" if lead else "border")
+                self.box(rectangle, "border", "selection" if lead else "card")
                 left, top, right, _bottom = rectangle
                 self.text((left + right) / 2, top + 5, item["label"], 9, "teal", anchor="n")
                 self.text((left + right) / 2, top + 22, format_votes(item["votes"]), 16, "purple" if lead else "text", anchor="n", bold=True)
@@ -578,19 +621,25 @@ class DesktopPanel:
             self.song_view_identity = identity
         self.song_visible_page = song_page(view, getattr(self, "song_scroll", 0), self.metrics)
         self.song_scroll = self.song_visible_page["offset"]
-        self.box(self.metrics["song_summary"], "purple" if view["connected"] else "red")
+        self.box(self.metrics["song_summary"], "border")
+        has_art = self.artwork("computer-small", 28, 84)
+        summary_x = 84 if has_art else 28
         status = view["status"] + (f" · 剩余 {view['remaining']} 秒" if view["remaining"] is not None else "")
-        self.text(28, 87, status, 10, "teal" if view["connected"] else "red")
+        self.text(summary_x, 87, status, 10, "teal" if view["connected"] else "red")
         songs = view["songs"]
         counts = f"点歌 {format_votes(songs['totalRequests'])} 次 · 本场略过 {format_votes(songs['grayCount'])} 首 · 拉黑 {format_votes(songs['blackCount'])} 首"
         if not view["connected"]:
             counts = "连接恢复后显示本轮点歌。"
-        self.text(28, 112, fit_one_line(counts, self.width - 56, self.statistics_fonts[9].measure), 9, "muted")
+        self.text(summary_x, 112, fit_one_line(counts, self.width - summary_x - 28, self.statistics_fonts[9].measure), 9, "muted")
         self.text(16, 148, "自主挑歌 · 点击略过仅限本场", 9, "muted")
         for name, symbol in (("song_previous", "↑"), ("song_next", "↓")):
             left, top, right, _bottom = self.metrics[name]
             self.box(self.metrics[name])
-            self.text((left + right) / 2, top + 3, symbol, 11, "teal", anchor="n")
+            center = (left + right) / 2
+            tip_y, tail_y = (top + 7, top + 17) if symbol == "↑" else (top + 17, top + 7)
+            self.canvas.create_line(center, tail_y, center, tip_y, fill=COLORS["teal"], width=1.5)
+            edge_y = tip_y + 4 if symbol == "↑" else tip_y - 4
+            self.canvas.create_line(center - 4, edge_y, center, tip_y, center + 4, edge_y, fill=COLORS["teal"], width=1.5)
         rows = self.song_visible_page["rows"]
         if not rows:
             message = "等待点歌弹幕" if view["connected"] else "等待恢复统计"
@@ -611,7 +660,8 @@ class DesktopPanel:
 
     def draw_footer(self, view):
         self.text(16, 402, view["counting"], 10, "muted")
-        self.text(self.width - 16, 402, "溣符雨 · 维护", 9, "credit", anchor="ne")
+        self.canvas.create_line(16, 397, self.width - 16, 397, fill=COLORS["border"])
+        self.text(self.width - 16, 402, "溣符雨 · 维护", 10, "credit", anchor="ne", bold=True)
         summary = statistics_line(view)
         summary_size = statistics_font_size(summary, self.width - 32, lambda label, size: self.statistics_fonts[size].measure(label))
         self.text(16, 425, summary, summary_size, "muted")
@@ -621,7 +671,7 @@ class DesktopPanel:
             helper = self.song_control_message
             helper_ok = helper.startswith("已加入")
         self.text(16, 452, helper, 9, "teal" if helper_ok else "amber", width=self.width - 32)
-        self.text(16, 480, "Ctrl + Alt：F6 点歌　F7 海克斯", 9, "muted")
+        self.text(16, 480, "Ctrl＋Alt：F6 点歌　F7 海克斯", 9, "muted")
         self.text(16, 498, "F8 出装　F9 锁定 · 点歌列表可滚轮翻页", 9, "muted")
 
     def move_song_page(self, change):

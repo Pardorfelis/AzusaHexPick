@@ -227,6 +227,12 @@ const publicFiles = new Map([
   ['/panel', ['index.html', 'text/html; charset=utf-8']],
   ['/style.css', ['style.css', 'text/css; charset=utf-8']],
   ['/app.js', ['app.js', 'text/javascript; charset=utf-8']],
+  ['/assets/azusa-snack.jpg', ['assets/azusa-snack.jpg', 'image/jpeg']],
+  ['/assets/azusa-brand.png', ['assets/azusa-brand.png', 'image/png']],
+  ['/assets/azusa-computer.png', ['assets/azusa-computer.png', 'image/png']],
+  ['/assets/azusa-cheer.gif', ['assets/azusa-cheer.gif', 'image/gif']],
+  ['/assets/azusa-sing.gif', ['assets/azusa-sing.gif', 'image/gif']],
+  ['/assets/fonts/Manrope.ttf', ['assets/fonts/Manrope.ttf', 'font/ttf']],
 ]);
 
 const server = http.createServer(async (request, response) => {
@@ -239,7 +245,7 @@ const server = http.createServer(async (request, response) => {
   const url = new URL(request.url, origin);
   const local = isLocal(request);
   if (!local) {
-    const staticAsset = ['/style.css', '/app.js'].includes(url.pathname);
+    const staticAsset = publicFiles.has(url.pathname) && !['/', '/panel'].includes(url.pathname);
     const readonly = ['/panel', '/api/state', '/api/events'].includes(url.pathname);
     if (request.method !== 'GET' || !lanEnabled || (!staticAsset && (!readonly || !validViewerToken(url.searchParams.get('token')))))
       return json(response, 403, {error: '手机只读页需要本机提供的配对链接。'});

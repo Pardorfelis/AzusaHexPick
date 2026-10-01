@@ -355,6 +355,9 @@ function renderEquipment(top3, against, unknown) {
   }));
 }
 
+let seenSongRound = null;
+let seenSongKeys = new Set();
+
 function renderSongs() {
   const songs = current.songs || {};
   const items = Array.isArray(songs.items) ? songs.items : [];
@@ -364,8 +367,12 @@ function renderSongs() {
     lastSongSignature = signature;
     const roundId = current.roundId;
     const sessionId = songs.sessionId;
+    const songRound = JSON.stringify([roundId, sessionId]);
+    if (seenSongRound !== songRound) { seenSongKeys = new Set(); seenSongRound = songRound; }
     const createRow = item => {
-      const row = element('div', 'song-request-row');
+      const isNew = !seenSongKeys.has(item.key);
+      seenSongKeys.add(item.key);
+      const row = element('div', 'song-request-row' + (isNew ? ' new-song' : ''));
       const name = element('div', 'song-request-name');
       name.append(element('span', 'song-title', item.title));
       if (!item.known) name.append(element('span', 'song-unconfirmed', '待确认'));
@@ -471,6 +478,7 @@ function renderClock() {
   text('round-status-text', label);
   byId('round-status').classList.toggle('collecting', collecting && remaining > 0);
   byId('round-status').classList.toggle('stale', isStale);
+  byId('round-status').classList.toggle('locked', current.status === 'locked' && !isStale);
   byId('result-card').classList.toggle('outdated', isStale);
   const age = current.latestUpdateAt ? Math.max(0, (lastSnapshotAt + elapsed - number(current.latestUpdateAt)) / 1000) : null;
   text('freshness-label', isStale ? '等待重新连接' : age === null ? '等待有效建议' : age < 2 ? '刚刚更新' : `${Math.floor(age)} 秒前更新`);
@@ -508,6 +516,7 @@ function render() {
   byId('song-results').hidden = !songMode;
   const rows = songMode ? [] : equipmentMode ? (current.equipment?.top3 || []) : (current.hex || []);
   const maximum = Math.max(0, ...rows.map((item) => number(item.votes)));
+  byId('result-card').classList.toggle('empty-result', !songMode && maximum === 0);
   const leaders = maximum > 0 ? rows.filter((item) => number(item.votes) === maximum) : [];
   const name = leaders.map((item) => equipmentMode ? item.name : item.key.endsWith('d') ? hexNames[item.key] : item.key).join('、');
   text('leader-caption', maximum > 0 ? leaders.length > 1 ? equipmentMode ? '前三项中支持并列最多' : '弹幕支持并列最多' : '弹幕支持最多' : current.status === 'collecting' ? '正在等待有效建议' : '等待弹幕建议');
@@ -705,8 +714,22 @@ function bindPageLifecycle() {
   });
 }
 
+function bindMotionControl() {
+  if (readOnly) return;
+  const button = byId('motion-toggle');
+  if (!button) return;
+  let paused = false;
+  button.addEventListener('click', () => {
+    paused = !paused;
+    document.body.classList.toggle('motion-paused', paused);
+    button.setAttribute('aria-pressed', String(paused));
+    button.textContent = paused ? '启用动图' : '暂停动图';
+  });
+}
+
 async function initialize() {
   bindPageLifecycle();
+  bindMotionControl();
   if (readOnly) {
     document.body.classList.add('panel-mode');
     document.querySelector('.read-only-caption').hidden = false;

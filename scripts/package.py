@@ -32,19 +32,23 @@ REPORT_FILES = ("validation/replay-inspection.json",
                 "validation/desktop-v03-check-result.json", "validation/web-v03-check-result.json",
                 "validation/automated-v03-check-result.json", "validation/song-catalog-sources.md",
                 "validation/song-replay-inspection.json", "validation/song-replay-review.mjs",
-                "validation/song-replay-review-result.json", "validation/song-v04-check-result.json")
+                "validation/song-replay-review-result.json", "validation/song-v04-check-result.json", "validation/frontend-v05-check-result.json")
+ASSET_FILES = ("public/assets/azusa-snack.jpg", "public/assets/azusa-brand.png",
+               "public/assets/azusa-computer.png", "public/assets/azusa-panel-brand.png",
+               "public/assets/azusa-cheer.gif", "public/assets/azusa-sing.gif",
+               "public/assets/fonts/Manrope.ttf", "public/assets/fonts/OFL.txt")
 EXTENSIONS = {".mjs", ".js", ".css", ".html", ".py", ".ps1", ".md", ".json"}
 LOCAL_DOCUMENTS = {"docs/plan.md"}
 LOCAL_NAMES = {"AGENTS.md", "CLAUDE.md", "GEMINI.md"}
 
 
 def package_files(root=ROOT):
-    files = {root / name for name in TOP_FILES + REPORT_FILES + DATA_FILES}
+    files = {root / name for name in TOP_FILES + REPORT_FILES + DATA_FILES + ASSET_FILES}
     for directory in APP_DIRS:
         for path in (root / directory).rglob("*"):
             if (path.is_file() and path.suffix in EXTENSIONS and "__pycache__" not in path.parts
                     and path.name not in LOCAL_NAMES
-                    and not {".agents", ".codex"}.intersection(path.parts)
+                    and not {".agents", ".codex", ".claude", ".impeccable"}.intersection(path.parts)
                     and path.relative_to(root).as_posix() not in LOCAL_DOCUMENTS):
                 files.add(path)
     for path in files:
