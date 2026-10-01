@@ -9,6 +9,7 @@ import { LiveSource } from './src/live-source.mjs';
 import { ReplaySource } from './src/replay-source.mjs';
 import { AiService, loadLocalKey } from './src/ai-service.mjs';
 import { allowedEquipment } from './src/equipment.mjs';
+import { SongLists } from './src/song-lists.mjs';
 
 const root = dirname(fileURLToPath(import.meta.url));
 const appVersion = JSON.parse(await readFile(new URL('./package.json', import.meta.url), 'utf8')).version;
@@ -26,7 +27,8 @@ function validViewerToken(value) {
   if (typeof value !== 'string' || !/^[a-f0-9]{48}$/.test(value)) return false;
   return timingSafeEqual(Buffer.from(value), Buffer.from(viewerToken));
 }
-const engine = new PanelEngine();
+const songLists = new SongLists({ path: process.env.AZUSA_SONG_BLACKLIST_FILE || resolve(root, 'data/song-blacklist.json') });
+const engine = new PanelEngine({ songLists });
 const listeners = new Set();
 let sourceKind = 'none';
 let liveStatus = {state: 'stopped'};
@@ -85,7 +87,7 @@ function snapshot() {
     source: sourceKind === 'live' ? liveStatus : replay.snapshot(),
     ai: ai.snapshot(), helperConnected: Date.now() - helperSeenAt < 10000,
     supportedEquipment: allowedEquipment().length,
-    error: lastError,
+    error: lastError || songLists.warning,
   };
 }
 
@@ -118,7 +120,7 @@ async function body(request) {
 function roundSettings(value) {
   const options = {...roundOptions};
   if (value.mode !== undefined) {
-    if (!['hex', 'equipment'].includes(value.mode)) throw new Error('无效的模式。');
+    if (!['hex', 'equipment', 'songs'].includes(value.mode)) throw new Error('无效的模式。');
     options.mode = value.mode;
   }
   if (value.counting !== undefined) {
@@ -126,9 +128,10 @@ function roundSettings(value) {
     options.counting = value.counting;
   }
   if (value.seconds !== undefined) {
-    if (![10, 15, 20, 30, 60].includes(Number(value.seconds))) throw new Error('请选择支持的收集时长。');
+    if (![10, 15, 20, 30, 60, 120, 180, 300].includes(Number(value.seconds))) throw new Error('请选择支持的收集时长。');
     options.seconds = Number(value.seconds);
   }
+  if (options.mode === 'songs') options.counting = 'messages';
   return options;
 }
 
@@ -192,6 +195,24 @@ async function control(value) {
     case 'helper-heartbeat':
       helperSeenAt = value.active === false ? 0 : Date.now();
       break;
+    case 'song-gray-add':
+      engine.addSongGray(value.key, value.roundId);
+      break;
+    case 'song-gray-remove':
+      if (value.sessionId !== songLists.sessionId) throw new Error('歌回场次已变化，请刷新名单后重试。');
+      if (typeof value.key !== 'string' || value.key.length > 160) throw new Error('歌曲无效。');
+      songLists.removeGray(value.key);
+      break;
+    case 'song-session-reset':
+      engine.resetSongSession();
+      break;
+    case 'song-black-add':
+      songLists.addBlack(value.title, value.term);
+      break;
+    case 'song-black-remove':
+      if (typeof value.key !== 'string' || value.key.length > 160) throw new Error('歌曲无效。');
+      songLists.removeBlack(value.key);
+      break;
     case 'shutdown':
       setTimeout(shutdown, 100);
       break;
@@ -233,12 +254,15 @@ const server = http.createServer(async (request, response) => {
     if (request.method === 'GET' && url.pathname === '/api/state') return json(response, 200, snapshot());
     if (request.method === 'GET' && url.pathname === '/api/hex-audit') return json(response, 200, engine.hexAudit());
     if (request.method === 'GET' && url.pathname === '/api/equipment-audit') return json(response, 200, engine.equipmentAudit());
+    if (request.method === 'GET' && url.pathname === '/api/song-audit') return json(response, 200, engine.songAudit());
+    if (request.method === 'GET' && url.pathname === '/api/song-lists') return json(response, 200, songLists.snapshot());
     if (request.method === 'GET' && url.pathname === '/api/replays') {
       const datasets = await replay.list();
       const inspection = JSON.parse(await readFile(resolve(root, 'validation/replay-inspection.json'), 'utf8').catch(() => '{"datasets":[]}'));
       for (const dataset of datasets) {
         const item = inspection.datasets.find(item => item.id === dataset.id);
         dataset.windows = [
+          ...(dataset.windows || []),
           ...(item?.voteDense10SecondBins || []).slice(0, 3).map(item => ({mode: 'hex', at: item.startAtSeconds, label: '数字建议密集片段'})),
           ...(item?.equipmentDense10SecondBins || []).slice(0, 3).map(item => ({mode: 'equipment', at: item.startAtSeconds, label: '装备词密集片段'})),
         ];
@@ -272,6 +296,10 @@ const server = http.createServer(async (request, response) => {
       '无效的回放编号。', '回放格式不正确。', '不支持的模型。',
       '未配置本机 DeepSeek 密钥。', '上次请求费用未知，请重启后再启用。',
       '请求处理中，请稍后切换。',
+      '点歌轮次已变化，请从当前列表重新选择。', '歌曲已不在当前列表，请刷新后重试。',
+      '歌回场次已变化，请刷新名单后重试。',
+      '歌曲无效。', '本场灰名单已达上限。', '歌曲黑名单已达上限。', '请输入有效歌名。', '拉黑期限无效。',
+      '歌曲黑名单未能保存，请检查本机文件写入权限。',
     ];
     lastError = safeMessages.includes(error.message) ? error.message
       : error.code === 'ENOENT' ? '回放文件尚未导入，请检查数据目录。'

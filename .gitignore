@@ -18,10 +18,13 @@ GEMINI.md
 /data/*
 !/data/equipment-aliases.json
 !/data/riot-equipment-names.json
+!/data/song-catalog.json
 !/data/replays/
 /data/replays/*
 !/data/replays/azusa-p3.json
 !/data/replays/azusa-p4.json
+!/data/replays/azusa-singing-p1.json
+!/data/replays/azusa-singing-p2.json
 
 # 可公开验证资料采用白名单，原始调试输出与截图留在本地。
 /validation/*
@@ -56,3 +59,9 @@ GEMINI.md
 !/validation/replay-inspection.json
 !/validation/riot-item-16.19.1.json
 !/validation/web-v03-check-result.json
+!/validation/song-catalog-sources.md
+!/validation/song-replay-inspection.json
+!/validation/song-replay-review.mjs
+!/validation/song-replay-review-result.json
+!/validation/song-v04-check-result.json
+!/validation/package-0.4.0-smoke-result.json

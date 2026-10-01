@@ -1,0 +1,445 @@
+{
+  "version": "0.4.0",
+  "catalogTitles": 2313,
+  "sourceVideo": "BV1boaW6PEqz",
+  "scope": "用户提供歌回文件的离线识别分布、名单状态复核及接收时钟模拟；没有观看视频定位主播提问，不代表总体语义准确率。",
+  "originalXmlModified": false,
+  "liveConnections": 0,
+  "paidApiCalls": 0,
+  "datasets": [
+    {
+      "id": "azusa-singing-p1",
+      "singingMessages": 8211,
+      "dense30SecondBins": [
+        {
+          "start": 3120,
+          "received": 202,
+          "recognized": 160,
+          "requests": 162
+        },
+        {
+          "start": 6300,
+          "received": 166,
+          "recognized": 118,
+          "requests": 122
+        },
+        {
+          "start": 2790,
+          "received": 195,
+          "recognized": 119,
+          "requests": 120
+        },
+        {
+          "start": 2820,
+          "received": 151,
+          "recognized": 113,
+          "requests": 113
+        },
+        {
+          "start": 6270,
+          "received": 110,
+          "recognized": 87,
+          "requests": 93
+        }
+      ]
+    },
+    {
+      "id": "azusa-singing-p2",
+      "singingMessages": 6368,
+      "dense30SecondBins": [
+        {
+          "start": 2880,
+          "received": 172,
+          "recognized": 116,
+          "requests": 116
+        },
+        {
+          "start": 2010,
+          "received": 96,
+          "recognized": 64,
+          "requests": 69
+        },
+        {
+          "start": 2400,
+          "received": 95,
+          "recognized": 60,
+          "requests": 65
+        },
+        {
+          "start": 3870,
+          "received": 64,
+          "recognized": 52,
+          "requests": 52
+        },
+        {
+          "start": 3780,
+          "received": 80,
+          "recognized": 50,
+          "requests": 50
+        }
+      ]
+    }
+  ],
+  "windows": [
+    {
+      "id": "azusa-singing-p1",
+      "start": 2790,
+      "seconds": 30,
+      "receivedMessages": 195,
+      "recognizedMessages": 119,
+      "totalSongRequests": 120,
+      "mainSongs": 20,
+      "singleCandidates": 3,
+      "hiddenBareSingles": 53,
+      "topObserved": [
+        {
+          "key": "雨爱",
+          "title": "雨爱",
+          "requests": 9,
+          "known": true
+        },
+        {
+          "key": "热气球",
+          "title": "热气球",
+          "requests": 6,
+          "known": true
+        },
+        {
+          "key": "我不难过",
+          "title": "我不难过",
+          "requests": 6,
+          "known": true
+        },
+        {
+          "key": "带我走",
+          "title": "带我走",
+          "requests": 5,
+          "known": true
+        },
+        {
+          "key": "泪海",
+          "title": "泪海",
+          "requests": 5,
+          "known": true
+        },
+        {
+          "key": "泪桥",
+          "title": "泪桥",
+          "requests": 4,
+          "known": true
+        },
+        {
+          "key": "一样的月光",
+          "title": "一样的月光",
+          "requests": 3,
+          "known": true
+        },
+        {
+          "key": "海屿你",
+          "title": "海屿你",
+          "requests": 2,
+          "known": true
+        }
+      ],
+      "grayCheck": {
+        "title": "雨爱",
+        "hiddenNow": true,
+        "filteredNextRound": true,
+        "restoredNextSession": true
+      }
+    },
+    {
+      "id": "azusa-singing-p1",
+      "start": 3120,
+      "seconds": 30,
+      "receivedMessages": 202,
+      "recognizedMessages": 160,
+      "totalSongRequests": 162,
+      "mainSongs": 34,
+      "singleCandidates": 6,
+      "hiddenBareSingles": 45,
+      "topObserved": [
+        {
+          "key": "泪海",
+          "title": "泪海",
+          "requests": 10,
+          "known": true
+        },
+        {
+          "key": "拆穿",
+          "title": "拆穿",
+          "requests": 9,
+          "known": true
+        },
+        {
+          "key": "阿楚姑娘",
+          "title": "阿楚姑娘",
+          "requests": 8,
+          "known": true
+        },
+        {
+          "key": "bb88",
+          "title": "BB88",
+          "requests": 6,
+          "known": true
+        },
+        {
+          "key": "搁浅",
+          "title": "搁浅",
+          "requests": 5,
+          "known": true
+        },
+        {
+          "key": "惧高症",
+          "title": "惧高症",
+          "requests": 5,
+          "known": true
+        },
+        {
+          "key": "干物女",
+          "title": "干物女",
+          "requests": 4,
+          "known": true
+        },
+        {
+          "key": "我不难过",
+          "title": "我不难过",
+          "requests": 4,
+          "known": true
+        }
+      ],
+      "grayCheck": {
+        "title": "泪海",
+        "hiddenNow": true,
+        "filteredNextRound": true,
+        "restoredNextSession": true
+      }
+    },
+    {
+      "id": "azusa-singing-p1",
+      "start": 6300,
+      "seconds": 30,
+      "receivedMessages": 166,
+      "recognizedMessages": 118,
+      "totalSongRequests": 122,
+      "mainSongs": 21,
+      "singleCandidates": 3,
+      "hiddenBareSingles": 54,
+      "topObserved": [
+        {
+          "key": "热气球",
+          "title": "热气球",
+          "requests": 9,
+          "known": true
+        },
+        {
+          "key": "月牙湾",
+          "title": "月牙湾",
+          "requests": 7,
+          "known": true
+        },
+        {
+          "key": "空心",
+          "title": "空心",
+          "requests": 6,
+          "known": true
+        },
+        {
+          "key": "大城小爱",
+          "title": "大城小爱",
+          "requests": 5,
+          "known": true
+        },
+        {
+          "key": "爱啦啦",
+          "title": "爱啦啦",
+          "requests": 3,
+          "known": true
+        },
+        {
+          "key": "才二十三",
+          "title": "才二十三",
+          "requests": 3,
+          "known": true
+        },
+        {
+          "key": "海芋恋",
+          "title": "海芋恋",
+          "requests": 3,
+          "known": true
+        },
+        {
+          "key": "我不难过",
+          "title": "我不难过",
+          "requests": 3,
+          "known": true
+        }
+      ],
+      "grayCheck": {
+        "title": "热气球",
+        "hiddenNow": true,
+        "filteredNextRound": true,
+        "restoredNextSession": true
+      }
+    },
+    {
+      "id": "azusa-singing-p2",
+      "start": 0,
+      "seconds": 30,
+      "receivedMessages": 4,
+      "recognizedMessages": 0,
+      "totalSongRequests": 0,
+      "mainSongs": 0,
+      "singleCandidates": 0,
+      "hiddenBareSingles": 0,
+      "topObserved": [],
+      "grayCheck": null
+    },
+    {
+      "id": "azusa-singing-p2",
+      "start": 2880,
+      "seconds": 30,
+      "receivedMessages": 172,
+      "recognizedMessages": 116,
+      "totalSongRequests": 116,
+      "mainSongs": 22,
+      "singleCandidates": 1,
+      "hiddenBareSingles": 49,
+      "topObserved": [
+        {
+          "key": "烟火里的尘埃",
+          "title": "烟火里的尘埃",
+          "requests": 8,
+          "known": true
+        },
+        {
+          "key": "空心",
+          "title": "空心",
+          "requests": 5,
+          "known": true
+        },
+        {
+          "key": "爱即正义",
+          "title": "爱即正义",
+          "requests": 4,
+          "known": true
+        },
+        {
+          "key": "呼吸决定",
+          "title": "呼吸决定",
+          "requests": 4,
+          "known": true
+        },
+        {
+          "key": "夏天的风",
+          "title": "夏天的风",
+          "requests": 4,
+          "known": true
+        },
+        {
+          "key": "才二十三",
+          "title": "才二十三",
+          "requests": 3,
+          "known": true
+        },
+        {
+          "key": "茶汤",
+          "title": "茶汤",
+          "requests": 3,
+          "known": true
+        },
+        {
+          "key": "大城小爱",
+          "title": "大城小爱",
+          "requests": 3,
+          "known": true
+        }
+      ],
+      "grayCheck": {
+        "title": "烟火里的尘埃",
+        "hiddenNow": true,
+        "filteredNextRound": true,
+        "restoredNextSession": true
+      }
+    },
+    {
+      "id": "azusa-singing-p2",
+      "start": 2010,
+      "seconds": 30,
+      "receivedMessages": 96,
+      "recognizedMessages": 64,
+      "totalSongRequests": 69,
+      "mainSongs": 14,
+      "singleCandidates": 4,
+      "hiddenBareSingles": 29,
+      "topObserved": [
+        {
+          "key": "苏幕遮",
+          "title": "苏幕遮",
+          "requests": 4,
+          "known": true
+        },
+        {
+          "key": "同花顺",
+          "title": "同花顺",
+          "requests": 4,
+          "known": true
+        },
+        {
+          "key": "轨迹",
+          "title": "轨迹",
+          "requests": 3,
+          "known": true
+        },
+        {
+          "key": "普通朋友",
+          "title": "普通朋友",
+          "requests": 3,
+          "known": true
+        },
+        {
+          "key": "牵丝戏",
+          "title": "牵丝戏",
+          "requests": 3,
+          "known": true
+        },
+        {
+          "key": "热气球",
+          "title": "热气球",
+          "requests": 3,
+          "known": true
+        },
+        {
+          "key": "爱殇",
+          "title": "爱殇",
+          "requests": 2,
+          "known": true
+        },
+        {
+          "key": "画心",
+          "title": "画心",
+          "requests": 2,
+          "known": true
+        }
+      ],
+      "grayCheck": {
+        "title": "苏幕遮",
+        "hiddenNow": true,
+        "filteredNextRound": true,
+        "restoredNextSession": true
+      }
+    }
+  ],
+  "clockSimulation": {
+    "representedHours": 6,
+    "wallTimeMs": 211,
+    "rounds": 360,
+    "messages": 21600,
+    "allRoundCountsMatched": true,
+    "dedupEntries": 20000,
+    "maxDedupEntries": 20000,
+    "songEntriesLastRound": 2,
+    "pendingRecords": 0,
+    "note": "加速的六小时接收时钟检查，不是实际六小时直播或服务器稳定性承诺。"
+  }
+}

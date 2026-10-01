@@ -62,24 +62,40 @@
         <section class="control-card">
           <div class="section-heading"><span class="step-number">02</span><h2>本轮怎么统计</h2></div>
           <div class="field-row">
-            <div class="field-grow"><label class="field-label" for="mode-select">建议类型</label><select id="mode-select"><option value="hex">海克斯技能</option><option value="equipment">出装建议</option></select></div>
-            <div><label class="field-label" for="round-seconds">收集时长</label><select id="round-seconds"><option value="10">10 秒</option><option value="15">15 秒</option><option value="20" selected>20 秒</option><option value="30">30 秒</option><option value="60">60 秒</option></select></div>
+            <div class="field-grow"><label class="field-label" for="mode-select">建议类型</label><select id="mode-select"><option value="hex">海克斯技能</option><option value="equipment">出装建议</option><option value="songs">弹幕点歌</option></select></div>
+            <div><label class="field-label" for="round-seconds">收集时长</label><select id="round-seconds"><option value="10">10 秒</option><option value="15">15 秒</option><option value="20" selected>20 秒</option><option value="30">30 秒</option><option value="60">60 秒</option><option value="120" hidden disabled>120 秒</option><option value="180" hidden disabled>180 秒</option><option value="300" hidden disabled>300 秒</option></select></div>
           </div>
-          <label class="field-label" for="counting-select">计票口径</label>
-          <select id="counting-select"><option value="messages">按有效弹幕条数</option><option value="anonymous">按匿名标识去重（实验）</option></select>
-          <p class="field-hint">去重模式取同一匿名标识的最新建议，不能称为精确观众人数。</p>
+          <label id="counting-field-label" class="field-label" for="counting-select">计票口径</label>
+          <select id="counting-select"><option id="counting-messages-option" value="messages">按有效弹幕条数</option><option value="anonymous">按匿名标识去重（实验）</option></select>
+          <p id="counting-hint" class="field-hint">去重模式取同一匿名标识的最新建议，不能称为精确观众人数。</p>
           <div class="button-row"><button id="new-round" class="button primary" type="button">清空并开始新轮</button><button id="lock-round" class="button secondary" type="button">锁定结果</button></div>
-          <p class="field-hint round-note">刷新技能后请开始新轮。延迟到达的旧建议仍可能混入。</p>
+          <p id="round-note" class="field-hint round-note">刷新技能后请开始新轮。延迟到达的旧建议仍可能混入。</p>
           <p id="hex-rule-summary" class="field-hint">重复数字每条一票，明确推荐短句即时识别。</p>
           <button id="hex-audit-refresh" class="text-button" type="button">查看最近识别依据</button>
           <div id="hex-audit-area" class="hex-audit-area" hidden><p id="hex-audit-status" class="field-hint"></p><ul id="hex-audit-list" class="hex-audit-list"></ul></div>
           <div class="shortcut-area">
-            <div class="shortcut-title"><span>不切出游戏的快捷键</span><span id="helper-status" class="small-badge">助手未启动</span></div>
-            <div class="shortcut-list"><span><kbd>Ctrl</kbd>＋<kbd>Alt</kbd>＋<kbd>F7</kbd> 海克斯新轮</span><span><kbd>Ctrl</kbd>＋<kbd>Alt</kbd>＋<kbd>F8</kbd> 装备新轮</span><span><kbd>Ctrl</kbd>＋<kbd>Alt</kbd>＋<kbd>F9</kbd> 锁定</span></div>
+            <div class="shortcut-title"><span>无需切换窗口的快捷键</span><span id="helper-status" class="small-badge">助手未启动</span></div>
+            <div class="shortcut-list"><span><kbd>Ctrl</kbd>＋<kbd>Alt</kbd>＋<kbd>F6</kbd> 点歌新轮</span><span><kbd>Ctrl</kbd>＋<kbd>Alt</kbd>＋<kbd>F7</kbd> 海克斯新轮</span><span><kbd>Ctrl</kbd>＋<kbd>Alt</kbd>＋<kbd>F8</kbd> 装备新轮</span><span><kbd>Ctrl</kbd>＋<kbd>Alt</kbd>＋<kbd>F9</kbd> 锁定</span></div>
           </div>
         </section>
 
-        <section class="control-card ai-card">
+        <section id="song-management-card" class="control-card song-management-card" hidden>
+          <div class="section-heading"><span class="step-number">03</span><h2>本场歌回的名单</h2></div>
+          <p class="field-hint">歌曲旁点「本场不再显示」，本场已唱或不想唱的歌就会进入灰名单。开始新一轮会保留灰名单。</p>
+          <div class="song-management-heading"><h3>本场灰名单</h3><button id="song-lists-refresh" class="text-button" type="button">刷新名单</button></div>
+          <div id="song-gray-list" class="song-managed-list"></div>
+          <button id="song-session-reset" class="button secondary" type="button">开始新场歌回</button>
+          <p class="field-hint">开始新场或重启服务会清空灰名单。黑名单会保留。</p>
+          <div class="song-management-heading"><h3>暂时不想唱的歌</h3></div>
+          <div class="field-row">
+            <div class="field-grow"><label class="field-label" for="song-black-title">歌名</label><input id="song-black-title" type="text" maxlength="100" autocomplete="off" placeholder="输入完整歌名"></div>
+            <div><label class="field-label" for="song-black-term">拉黑期限</label><select id="song-black-term"><option value="week">一周</option><option value="month" selected>一个月</option><option value="quarter">三个月</option><option value="half-year">半年</option><option value="year">一年</option><option value="forever">永久</option></select></div>
+          </div>
+          <div class="button-row"><button id="song-black-add" class="button secondary" type="button">加入黑名单</button></div>
+          <div id="song-black-list" class="song-managed-list"></div>
+          <p id="song-lists-status" class="field-hint" role="status">名单仅保存在本机。</p>
+        </section>
+        <section id="ai-card" class="control-card ai-card">
           <div class="section-heading"><span class="step-number">03</span><h2>整理复杂建议</h2><span class="optional-tag">可选</span></div>
           <div class="ai-topline"><label class="toggle-label" for="ai-enabled"><input id="ai-enabled" type="checkbox"><span>启用装备 AI</span></label><span id="key-status" class="small-badge">正在检查配置</span></div>
           <label class="toggle-label" for="hex-ai-enabled"><input id="hex-ai-enabled" type="checkbox"><span>启用海克斯 AI，仅建议较少时</span></label>
@@ -106,9 +122,17 @@
           <div id="flow-counts" class="flow-counts">收到 0 · 计入 0 · 未决 0</div>
           <div id="result-warning" class="result-warning" role="status" hidden></div>
 
-          <div class="leader-area"><div id="leader-caption" class="leader-caption">等待弹幕建议</div><div id="leader-name" class="leader-name" aria-live="polite">—</div><div id="leader-detail" class="leader-detail">开始一轮后，结果会在这里更新。</div></div>
+          <div id="leader-area" class="leader-area"><div id="leader-caption" class="leader-caption">等待弹幕建议</div><div id="leader-name" class="leader-name" aria-live="polite">—</div><div id="leader-detail" class="leader-detail">开始一轮后，结果会在这里更新。</div></div>
           <div id="hex-results" class="hex-results" aria-label="技能选择及刷新动作票数"></div>
           <div id="equipment-results" class="equipment-results" hidden><div id="equipment-ranking" class="equipment-ranking" aria-label="装备建议前三项"></div><div id="against-area" class="against-area" hidden><div class="against-heading">反对当前购买</div><div id="against-list" class="against-list"></div></div><div id="unknown-area" class="unknown-area" hidden><div class="unknown-heading">重复出现的待确认名称</div><div id="unknown-list" class="unknown-list"></div><p class="equipment-scope">尚未确定对应装备，不计入支持票。</p></div><div class="pending-row"><span>待识别的复杂建议</span><span id="pending-count">0</span></div><p id="equipment-scope" class="equipment-scope">正在读取装备目录。</p></div>
+          <div id="song-results" class="song-results" hidden>
+            <p class="song-intro">想唱哪首就选哪首，次数只是观众点歌的记录。</p>
+            <div class="song-section-heading"><h3>大家点的歌</h3><span>2 次及以上</span></div>
+            <div id="song-main-list" class="song-request-list" aria-label="两次及以上的点歌"></div>
+            <div id="song-singles-area" class="song-singles-area" hidden><div class="song-section-heading"><h3>单次点歌</h3><span>也许正好想唱</span></div><div id="song-single-list" class="song-request-list song-single-list" aria-label="明确表达的一次点歌"></div></div>
+            <p id="song-recognition-note" class="equipment-scope">明确点歌出现 1 次即可进入候选；裸歌名重复后才展示。「待确认」保留观众原词。</p>
+            <p id="song-exclusions" class="equipment-scope"></p>
+          </div>
 
           <footer class="result-footer"><div class="counting-line"><span id="counting-label">有效弹幕条数</span><span id="valid-count">0 条有效建议</span></div><div class="result-health"><span><span id="connection-dot" class="status-dot"></span><span id="connection-label">未接入</span></span><span id="freshness-label">等待更新</span></div><p id="identity-warning" class="identity-warning" hidden></p><p id="capacity-warning" class="identity-warning" hidden>本轮数据达到上限，结果可能不完整。</p><p class="panel-credit">溣符雨 · 维护</p></footer>
         </section>

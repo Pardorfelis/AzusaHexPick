@@ -13,8 +13,9 @@ TOP_FILES = (
     "启动.cmd", "启动手机模式.cmd", "停止.cmd", "验证.cmd",
 )
 APP_DIRS = ("src", "public", "scripts", "docs", "tests")
-DATA_FILES = ("data/equipment-aliases.json", "data/riot-equipment-names.json",
-              "data/replays/azusa-p3.json", "data/replays/azusa-p4.json")
+DATA_FILES = ("data/equipment-aliases.json", "data/riot-equipment-names.json", "data/song-catalog.json",
+              "data/replays/azusa-p3.json", "data/replays/azusa-p4.json",
+              "data/replays/azusa-singing-p1.json", "data/replays/azusa-singing-p2.json")
 REPORT_FILES = ("validation/replay-inspection.json",
                 "validation/equipment-language-cases.json", "validation/mvp-live-check-result.json",
                 "validation/mvp-ai-check-result.json", "validation/mvp-ai-flash-followup-result.json",
@@ -29,7 +30,9 @@ REPORT_FILES = ("validation/replay-inspection.json",
                 "validation/live-equipment-observation-report.md", "validation/equipment-v03-ai-initial-result.json",
                 "validation/equipment-v03-ai-assessment.mjs", "validation/equipment-v03-ai-assessment-result.json",
                 "validation/desktop-v03-check-result.json", "validation/web-v03-check-result.json",
-                "validation/automated-v03-check-result.json")
+                "validation/automated-v03-check-result.json", "validation/song-catalog-sources.md",
+                "validation/song-replay-inspection.json", "validation/song-replay-review.mjs",
+                "validation/song-replay-review-result.json", "validation/song-v04-check-result.json")
 EXTENSIONS = {".mjs", ".js", ".css", ".html", ".py", ".ps1", ".md", ".json"}
 LOCAL_DOCUMENTS = {"docs/plan.md"}
 LOCAL_NAMES = {"AGENTS.md", "CLAUDE.md", "GEMINI.md"}

@@ -15,6 +15,8 @@ function snapshot(overrides = {}) {
     remainingMs: 0, latestUpdateAt: null, validMessages: 0, sourceKind: 'none', source: {},
     hex: ['1', '2', '3', '1d', '2d', '3d'].map(key => ({ key, votes: 0, messageVotes: 0, anonymousVotes: 0 })),
     equipment: { top3: [], against: [] }, pendingCount: 0,
+    songs: { sessionId: 'synthetic-song-session', items: [], singles: [], totalRequests: 0, uniqueSongs: 0, hiddenSingles: 0,
+      grayCount: 0, blackCount: 0, excludedRequests: 0 },
     supportedEquipment: 12,
     ai: { enabled: false, configured: false, model: 'deepseek-v4-pro', busy: false, requests: 0, estimatedPeakCostCny: 0 },
     ...overrides,
@@ -52,6 +54,7 @@ class FakeElement {
   get id() { return this._id; }
   set value(value) { this._value = String(value); }
   get value() { return this._value; }
+  get options() { return this.tagName === 'SELECT' ? this.children : undefined; }
   set textContent(value) { this._text = String(value); this.children = []; }
   get textContent() { return this._text + this.children.map(child => typeof child === 'string' ? child : child.textContent).join(''); }
   set innerHTML(_) { throw new Error('测试禁止使用 innerHTML 呈现动态内容。'); }
@@ -91,9 +94,21 @@ function documentFixture() {
     if (id) node.id = id[1];
     if (className) node.className = className[1];
   }
+  for (const match of html.matchAll(/<select\b[^>]*\bid="([^"]+)"[^>]*>([\s\S]*?)<\/select>/gi)) {
+    const select = nodes.get(match[1]);
+    for (const item of match[2].matchAll(/<option\b([^>]*)>([^<]*)<\/option>/gi)) {
+      const id = /\bid="([^"]+)"/.exec(item[1])?.[1];
+      const option = id ? nodes.get(id) : make('option');
+      option.value = /\bvalue="([^"]*)"/.exec(item[1])?.[1] || '';
+      option.textContent = item[2];
+      option.hidden = /\bhidden\b/.test(item[1]);
+      option.disabled = /\bdisabled\b/.test(item[1]);
+      select.append(option);
+    }
+  }
   const defaults = {
     'dataset-select': '', 'replay-position': '00:24:40', 'replay-speed': '1', 'room-input': '510',
-    'mode-select': 'hex', 'counting-select': 'messages', 'round-seconds': '20', 'ai-model': 'deepseek-v4-pro',
+    'mode-select': 'hex', 'counting-select': 'messages', 'round-seconds': '20', 'ai-model': 'deepseek-v4-pro', 'song-black-term': 'month',
   };
   for (const [id, value] of Object.entries(defaults)) nodes.get(id).value = value;
   const body = all.find(node => node.tagName === 'BODY');
@@ -107,7 +122,8 @@ function documentFixture() {
   };
 }
 
-async function harness({ pathname = '/', token = '', state = snapshot(), onControl, windows, audit } = {}) {
+async function harness({ pathname = '/', token = '', state = snapshot(), onControl, windows, audit, onSongLists,
+  songLists = { sessionId: 'synthetic-song-session', gray: [], black: [] }, confirm = true } = {}) {
   const document = documentFixture();
   const fetches = [];
   const events = [];
@@ -156,7 +172,7 @@ async function harness({ pathname = '/', token = '', state = snapshot(), onContr
     setInterval: () => { const id = ++timer; clockTimers.add(id); return id; },
     clearInterval: id => { clockTimers.delete(id); },
     navigator: { clipboard: { writeText: async () => {} } },
-    window: { addEventListener: (name, handler, options = {}) => {
+    window: { confirm: () => confirm, addEventListener: (name, handler, options = {}) => {
       const records = pageHandlers.get(name) || [];
       records.push({ handler, once: Boolean(options.once) });
       pageHandlers.set(name, records);
@@ -171,7 +187,8 @@ async function harness({ pathname = '/', token = '', state = snapshot(), onContr
       if (method === 'GET' && path === '/api/state') value = active;
       else if (method === 'GET' && path === '/api/replays') value = [dataset];
       else if (method === 'GET' && path === '/api/health') value = { lanEnabled: false, viewerUrls: [] };
-      else if (method === 'GET' && ['/api/hex-audit', '/api/equipment-audit'].includes(path)) value = audit;
+      else if (method === 'GET' && ['/api/hex-audit', '/api/equipment-audit', '/api/song-audit'].includes(path)) value = audit;
+      else if (method === 'GET' && path === '/api/song-lists') value = onSongLists ? await onSongLists(instance) : songLists;
       else if (method === 'POST' && path === '/api/control') {
         assert.ok(onControl, '测试没有为该控制动作设置响应');
         value = await onControl(body, instance);
@@ -500,3 +517,204 @@ test('操作台缓存恢复不重复绑定按钮，也不清除未提交轮次�
     assert.equal(app.fetches.filter(request => request.method === 'POST').length, 0);
   } finally { app.dispose(); }
 });
+
+const singingSnapshot = (overrides = {}) => snapshot({
+  mode: 'songs', seconds: 60, counting: 'messages', connection: 'connected',
+  songs: { sessionId: 'synthetic-song-session', items: [{ key: '晴天', title: '晴天', requests: 7, known: true }],
+    singles: [{ key: '小幸运', title: '小幸运', requests: 1, known: true }], totalRequests: 8, uniqueSongs: 2,
+    hiddenSingles: 2, grayCount: 0, blackCount: 0, excludedRequests: 0 }, validMessages: 8,
+  ...overrides,
+});
+const flush = () => new Promise(resolve => setImmediate(resolve));
+const buttonsIn = node => node.children.flatMap(child => typeof child === 'string' ? []
+  : [...(child.tagName === 'BUTTON' ? [child] : []), ...buttonsIn(child)]);
+
+test('点歌展示主列表和单次候选，不把最多次数显示成演唱首选', async () => {
+  const app = await harness({ pathname: '/panel', state: singingSnapshot() });
+  try {
+    assert.equal(app.get('result-title').textContent, '弹幕点歌');
+    assert.equal(app.get('leader-area').hidden, true);
+    assert.equal(app.get('hex-results').hidden, true);
+    assert.equal(app.get('equipment-results').hidden, true);
+    assert.equal(app.get('song-results').hidden, false);
+    assert.ok(app.get('song-main-list').textContent.includes('晴天7 次'));
+    assert.ok(app.get('song-single-list').textContent.includes('小幸运1 次'));
+    assert.equal(app.get('counting-label').textContent, '点歌次数');
+    assert.equal(app.get('valid-count').textContent, '2 首 · 8 次点歌');
+    assert.ok(app.get('song-recognition-note').textContent.includes('2 个仅出现一次'));
+    assert.equal(buttonsIn(app.get('song-results')).length, 0);
+  } finally { app.dispose(); }
+});
+
+test('点歌模式强制逐条计入，切回游戏保留原来的匿名口径和时长', async () => {
+  const app = await harness({ onControl: staleLoadThenPlay });
+  try {
+    await choose(app, 'round-seconds', '10');
+    await choose(app, 'counting-select', 'anonymous');
+    await choose(app, 'mode-select', 'songs');
+    assert.equal(app.get('round-seconds').value, '60');
+    assert.equal(app.get('counting-select').value, 'messages');
+    assert.equal(app.get('counting-select').disabled, true);
+    assert.equal(app.get('ai-card').hidden, true);
+    assert.ok(app.get('counting-hint').textContent.includes('次数不代表人数'));
+    assert.deepEqual(app.get('round-seconds').options.filter(item => !item.hidden).map(item => item.value), ['30', '60', '120', '180', '300']);
+    await choose(app, 'round-seconds', '120');
+    await choose(app, 'mode-select', 'equipment');
+    assert.equal(app.get('round-seconds').value, '10');
+    assert.equal(app.get('counting-select').value, 'anonymous');
+    assert.equal(app.get('counting-select').disabled, false);
+    await choose(app, 'mode-select', 'songs');
+    assert.equal(app.get('round-seconds').value, '120');
+    app.get('counting-select').value = 'anonymous';
+    await app.get('replay-play').fire('click');
+    assert.deepEqual(app.fetches.filter(item => item.method === 'POST').at(-1).body,
+      { action: 'replay-play', mode: 'songs', counting: 'messages', seconds: 120 });
+  } finally { app.dispose(); }
+});
+
+test('歌回候选回放启动点歌模式，使用候选位置和逐条计数', async () => {
+  const app = await harness({ onControl: staleLoadThenPlay, windows: [{ mode: 'songs', at: 2790, label: '下一首唱什么' }] });
+  try {
+    await choose(app, 'counting-select', 'anonymous');
+    await app.get('candidate-windows').children[0].fire('click');
+    const posts = app.fetches.filter(item => item.method === 'POST');
+    assert.equal(posts[0].body.position, 2790);
+    assert.deepEqual(posts[1].body, { action: 'replay-play', mode: 'songs', counting: 'messages', seconds: 60 });
+  } finally { app.dispose(); }
+});
+
+test('灰名单从当前歌曲行添加，带轮次校验，不需要输入歌名', async () => {
+  const gray = [];
+  const app = await harness({ state: singingSnapshot(), onSongLists: () => ({ sessionId: 'synthetic-song-session', gray, black: [] }),
+    onControl: body => {
+      assert.deepEqual(body, { action: 'song-gray-add', key: '晴天', roundId: 1 });
+      gray.push({ key: '晴天', title: '晴天' });
+      return singingSnapshot({ revision: 2, songs: { ...singingSnapshot().songs, items: [], grayCount: 1 } });
+    } });
+  try {
+    await buttonsIn(app.get('song-main-list'))[0].fire('click');
+    assert.ok(app.get('song-gray-list').textContent.includes('晴天恢复显示'));
+    assert.equal(app.get('song-main-list').textContent.includes('晴天'), false);
+    assert.equal(app.fetches.filter(item => item.method === 'POST').length, 1);
+  } finally { app.dispose(); }
+});
+
+test('换轮后旧点歌按钮拒绝添加灰名单，避免把下一轮歌曲误排除', async () => {
+  const app = await harness({ state: singingSnapshot() });
+  try {
+    const old = buttonsIn(app.get('song-main-list'))[0];
+    app.emit(singingSnapshot({ revision: 2, roundId: 2 }));
+    await old.fire('click');
+    assert.equal(app.fetches.filter(item => item.method === 'POST').length, 0);
+    assert.ok(app.get('page-error').textContent.includes('点歌轮次已变化'));
+  } finally { app.dispose(); }
+});
+
+test('黑名单提交完整歌名和期限，灰名单与黑名单分别提供移除动作', async () => {
+  const lists = { sessionId: 'synthetic-song-session', gray: [{ key: '晴天', title: '晴天' }], black: [] };
+  const actions = [];
+  const app = await harness({ state: singingSnapshot(), onSongLists: () => lists, onControl: body => {
+    actions.push(body);
+    if (body.action === 'song-black-add') lists.black.push({ key: '小幸运', title: body.title, term: body.term, expiresAt: 4070908800000 });
+    if (body.action === 'song-gray-remove') lists.gray = [];
+    if (body.action === 'song-black-remove') lists.black = [];
+    return singingSnapshot({ revision: actions.length + 1, songs: { ...singingSnapshot().songs, grayCount: lists.gray.length, blackCount: lists.black.length } });
+  } });
+  try {
+    await flush();
+    app.get('song-black-title').value = '  小幸运  ';
+    app.get('song-black-term').value = 'quarter';
+    await app.get('song-black-add').fire('click');
+    assert.deepEqual(actions[0], { action: 'song-black-add', title: '小幸运', term: 'quarter' });
+    assert.equal(app.get('song-black-title').value, '');
+    assert.ok(app.get('song-black-list').textContent.includes('小幸运'));
+    assert.match(app.get('song-black-list').textContent, /2099 年.*08：00.*北京时间/);
+    await buttonsIn(app.get('song-gray-list'))[0].fire('click');
+    await buttonsIn(app.get('song-black-list'))[0].fire('click');
+    assert.deepEqual(actions.slice(1), [{ action: 'song-gray-remove', key: '晴天', sessionId: 'synthetic-song-session' }, { action: 'song-black-remove', key: '小幸运' }]);
+  } finally { app.dispose(); }
+});
+
+test('新场歌回先确认，取消时保留次数和灰名单且不发送控制动作', async () => {
+  const cancelled = await harness({ state: singingSnapshot(), confirm: false });
+  try {
+    await cancelled.get('song-session-reset').fire('click');
+    assert.equal(cancelled.fetches.filter(item => item.method === 'POST').length, 0);
+    assert.ok(cancelled.get('song-main-list').textContent.includes('晴天'));
+  } finally { cancelled.dispose(); }
+  const app = await harness({ state: singingSnapshot(), onControl: body => {
+    assert.deepEqual(body, { action: 'song-session-reset' });
+    return singingSnapshot({ revision: 2, roundId: 2, status: 'idle', validMessages: 0,
+      songs: { ...singingSnapshot().songs, sessionId: 'new-session', items: [], singles: [], totalRequests: 0, uniqueSongs: 0, grayCount: 0 } });
+  }, onSongLists: instance => ({ sessionId: instance.fetches.some(item => item.body?.action === 'song-session-reset') ? 'new-session' : 'synthetic-song-session', gray: [], black: [] }) });
+  try {
+    await app.get('song-session-reset').fire('click');
+    assert.equal(app.get('valid-count').textContent, '0 首 · 0 次点歌');
+    assert.equal(app.get('round-status-text').textContent, '尚未开始');
+  } finally { app.dispose(); }
+});
+
+test('点歌名单的迟到响应不能覆盖新场歌回的名单', async () => {
+  let resolveOld;
+  let calls = 0;
+  const old = new Promise(resolve => { resolveOld = resolve; });
+  const app = await harness({ state: snapshot(), onSongLists: () => ++calls === 1 ? old
+    : { sessionId: 'new-session', gray: [{ key: '新场', title: '新场歌' }], black: [] } });
+  try {
+    await choose(app, 'mode-select', 'songs');
+    app.emit(singingSnapshot({ revision: 2, roundId: 2,
+      songs: { ...singingSnapshot().songs, sessionId: 'new-session' } }));
+    await flush();
+    assert.ok(app.get('song-gray-list').textContent.includes('新场歌'));
+    resolveOld({ sessionId: 'synthetic-song-session', gray: [{ key: '旧场', title: '旧场歌' }], black: [] });
+    await flush();
+    assert.equal(app.get('song-gray-list').textContent.includes('旧场歌'), false);
+    assert.ok(app.get('song-gray-list').textContent.includes('新场歌'));
+  } finally { app.dispose(); }
+});
+
+test('上一场灰名单的恢复按钮不会移除新场的同名歌曲', async () => {
+  let sessionId = 'synthetic-song-session';
+  const app = await harness({ state: singingSnapshot(), onSongLists: () => ({
+    sessionId,
+    gray: [{ key: '晴天', title: '晴天' }], black: [],
+  }) });
+  try {
+    await flush();
+    const old = buttonsIn(app.get('song-gray-list'))[0];
+    assert.ok(old);
+    sessionId = 'new-session';
+    app.emit(singingSnapshot({ revision: 2, roundId: 2,
+      songs: { ...singingSnapshot().songs, sessionId: 'new-session' } }));
+    await old.fire('click');
+    assert.equal(app.fetches.filter(item => item.method === 'POST').length, 0);
+    assert.ok(app.get('page-error').textContent.includes('已开始另一场歌回'));
+  } finally { app.dispose(); }
+});
+
+test('点歌未知原词安全呈现，点歌审计区分计入与名单排除', async () => {
+  const title = '<img src=x onerror=alert(1)>';
+  const app = await harness({ state: singingSnapshot({ songs: { ...singingSnapshot().songs,
+    singles: [{ key: 'unknown', title, requests: 1, known: false }] } }),
+    audit: { roundId: 1, mode: 'songs', samples: [{ text: '点歌晴天和小幸运', included: ['晴天'], excluded: ['小幸运'] }] } });
+  try {
+    assert.ok(app.get('song-single-list').textContent.includes(title));
+    assert.ok(app.get('song-single-list').textContent.includes('待确认'));
+    await app.get('hex-audit-refresh').fire('click');
+    assert.ok(app.fetches.some(item => new URL(item.url).pathname === '/api/song-audit'));
+    assert.ok(app.get('hex-audit-list').textContent.includes('计入点歌：晴天；名单排除：小幸运'));
+  } finally { app.dispose(); }
+});
+
+for (const [pathname, token] of [['/panel', ''], ['/', 'synthetic-viewer-token']]) {
+  test(`点歌只读页 ${pathname} 不生成歌曲管理按钮，不请求名单或审计接口`, async () => {
+    const app = await harness({ pathname, token, state: singingSnapshot() });
+    try {
+      assert.equal(buttonsIn(app.get('song-main-list')).length, 0);
+      assert.equal(buttonsIn(app.get('song-single-list')).length, 0);
+      for (const id of ['song-black-add', 'song-session-reset', 'song-lists-refresh']) assert.equal(app.get(id).handlers.size, 0);
+      assert.equal(app.fetches.some(item => /song-lists|song-audit/.test(new URL(item.url).pathname)), false);
+      assert.equal(app.fetches.filter(item => item.method === 'POST').length, 0);
+    } finally { app.dispose(); }
+  });
+}

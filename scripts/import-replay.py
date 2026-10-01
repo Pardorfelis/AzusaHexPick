@@ -42,7 +42,8 @@ def equipment_terms(text):
     return [term for term in EQUIPMENT_TERMS if term in text]
 
 
-def import_xml(path, page, salt):
+def import_xml(path, page, salt, *, bvid=BVID, duration=DURATION, expected_cid=None, dataset_id=None,
+               label=None, duration_source=None):
     if not path.is_file():
         raise FileNotFoundError('source-file-missing')
     source_bytes = path.stat().st_size
@@ -89,7 +90,8 @@ def import_xml(path, page, salt):
             headers[element.tag] = element.text
         element.clear()
     cid = int(headers.get('chatid') or 0)
-    if cid != EXPECTED_CIDS[page]:
+    expected_cid = EXPECTED_CIDS.get(page) if expected_cid is None else expected_cid
+    if expected_cid is None or cid != expected_cid:
         raise ValueError('source-cid-does-not-match-selected-page')
     messages.sort(key=lambda item: (item['at'], item['id']))
     coverage = {
@@ -113,21 +115,21 @@ def import_xml(path, page, salt):
         ],
     }
     dataset = {
-        'id': f'azusa-p{page}',
-        'label': f'P{page} 阿梓回放',
-        'bvid': BVID,
+        'id': dataset_id or f'azusa-p{page}',
+        'label': label or f'P{page} 阿梓回放',
+        'bvid': bvid,
         'page': page,
         'cid': cid,
-        'duration': DURATION,
+        'duration': duration,
         'coverage': coverage,
         'source': {
             'kind': 'user-provided-file',
             'fileName': path.name,
-            'url': f'https://www.bilibili.com/video/{BVID}/?p={page}',
+            'url': f'https://www.bilibili.com/video/{bvid}/?p={page}',
             'originalFileModified': False,
             'messageIdMethod': '会话加盐 SHA-256 截取；来源缺失时按分 P、原始行序、时间及原文生成。',
             'anonymousIdMethod': '对 XML 的 p[6] 再次会话加盐哈希；来源缺失为 null，不合并成一个观众。',
-            'durationSource': '用户指定 BV 的正常游客元数据接口，两个分 P 都为 7213 秒。',
+            'durationSource': duration_source or '用户指定 BV 的正常游客元数据接口，两个分 P 都为 7213 秒。',
         },
         'messages': messages,
     }

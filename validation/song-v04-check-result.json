@@ -1,0 +1,47 @@
+{
+  "version": "0.4.0",
+  "date": "2026-10-02",
+  "status": "passed-with-stated-scope",
+  "scope": "点歌功能、真实文件回放、名单和界面的本机验证；不代表主播长期实战验收或未知直播总体语义准确率。",
+  "liveConnectionsDuringValidation": 0,
+  "paidApiCalls": 0,
+  "catalogTitles": 2313,
+  "nodeTests": {"passed": 224, "failed": 0, "skipped": 0},
+  "pythonTests": {"passed": 39, "failed": 0},
+  "nativeWindow": {
+    "ownWindowOnly": true,
+    "foregroundUnchanged": true,
+    "clickGrayRequestVerified": true,
+    "width": 360,
+    "clickFixture": "独立窗口与本机模拟服务器，确认歌曲键、轮次及响应后更新。",
+    "runtimeWindow": {"width": 380, "height": 520, "source": "azusa-singing-p1", "songCountsMatchBrowser": true, "foregroundUnchanged": true},
+    "realGameForegroundTested": false
+  },
+  "browser": {
+    "realUiOperations": true,
+    "source": "azusa-singing-p1",
+    "startSeconds": 2790,
+    "collectSeconds": 30,
+    "replaySpeed": 1,
+    "receivedMessages": 195,
+    "recognizedSongMessages": 119,
+    "totalSongRequests": 120,
+    "mainSongs": 20,
+    "singleCandidates": 3,
+    "hiddenBareSingles": 53,
+    "grayAddAndRestore": true,
+    "blackAddAndRemove": true,
+    "blackDeadlineBeijingDateAndTime": true,
+    "readOnlyPanelHasNoControls": true,
+    "testListEntriesCleaned": true,
+    "newSessionConfirmation": "前端交互检查覆盖确认、取消及当前轮清空，HTTP 检查覆盖服务场次重置。"
+  },
+  "limits": {
+    "actualMultiHourBroadcastTested": false,
+    "actualPhoneHardwareTested": false,
+    "originalXmlModified": false,
+    "unknownBareSongNamesMayBeMissed": true,
+    "corpusAlsoUsedForCatalogExpansion": true,
+    "acceleratedClockIsNotLongDurationStabilityEvidence": true
+  }
+}

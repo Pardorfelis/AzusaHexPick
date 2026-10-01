@@ -194,6 +194,7 @@ export class AiService {
   async tick() {
     let snapshot = this.engine.snapshot();
     this._syncRound(snapshot);
+    if (snapshot.mode === 'songs') return;
     const hex = snapshot.mode === 'hex';
     if (this.busy || snapshot.status !== 'collecting' || snapshot.connection !== 'connected'
       || !(hex ? this.hexEnabled : this.enabled)) return;

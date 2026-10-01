@@ -30,9 +30,13 @@ class PackagingTests(unittest.TestCase):
                 target.write_text("fixture", encoding="utf-8")
             private_data = root / "data" / "private-account.json"
             private_data.write_text("synthetic-private", encoding="utf-8")
+            (root / "data" / "song-blacklist.json").write_text("synthetic-list", encoding="utf-8")
+            (root / "data" / "song-blacklist.json.tmp").write_text("synthetic-list", encoding="utf-8")
             (root / ".env.local").write_text("synthetic-key", encoding="utf-8")
             names = {path.relative_to(root).as_posix() for path in PACKAGE.package_files(root)}
             self.assertNotIn("data/private-account.json", names)
+            self.assertNotIn("data/song-blacklist.json", names)
+            self.assertNotIn("data/song-blacklist.json.tmp", names)
             self.assertNotIn(".env.local", names)
 
     def test_local_documents_are_excluded_from_distribution(self):

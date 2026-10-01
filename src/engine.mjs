@@ -1,5 +1,7 @@
 import { classifyEquipment, extractUnknownEquipmentCandidates, validateInterpretation } from './equipment.mjs';
 import { classifyHex, HEX_COMMANDS, validateHexInterpretation } from './hex.mjs';
+import { classifySongRequests } from './songs.mjs';
+import { SongLists } from './song-lists.mjs';
 
 const HEX = HEX_COMMANDS;
 export const HEX_AI_MIN_LOCAL_VOTES = 20;
@@ -10,9 +12,10 @@ const increment = (map, key, amount = 1) => map.set(key, (map.get(key) ?? 0) + a
 const hasSuggestion = value => ['current', 'later', 'alternatives', 'against', 'conditional'].some(key => value[key].length);
 
 export class PanelEngine {
-  constructor({ now = Date.now, dedupLimit = 20000, aiTimeoutMs = 5000, maxRecords = 2000, maxParticipants = 20000 } = {}) {
+  constructor({ now = Date.now, dedupLimit = 20000, aiTimeoutMs = 5000, maxRecords = 2000, maxParticipants = 20000,
+                songLists = null, maxSongs = 500 } = {}) {
     if (typeof now !== 'function') throw new TypeError('now must be a function');
-    for (const value of [dedupLimit, aiTimeoutMs, maxRecords, maxParticipants]) {
+    for (const value of [dedupLimit, aiTimeoutMs, maxRecords, maxParticipants, maxSongs]) {
       if (!Number.isInteger(value) || value < 1) throw new RangeError('Limits must be positive integers');
     }
     this.now = now;
@@ -20,6 +23,8 @@ export class PanelEngine {
     this.aiTimeoutMs = aiTimeoutMs;
     this.maxRecords = maxRecords;
     this.maxParticipants = maxParticipants;
+    this.maxSongs = maxSongs;
+    this.songLists = songLists ?? new SongLists({ now });
     this.seen = new Map();
     this.records = new Map();
     this.tickets = new Map();
@@ -61,14 +66,18 @@ export class PanelEngine {
     this.evictedPending = 0;
     this.supersededPending = 0;
     this.capacityLimited = false;
+    this.songMessages = new Map();
+    this.songIgnored = {};
+    this.songAuditRows = [];
+    this.songExcludedRequests = 0;
   }
 
   startRound({ mode = this.mode, counting = this.counting, seconds = this.seconds } = {}) {
-    if (!['hex', 'equipment'].includes(mode)) throw new RangeError('Unknown mode');
+    if (!['hex', 'equipment', 'songs'].includes(mode)) throw new RangeError('Unknown mode');
     if (!['messages', 'anonymous'].includes(counting)) throw new RangeError('Unknown counting mode');
     if (!Number.isFinite(seconds) || seconds < 1 || seconds > 300) throw new RangeError('seconds must be between 1 and 300');
     this.mode = mode;
-    this.counting = counting;
+    this.counting = mode === 'songs' ? 'messages' : counting;
     this.seconds = seconds;
     this.roundId += 1;
     this._clearRound();
@@ -182,8 +191,9 @@ export class PanelEngine {
     if (!Number.isFinite(at) || at < this.startedAt || at > this.now() + 1000) return { accepted: false, ignoredReason: 'invalid-receive-time' };
     if (!this._remember(id)) return { accepted: false, ignoredReason: 'duplicate-message' };
     this.receivedMessages += 1;
-    const anonymous = this._anonymous(anonymousId);
     this.latestUpdateAt = this.now();
+    if (this.mode === 'songs') return this._ingestSongs(id, text, at, replayAt);
+    const anonymous = this._anonymous(anonymousId);
     if (this.mode === 'hex') {
       const interpretation = classifyHex(text);
       const identityKey = anonymous ? `anonymous:${anonymous}` : `message:${id}`;
@@ -220,6 +230,79 @@ export class PanelEngine {
     this._applyInterpretation(record, interpretation, 'local');
     this._auditEquipment(record, interpretation, 'local');
     return { accepted: true, pending: interpretation.pending, messageKey: id };
+  }
+
+  _ingestSongs(id, text, at, replayAt) {
+    const interpretation = classifySongRequests(text);
+    const included = [];
+    const excluded = [];
+    for (const song of interpretation.songs) {
+      if (this.songLists.blocked(song.key)) {
+        this.songExcludedRequests += 1;
+        excluded.push(song.title);
+        continue;
+      }
+      if (!this.songMessages.has(song.key)) {
+        if (this.songMessages.size >= this.maxSongs) { this.capacityLimited = true; continue; }
+        this.songMessages.set(song.key, { key: song.key, title: song.title, requests: 0,
+          known: song.confidence === 'catalog', explicit: false });
+      }
+      const item = this.songMessages.get(song.key);
+      item.requests += 1;
+      item.explicit ||= song.explicit;
+      included.push(song.title);
+    }
+    if (included.length) this.validMessages += 1;
+    else {
+      const reason = excluded.length ? 'excluded' : interpretation.ignoredReason ?? 'no-song';
+      this.songIgnored[reason] = (this.songIgnored[reason] ?? 0) + 1;
+    }
+    this.songAuditRows.push({ text: text.slice(0, 160), truncated: text.length > 160,
+      included, excluded, reason: interpretation.ignoredReason ?? null, at,
+      replayAt: Number.isFinite(replayAt) ? replayAt : null });
+    if (this.songAuditRows.length > 20) this.songAuditRows.shift();
+    return { accepted: true, pending: false, messageKey: id, songs: included };
+  }
+
+  songAudit() {
+    return { roundId: this.roundId, mode: this.mode, limit: 20,
+      samples: this.songAuditRows.map(row => ({ ...row, included: [...row.included], excluded: [...row.excluded] })) };
+  }
+
+  songSnapshot() {
+    this.songLists.prune();
+    const visible = [...this.songMessages.values()].filter(row => !this.songLists.blocked(row.key));
+    const items = visible.filter(row => row.requests >= 2)
+      .sort((a, b) => b.requests - a.requests || a.title.localeCompare(b.title, 'zh-CN'));
+    const singles = visible.filter(row => row.requests === 1 && row.explicit);
+    const publicRow = ({ key, title, requests, known }) => ({ key, title, requests, known });
+    return { items: items.map(publicRow), singles: singles.map(publicRow),
+      totalRequests: visible.reduce((total, row) => total + row.requests, 0), uniqueSongs: items.length + singles.length,
+      hiddenSingles: visible.filter(row => row.requests === 1 && !row.explicit).length,
+      grayCount: this.songLists.gray.size, blackCount: this.songLists.black.size,
+      excludedRequests: this.songExcludedRequests, sessionId: this.songLists.sessionId,
+      ignoredByReason: { ...this.songIgnored }, limit: this.maxSongs };
+  }
+
+  addSongGray(key, roundId) {
+    if (this.mode !== 'songs' || !Number.isInteger(roundId) || roundId !== this.roundId)
+      throw new Error('点歌轮次已变化，请从当前列表重新选择。');
+    const snapshot = this.songSnapshot();
+    const item = [...snapshot.items, ...snapshot.singles].find(row => row.key === key);
+    if (!item) throw new Error('歌曲已不在当前列表，请刷新后重试。');
+    this.songLists.addGray(item);
+  }
+
+  resetSongSession() {
+    this.songLists.resetSession();
+    if (this.mode === 'songs') {
+      this.roundId += 1;
+      this._clearRound();
+      this.status = 'idle';
+      this.startedAt = this.endsAt = null;
+      this.lockReason = null;
+      this.latestUpdateAt = this.now();
+    }
   }
 
   _applyHexVote(record, command, tier) {
@@ -381,7 +464,7 @@ export class PanelEngine {
     const pendingCount = [...this.records.values()].filter(record => ['pending', 'processing', 'unresolved'].includes(record.status)).length;
     return {
       roundId: this.roundId, mode: this.mode, counting: this.counting,
-      countingLabel: this.counting === 'messages' ? '有效弹幕条数' : '按匿名标识去重（实验）',
+      countingLabel: this.mode === 'songs' ? '点歌次数（允许重复点歌）' : this.counting === 'messages' ? '有效弹幕条数' : '按匿名标识去重（实验）',
       experimentalIdentity: this.counting === 'anonymous', status: this.status, connection: this.connection,
       source: this.source, startedAt: this.startedAt, endsAt: this.endsAt,
       remainingMs: this.endsAt === null ? 0 : Math.max(0, this.endsAt - this.now()),
@@ -399,6 +482,7 @@ export class PanelEngine {
         unknown: this._unknownEquipment() },
       equipmentDiagnostics: { byTier: { ...this.equipmentTiers }, ignoredByReason: { ...this.equipmentIgnored },
         pendingCount, unknownMinimumMentions: 3 },
+      songs: this.songSnapshot(),
       limitations: ['纯数字新消息可能回复旧画面，轮次清空不能可靠排除旧票。',
         '匿名标识去重不是精确人数，未获得身份的消息不会计入匿名票。'],
     };

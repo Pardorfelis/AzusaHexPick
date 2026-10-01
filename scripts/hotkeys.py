@@ -24,6 +24,7 @@ KEYS = (
     (1, 0x76, "F7", {"action": "round", "mode": "hex"}),
     (2, 0x77, "F8", {"action": "round", "mode": "equipment"}),
     (3, 0x78, "F9", {"action": "lock"}),
+    (4, 0x75, "F6", {"action": "round", "mode": "songs", "seconds": 60, "counting": "messages"}),
 )
 
 

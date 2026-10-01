@@ -26,6 +26,13 @@ let pageSuspended = false;
 let lifecycleBound = false;
 let auditRoundId = null;
 let auditMode = null;
+let lastSongSignature = '';
+let songLists = null;
+let songListRequestId = 0;
+let lastSongListState = '';
+let formMode = 'hex';
+let gameDraft = { counting: 'messages', seconds: '20' };
+let songSeconds = '60';
 
 function apiUrl(path) {
   const url = new URL(path, location.origin);
@@ -70,7 +77,42 @@ function parsePosition(value) {
 }
 
 function roundOptions() {
-  return { mode: byId('mode-select').value, counting: byId('counting-select').value, seconds: Number(byId('round-seconds').value) };
+  const mode = byId('mode-select').value;
+  return { mode, counting: mode === 'songs' ? 'messages' : byId('counting-select').value, seconds: Number(byId('round-seconds').value) };
+}
+
+function configureMode(fromUser = false) {
+  if (readOnly) return;
+  const mode = byId('mode-select').value;
+  const songs = mode === 'songs';
+  if (fromUser && mode !== formMode) {
+    if (songs) {
+      gameDraft = { counting: byId('counting-select').value, seconds: byId('round-seconds').value };
+      byId('round-seconds').value = songSeconds;
+    } else if (formMode === 'songs') {
+      songSeconds = byId('round-seconds').value;
+      byId('counting-select').value = gameDraft.counting;
+      byId('round-seconds').value = gameDraft.seconds;
+    }
+  }
+  formMode = mode;
+  if (songs) byId('counting-select').value = 'messages';
+  const durations = songs ? [30, 60, 120, 180, 300] : [10, 15, 20, 30, 60];
+  for (const option of byId('round-seconds').options || []) {
+    option.hidden = !durations.includes(Number(option.value));
+    option.disabled = option.hidden;
+  }
+  if (!durations.includes(Number(byId('round-seconds').value))) byId('round-seconds').value = songs ? '60' : '20';
+  byId('song-management-card').hidden = !songs;
+  byId('ai-card').hidden = songs;
+  if (songs) byId('hex-audit-area').hidden = true;
+  text('counting-field-label', songs ? '点歌口径' : '计票口径');
+  text('counting-messages-option', songs ? '按点歌次数（重复发送也计入）' : '按有效弹幕条数');
+  text('counting-hint', songs ? '按点歌次数记录。同一观众多次点同一首歌，也会逐条计入；次数不代表人数。'
+    : '去重模式取同一匿名标识的最新建议，不能称为精确观众人数。');
+  text('round-note', songs ? '新一轮清空点歌次数，保留本场灰名单。准备下一场歌回时再清空灰名单。'
+    : '刷新技能后请开始新轮。延迟到达的旧建议仍可能混入。');
+  refreshControls();
 }
 
 function replaySelection() {
@@ -86,11 +128,12 @@ function replaySelection() {
 function syncForm(snapshot) {
   if (!snapshot || busy || readOnly) return;
   if (!settingsDirty && (!settingsInitialized || snapshot.roundId !== lastRoundId)) {
-    byId('mode-select').value = snapshot.mode === 'equipment' ? 'equipment' : 'hex';
-    byId('counting-select').value = snapshot.counting === 'anonymous' ? 'anonymous' : 'messages';
-    if ([10, 15, 20, 30, 60].includes(Number(snapshot.seconds))) byId('round-seconds').value = String(snapshot.seconds);
+    byId('mode-select').value = ['equipment', 'songs'].includes(snapshot.mode) ? snapshot.mode : 'hex';
+    byId('counting-select').value = snapshot.mode !== 'songs' && snapshot.counting === 'anonymous' ? 'anonymous' : 'messages';
+    if ([10, 15, 20, 30, 60, 120, 180, 300].includes(Number(snapshot.seconds))) byId('round-seconds').value = String(snapshot.seconds);
     settingsInitialized = true;
     lastRoundId = snapshot.roundId;
+    configureMode();
   }
   if (!aiDraftDirty) {
     byId('ai-model').value = snapshot.ai?.model || 'deepseek-v4-pro';
@@ -167,6 +210,7 @@ function refreshControls() {
   byId('stop-source').disabled = blocked || !current || current.sourceKind === 'none';
   byId('new-round').disabled = blocked || current?.connection !== 'connected';
   byId('lock-round').disabled = blocked || current?.status !== 'collecting';
+  byId('counting-select').disabled = blocked || byId('mode-select').value === 'songs';
   const aiBlocked = blocked || !current?.ai?.configured || Boolean(current?.ai?.costUnknown) || Boolean(current?.ai?.busy);
   byId('ai-enabled').disabled = aiBlocked;
   byId('hex-ai-enabled').disabled = aiBlocked;
@@ -182,10 +226,11 @@ function renderCandidates() {
   for (const candidate of Array.isArray(dataset.windows) ? dataset.windows : []) {
     const button = element('button', 'candidate-button');
     button.type = 'button';
-    button.append(element('span', 'candidate-time', formatPosition(candidate.at, true)), element('span', '', candidate.label || (candidate.mode === 'hex' ? '数字建议片段' : '装备建议片段')));
+    button.append(element('span', 'candidate-time', formatPosition(candidate.at, true)), element('span', '', candidate.label || (candidate.mode === 'songs' ? '点歌片段' : candidate.mode === 'hex' ? '数字建议片段' : '装备建议片段')));
     button.addEventListener('click', () => perform(async () => {
       byId('replay-position').value = formatPosition(candidate.at);
-      byId('mode-select').value = candidate.mode === 'equipment' ? 'equipment' : 'hex';
+      byId('mode-select').value = ['equipment', 'songs'].includes(candidate.mode) ? candidate.mode : 'hex';
+      configureMode(true);
       positionDirty = true;
       settingsDirty = true;
       const selection = replaySelection();
@@ -253,12 +298,18 @@ function update(snapshot) {
   if (!snapshot || typeof snapshot !== 'object') return;
   if (serviceOnline && current && Number.isFinite(snapshot.revision) && Number.isFinite(current.revision) && snapshot.revision < current.revision) return;
   current = snapshot;
+  if (!readOnly && songLists && snapshot.songs?.sessionId && songLists.sessionId !== snapshot.songs.sessionId) {
+    songLists = null;
+    byId('song-gray-list').replaceChildren();
+    byId('song-black-list').replaceChildren();
+  }
   lastReceivedAt = performance.now();
   lastSnapshotAt = number(snapshot.now);
   serviceOnline = true;
   syncForm(snapshot);
   render();
   refreshControls();
+  refreshSongListsIfChanged();
 }
 
 function sourceLabel() {
@@ -304,6 +355,110 @@ function renderEquipment(top3, against, unknown) {
   }));
 }
 
+function renderSongs() {
+  const songs = current.songs || {};
+  const items = Array.isArray(songs.items) ? songs.items : [];
+  const singles = Array.isArray(songs.singles) ? songs.singles : [];
+  const signature = JSON.stringify([current.roundId, songs.sessionId, items, singles]);
+  if (signature !== lastSongSignature) {
+    lastSongSignature = signature;
+    const roundId = current.roundId;
+    const sessionId = songs.sessionId;
+    const createRow = item => {
+      const row = element('div', 'song-request-row');
+      const name = element('div', 'song-request-name');
+      name.append(element('span', 'song-title', item.title));
+      if (!item.known) name.append(element('span', 'song-unconfirmed', '待确认'));
+      row.append(name, element('span', 'song-request-count', `${number(item.requests)} 次`));
+      if (!readOnly) {
+        const button = element('button', 'text-button song-gray-action operator-only', '本场不再显示');
+        button.type = 'button';
+        button.setAttribute('aria-label', `${item.title}，本场不再显示`);
+        button.addEventListener('click', () => perform(async () => {
+          if (current?.mode !== 'songs' || current.roundId !== roundId || current.songs?.sessionId !== sessionId) {
+            throw new Error('点歌轮次已变化，请在当前列表重新选择歌曲。');
+          }
+          await control('song-gray-add', { key: item.key, roundId });
+          await loadSongLists();
+        }));
+        row.append(button);
+      }
+      return row;
+    };
+    byId('song-main-list').replaceChildren(...items.map(createRow));
+    if (!items.length) byId('song-main-list').append(element('div', 'song-empty', '还没有重复出现的点歌，单次候选也可以选。'));
+    byId('song-single-list').replaceChildren(...singles.map(createRow));
+    byId('song-singles-area').hidden = !singles.length;
+  }
+  const hidden = number(songs.hiddenSingles);
+  text('song-recognition-note', `明确点歌出现 1 次即可进入候选；裸歌名重复后才展示。「待确认」保留观众原词。${hidden ? `另有 ${hidden} 个仅出现一次的裸歌名暂未展示。` : ''}`);
+  text('song-exclusions', `本场灰名单 ${number(songs.grayCount)} 首 · 黑名单 ${number(songs.blackCount)} 首 · 本轮排除 ${number(songs.excludedRequests)} 次点歌`);
+}
+
+function renderSongLists() {
+  if (readOnly || !songLists) return;
+  const listRow = (item, kind) => {
+    const row = element('div', 'song-managed-row');
+    const name = element('div', 'song-managed-name');
+    name.append(element('span', '', item.title));
+    if (kind === 'black') {
+      const date = item.expiresAt ? new Date(item.expiresAt) : null;
+      const expiry = date && Number.isFinite(date.getTime())
+        ? `至 ${date.toLocaleDateString('zh-CN', { timeZone: 'Asia/Shanghai', year: 'numeric', month: 'long', day: 'numeric' }).replace(/(\d+)([年月日])/g, '$1 $2 ')}${date.toLocaleTimeString('zh-CN', { timeZone: 'Asia/Shanghai', hour: '2-digit', minute: '2-digit', hour12: false }).replace(':', '：')}（北京时间）` : '永久';
+      name.append(element('span', 'song-managed-expiry', expiry));
+    }
+    const sessionId = songLists.sessionId;
+    const remove = element('button', 'text-button', kind === 'gray' ? '恢复显示' : '移出黑名单');
+    remove.type = 'button';
+    remove.setAttribute('aria-label', `${item.title}，${remove.textContent}`);
+    remove.addEventListener('click', () => perform(async () => {
+      if (kind === 'gray' && current?.songs?.sessionId && current.songs.sessionId !== sessionId) {
+        throw new Error('已开始另一场歌回，请刷新名单后再操作。');
+      }
+      await control(`song-${kind}-remove`, { key: item.key, ...(kind === 'gray' ? { sessionId } : {}) });
+      await loadSongLists();
+    }));
+    row.append(name, remove);
+    return row;
+  };
+  for (const kind of ['gray', 'black']) {
+    const items = Array.isArray(songLists[kind]) ? songLists[kind] : [];
+    const list = byId(`song-${kind}-list`);
+    list.replaceChildren(...items.map(item => listRow(item, kind)));
+    if (!items.length) list.append(element('p', 'field-hint', kind === 'gray' ? '本场还没有加入灰名单的歌。' : '目前没有拉黑的歌。'));
+  }
+  refreshControls();
+}
+
+async function loadSongLists() {
+  if (readOnly || byId('mode-select').value !== 'songs') return;
+  const requestId = ++songListRequestId;
+  const sessionId = current?.songs?.sessionId;
+  text('song-lists-status', '正在读取本机名单…');
+  try {
+    const value = await request('/api/song-lists');
+    if (requestId !== songListRequestId || byId('mode-select').value !== 'songs'
+      || (sessionId && sessionId !== current?.songs?.sessionId)
+      || (current?.songs?.sessionId && value.sessionId !== current.songs.sessionId)) return;
+    songLists = value;
+    renderSongLists();
+    text('song-lists-status', value.warning || '名单仅保存在本机。黑名单到期后会自动移除。');
+  } catch (error) {
+    if (requestId === songListRequestId && byId('mode-select').value === 'songs') {
+      text('song-lists-status', error.message || '名单暂时无法读取，请重试。');
+    }
+  }
+}
+
+function refreshSongListsIfChanged() {
+  if (readOnly || busy || byId('mode-select').value !== 'songs') return;
+  const songs = current?.songs || {};
+  const signature = JSON.stringify([songs.sessionId, songs.grayCount, songs.blackCount]);
+  if (signature === lastSongListState) return;
+  lastSongListState = signature;
+  loadSongLists();
+}
+
 function renderClock() {
   if (!current) return;
   const elapsed = Math.max(0, performance.now() - lastReceivedAt);
@@ -326,17 +481,20 @@ function render() {
   byId('service-dot').className = 'status-dot ' + (serviceOnline ? 'good' : 'bad');
   if (!current) { renderError(); return; }
   const equipmentMode = current.mode === 'equipment';
-  text('result-title', equipmentMode ? '出装建议' : '海克斯技能');
+  const songMode = current.mode === 'songs';
+  byId('result-card').classList.toggle('song-mode', songMode);
+  text('result-title', songMode ? '弹幕点歌' : equipmentMode ? '出装建议' : '海克斯技能');
   text('round-label', number(current.roundId) ? `第 ${current.roundId} 轮` : '尚未开始一轮');
   text('result-source', sourceLabel());
-  text('counting-label', current.countingLabel || '有效弹幕条数');
-  text('valid-count', `${number(current.validMessages)} 条有效建议`);
+  text('counting-label', songMode ? '点歌次数' : current.countingLabel || '有效弹幕条数');
+  text('valid-count', songMode ? `${number(current.songs?.uniqueSongs)} 首 · ${number(current.songs?.totalRequests)} 次点歌` : `${number(current.validMessages)} 条有效建议`);
   text('flow-counts', serviceOnline && current.connection === 'connected'
-    ? `收到 ${number(current.receivedMessages)} · 计入 ${number(current.validMessages)} · 未决 ${number(current.pendingTotal ?? current.pendingCount)}`
+    ? `收到 ${number(current.receivedMessages)} · ${songMode ? '点歌弹幕' : '计入'} ${number(current.validMessages)} · 未决 ${number(current.pendingTotal ?? current.pendingCount)}`
     : '收到 — · 计入 — · 未决 —');
   const tiers = current.hexDiagnostics?.byTier || {};
   const equipmentTiers = current.equipmentDiagnostics?.byTier || {};
-  text('hex-rule-summary', equipmentMode ? `本地明确分类 ${number(equipmentTiers.local)} · AI ${number(equipmentTiers.ai)}，前三项仅显示当前购买。`
+  text('hex-rule-summary', songMode ? '本地整理点歌。重复发送逐条计入，单次明确点歌保留为候选；灰名单和黑名单会排除。'
+    : equipmentMode ? `本地明确分类 ${number(equipmentTiers.local)} · AI ${number(equipmentTiers.ai)}，前三项仅显示当前购买。`
     : `纯指令 ${number(tiers.exact)} · 重复数字 ${number(tiers.repeated)} · 明确短句 ${number(tiers.phrase)} · AI ${number(tiers.ai)}`);
   if (auditRoundId !== null && (auditRoundId !== current.roundId || auditMode !== current.mode)) {
     byId('hex-audit-area').hidden = true;
@@ -344,9 +502,11 @@ function render() {
     auditRoundId = null;
     auditMode = null;
   }
-  byId('hex-results').hidden = equipmentMode;
+  byId('leader-area').hidden = songMode;
+  byId('hex-results').hidden = equipmentMode || songMode;
   byId('equipment-results').hidden = !equipmentMode;
-  const rows = equipmentMode ? (current.equipment?.top3 || []) : (current.hex || []);
+  byId('song-results').hidden = !songMode;
+  const rows = songMode ? [] : equipmentMode ? (current.equipment?.top3 || []) : (current.hex || []);
   const maximum = Math.max(0, ...rows.map((item) => number(item.votes)));
   const leaders = maximum > 0 ? rows.filter((item) => number(item.votes) === maximum) : [];
   const name = leaders.map((item) => equipmentMode ? item.name : item.key.endsWith('d') ? hexNames[item.key] : item.key).join('、');
@@ -356,7 +516,8 @@ function render() {
   byId('leader-name').classList.toggle('tie', leaders.length > 1);
   const voteUnit = current.counting === 'anonymous' ? '个匿名标识' : '条弹幕';
   text('leader-detail', maximum > 0 ? `每项 ${maximum} ${voteUnit}${leaders.length > 1 ? ' · 暂无单一领先项' : ''}` : current.status === 'collecting' ? '已收到的明确建议会立即显示。' : '开始一轮后，结果会在这里更新。');
-  if (equipmentMode) renderEquipment(rows, current.equipment?.against || [],
+  if (songMode) renderSongs();
+  else if (equipmentMode) renderEquipment(rows, current.equipment?.against || [],
     current.connection === 'connected' && serviceOnline ? current.equipment?.unknown || [] : []);
   else renderHex(rows, maximum);
   text('pending-count', number(current.pendingTotal ?? current.pendingCount));
@@ -370,7 +531,7 @@ function render() {
   const warning = !serviceOnline ? '服务连接中断，保留的结果已过期。' : current.connection === 'error' ? '来源连接异常，当前结果不再更新。' : current.status === 'paused' || (current.sourceKind === 'replay' && current.source?.state === 'paused' && current.roundId) ? '来源暂停，结果保留供回看。请重新开始一轮。' : '';
   byId('result-warning').hidden = !warning;
   text('result-warning', warning);
-  byId('identity-warning').hidden = current.counting !== 'anonymous' || !number(current.missingIdentityMessages);
+  byId('identity-warning').hidden = songMode || current.counting !== 'anonymous' || !number(current.missingIdentityMessages);
   text('identity-warning', `${number(current.missingIdentityMessages)} 条建议缺少匿名标识，未计入去重结果。`);
   byId('capacity-warning').hidden = !current.capacityLimited;
   text('helper-status', current.helperConnected ? '助手已连接' : '助手未启动');
@@ -401,7 +562,7 @@ function render() {
 function bindControls() {
   byId('hex-audit-refresh').addEventListener('click', () => perform(async () => {
     const mode = current?.mode;
-    const audit = await request(mode === 'equipment' ? '/api/equipment-audit' : '/api/hex-audit');
+    const audit = await request(mode === 'songs' ? '/api/song-audit' : mode === 'equipment' ? '/api/equipment-audit' : '/api/hex-audit');
     if (audit.roundId !== current?.roundId || current?.mode !== mode) throw new Error('轮次已变化，请重新查看识别依据。');
     const reasons = { support: '已计入', ambiguous: '未决', against: '反对，不加支持票', multi: '多选或动作混合',
       retrospective: '回顾，不计当前建议', ordinary: '普通数字聊天', superseded: '已有更新建议，旧解释不采用', ai: 'AI 确认' };
@@ -412,7 +573,10 @@ function bindControls() {
       const categories = [['current', '现在买'], ['against', '反对'], ['later', '后续'], ['alternatives', '备选'], ['conditional', '条件']];
       const equipmentLabel = categories.filter(([key]) => row[key]?.length)
         .map(([key, label]) => label + '：' + row[key].join('、')).join('；');
-      const label = mode === 'equipment'
+      const songLabel = [row.included?.length ? '计入点歌：' + row.included.join('、') : '',
+        row.excluded?.length ? '名单排除：' + row.excluded.join('、') : ''].filter(Boolean).join('；');
+      const label = mode === 'songs' ? songLabel || '未识别为点歌'
+        : mode === 'equipment'
         ? (row.reason === 'superseded' ? reasons.superseded : equipmentLabel || (row.pending ? '未决，暂不计入当前购买' : '未计入')) + ` · ${row.via === 'ai' ? 'AI' : '本地'}`
         : row.command ? `${hexNames[row.command] || row.command} · ${tiers[row.tier] || '识别'}` : reasons[row.reason] || '未计入';
       item.append(element('span', 'hex-audit-label', label), element('span', 'hex-audit-text', String(row.text ?? '') + (row.truncated ? '…' : '')));
@@ -420,7 +584,7 @@ function bindControls() {
     }));
     auditRoundId = audit.roundId;
     auditMode = mode;
-    text('hex-audit-status', samples.length ? `最近最多 20 条${mode === 'equipment' ? '装备' : '数字及刷新'}相关样本，仅本机可读；不是完整日志。` : '本轮暂无相关识别样本。');
+    text('hex-audit-status', samples.length ? `最近最多 20 条${mode === 'songs' ? '点歌识别' : mode === 'equipment' ? '装备' : '数字及刷新'}相关样本，仅本机可读；不是完整日志。` : '本轮暂无相关识别样本。');
     byId('hex-audit-area').hidden = false;
   }));
   byId('replay-tab').addEventListener('click', () => selectSource('replay'));
@@ -428,7 +592,13 @@ function bindControls() {
   byId('dataset-select').addEventListener('change', () => { positionDirty = true; renderCandidates(); });
   byId('replay-position').addEventListener('input', () => { positionDirty = true; });
   byId('replay-speed').addEventListener('change', () => { positionDirty = true; });
-  for (const id of ['mode-select', 'round-seconds', 'counting-select']) byId(id).addEventListener('change', () => { settingsDirty = true; });
+  byId('mode-select').addEventListener('change', () => {
+    settingsDirty = true;
+    configureMode(true);
+    if (byId('mode-select').value === 'songs') refreshSongListsIfChanged();
+    else { ++songListRequestId; lastSongListState = ''; }
+  });
+  for (const id of ['round-seconds', 'counting-select']) byId(id).addEventListener('change', () => { settingsDirty = true; });
   byId('replay-load').addEventListener('click', () => perform(() => loadReplay(replaySelection())));
   byId('replay-play').addEventListener('click', () => perform(async () => {
     const selection = replaySelection();
@@ -453,6 +623,20 @@ function bindControls() {
     return control('round', options);
   }));
   byId('lock-round').addEventListener('click', () => perform(() => control('lock')));
+  byId('song-lists-refresh').addEventListener('click', () => perform(() => loadSongLists()));
+  byId('song-session-reset').addEventListener('click', () => perform(async () => {
+    if (!window.confirm('开始新场歌回会清空当前点歌结果和本场灰名单，黑名单会保留。继续吗？')) return;
+    await control('song-session-reset');
+    await loadSongLists();
+  }));
+  byId('song-black-add').addEventListener('click', () => perform(async () => {
+    const title = byId('song-black-title').value.trim();
+    if (!title) throw new Error('请先填写要暂时拉黑的歌名。');
+    const term = byId('song-black-term').value;
+    await control('song-black-add', { title, term });
+    if (byId('song-black-title').value.trim() === title) byId('song-black-title').value = '';
+    await loadSongLists();
+  }));
   byId('ai-enabled').addEventListener('change', () => perform(() => {
     aiDraftDirty = true;
     const selection = { enabled: byId('ai-enabled').checked, model: byId('ai-model').value };

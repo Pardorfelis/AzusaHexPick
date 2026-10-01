@@ -1,0 +1,68 @@
+{
+  "bvid": "BV1boaW6PEqz",
+  "originalFilesModified": false,
+  "identitySaltSaved": false,
+  "networkRequestsDuringImport": 0,
+  "datasets": [
+    {
+      "id": "azusa-singing-p1",
+      "page": 1,
+      "cid": 42314237532,
+      "sourceBytes": 991976,
+      "messages": 9600,
+      "singingMessages": 8211,
+      "duration": 7196,
+      "singingStartAt": 2790,
+      "coverage": {
+        "kind": "user-provided-jijidown-xml",
+        "sourceRows": 9600,
+        "retainedMessages": 9600,
+        "skippedRows": 0,
+        "truncated": false,
+        "firstAtSeconds": 2357.18,
+        "lastAtSeconds": 7194.986,
+        "xmlHeaderMaxlimit": "8000",
+        "missingAnonymousIdentity": 0,
+        "fallbackMessageIds": 0,
+        "description": "解析用户提供的弹幕文件，时间相对各自分 P；不代表全部直播原始弹幕。",
+        "limitations": [
+          "文件可能包含回放观看弹幕或直播弹幕转存，无法据此保证原始直播全量覆盖。",
+          "XML 的 maxlimit 仅作为原始元数据保留，不解释为实际条数或抓取方式。",
+          "匿名标识依据文件中的匿名来源再次加盐哈希，不能据此保证精确观众人数。",
+          "每次重新导入使用新盐；不同导入之间的匿名标识不能关联。",
+          "各分 P 的时间独立；切换分 P 或回放跳转时应清空当前轮次。"
+        ]
+      }
+    },
+    {
+      "id": "azusa-singing-p2",
+      "page": 2,
+      "cid": 42314237970,
+      "sourceBytes": 654101,
+      "messages": 6368,
+      "singingMessages": 6368,
+      "duration": 5535,
+      "singingStartAt": 0,
+      "coverage": {
+        "kind": "user-provided-jijidown-xml",
+        "sourceRows": 6368,
+        "retainedMessages": 6368,
+        "skippedRows": 0,
+        "truncated": false,
+        "firstAtSeconds": 2.236,
+        "lastAtSeconds": 5533.382,
+        "xmlHeaderMaxlimit": "8000",
+        "missingAnonymousIdentity": 0,
+        "fallbackMessageIds": 0,
+        "description": "解析用户提供的弹幕文件，时间相对各自分 P；不代表全部直播原始弹幕。",
+        "limitations": [
+          "文件可能包含回放观看弹幕或直播弹幕转存，无法据此保证原始直播全量覆盖。",
+          "XML 的 maxlimit 仅作为原始元数据保留，不解释为实际条数或抓取方式。",
+          "匿名标识依据文件中的匿名来源再次加盐哈希，不能据此保证精确观众人数。",
+          "每次重新导入使用新盐；不同导入之间的匿名标识不能关联。",
+          "各分 P 的时间独立；切换分 P 或回放跳转时应清空当前轮次。"
+        ]
+      }
+    }
+  ]
+}

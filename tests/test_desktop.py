@@ -7,7 +7,9 @@ import queue
 import sys
 import threading
 import time
+from types import SimpleNamespace
 import unittest
+from unittest.mock import patch
 
 SCRIPTS = Path(__file__).resolve().parents[1] / "scripts"
 if str(SCRIPTS) not in sys.path:
@@ -31,7 +33,7 @@ def state(mode="hex", **extra):
     return {"snapshot": snapshot, "sourceKind": "live"}
 
 
-def capture_draw(view, width=380):
+def capture_draw(view, width=380, return_panel=False):
     class Font:
         def measure(self, label):
             return len(label) * 7
@@ -44,11 +46,13 @@ def capture_draw(view, width=380):
     panel.canvas = Canvas()
     panel.statistics_fonts = {9: Font(), 10: Font()}
     panel.helper_status = {"message": "快捷键未启用。", "active": False}
+    panel.song_pending = set()
+    panel.song_commands = queue.Queue(maxsize=16)
     texts, boxes = [], []
     panel.text = lambda x, y, label, size=12, color="text", **options: texts.append((x, y, label, size, options))
     panel.box = lambda rectangle, *args, **options: boxes.append(rectangle)
     panel.draw(view)
-    return texts, boxes
+    return (texts, boxes, panel) if return_panel else (texts, boxes)
 
 
 class ViewTests(unittest.TestCase):
@@ -294,6 +298,136 @@ class ViewTests(unittest.TestCase):
         self.assertEqual(desktop.choose_position(monitors[:1]), (1516, 24))
         self.assertEqual(desktop.choose_position([]), (1516, 24))
 
+    def test_song_mode_keeps_low_counts_and_explicit_singles_separate(self):
+        songs = {"items": [{"key": "a", "title": "晴天", "requests": 80, "known": True},
+                            {"key": "b", "title": "听海", "requests": 2, "known": True},
+                            {"key": "not-main", "title": "不进主列表", "requests": 1}],
+                 "singles": [{"key": "c", "title": "今晚想听的歌", "requests": 1, "known": False},
+                             {"key": "not-single", "title": "不是单次", "requests": 2}],
+                 "totalRequests": 83, "uniqueSongs": 3, "grayCount": 4, "blackCount": 2,
+                 "hiddenSingles": 6, "excludedRequests": 7}
+        view = desktop.build_view(state("songs", songs=songs, validMessages=83, receivedMessages=100))
+        self.assertEqual(view["mode"], "songs")
+        self.assertEqual([item["key"] for item in view["songs"]["items"]], ["a", "b"])
+        self.assertEqual([item["key"] for item in view["songs"]["singles"]], ["c"])
+        self.assertEqual(view["leader"], "歌曲由你挑选")
+        self.assertEqual(view["leaders"], [])
+        self.assertEqual(view["leader_votes"], 0)
+        self.assertEqual(view["songs"]["grayCount"], 4)
+        self.assertEqual(view["counting"], "每条点歌均计入")
+        texts, _boxes = capture_draw(view)
+        labels = [item[2] for item in texts]
+        self.assertIn("点歌列表 · 2 次及以上", labels)
+        self.assertIn("单次候选 · 明确点歌", labels)
+        self.assertIn("听海", labels)
+        self.assertTrue(any(label.startswith("待确认 · ") for label in labels))
+        self.assertFalse(any("80 票" in label or "获胜" in label for label in labels))
+
+    def test_song_disconnect_hides_stale_choices_and_locked_round_retains_them(self):
+        songs = {"items": [{"key": "a", "title": "晴天", "requests": 2, "known": True}], "singles": []}
+        for view in (desktop.build_view(state("songs", songs=songs), online=False),
+                     desktop.build_view(state("songs", songs=songs, connection="disconnected", status="paused"))):
+            self.assertEqual(view["songs"]["items"], [])
+            self.assertEqual(desktop.song_entries(view), [])
+            self.assertEqual(desktop.song_page(view, 0, desktop.layout())["rows"], [])
+            self.assertFalse(any("晴天" in item[2] for item in capture_draw(view)[0]))
+        locked = desktop.build_view(state("songs", songs=songs, status="locked", lockReason="manual"))
+        self.assertEqual(locked["songs"]["items"][0]["key"], "a")
+        self.assertEqual(locked["status"], "本轮已锁定")
+        self.assertEqual(desktop.build_view(state("songs", songs=[]))["songs"]["items"], [])
+
+    def test_song_scroll_reaches_every_main_and_single_candidate_at_all_widths(self):
+        songs = {"items": [{"key": f"main-{index}", "title": f"歌曲 {index}", "requests": 20 - index, "known": True} for index in range(12)],
+                 "singles": [{"key": f"single-{index}", "title": f"候选 {index}", "requests": 1, "known": False} for index in range(9)]}
+        view = desktop.build_view(state("songs", songs=songs))
+        expected = {item["key"] for name in ("items", "singles") for item in view["songs"][name]}
+        for width in (360, 380, 640):
+            metrics = desktop.layout(width)
+            maximum = desktop.song_page(view, 9999, metrics)["maxOffset"]
+            shown = set()
+            for offset in range(maximum + 1):
+                page = desktop.song_page(view, offset, metrics)
+                self.assertLessEqual(len(page["rows"]), desktop.SONG_VISIBLE_ROWS)
+                for item in page["rows"]:
+                    left, top, right, bottom = item["rectangle"]
+                    self.assertGreaterEqual(left, 16)
+                    self.assertLessEqual(right, width - 16)
+                    self.assertLess(bottom, metrics["footer"][1])
+                    if item["kind"] == "song":
+                        shown.add(item["key"])
+            self.assertEqual(shown, expected)
+            self.assertEqual(desktop.song_page(view, -2, metrics)["offset"], 0)
+        texts = capture_draw(view, 360)[0]
+        self.assertTrue(any(item[2] == "梓有妙选｜Azusa HexPick" for item in texts))
+        self.assertTrue(any(item[2] == "溣符雨 · 维护" for item in texts))
+
+    def test_song_click_uses_displayed_key_and_round_and_never_the_row_index(self):
+        songs = {"items": [{"key": f"main-{index}", "title": f"歌曲 {index}", "requests": 2, "known": True} for index in range(10)],
+                 "singles": [{"key": "last-single", "title": "最后的单次候选", "requests": 1, "known": True}]}
+        view = desktop.build_view(state("songs", songs=songs))
+        _texts, _boxes, panel = capture_draw(view, return_panel=True)
+        panel.move_song_page(1000)
+        last = panel.song_visible_page["rows"][-1]
+        left, top, right, bottom = last["button"]
+        event = SimpleNamespace(x=(left + right) / 2, y=(top + bottom) / 2)
+        panel.press(event)
+        action = panel.song_commands.get_nowait()
+        self.assertEqual(action, {"action": "song-gray-add", "key": "last-single", "roundId": 3})
+        self.assertEqual(panel.song_pending, {(3, "last-single")})
+        self.assertEqual(panel.last_view["songs"]["singles"][0]["key"], "last-single")
+        panel.press(event)
+        self.assertTrue(panel.song_commands.empty())
+        self.assertIsNone(desktop.song_control_at(panel.song_visible_page, view, 20, event.y))
+        disconnected = desktop.build_view(state("songs", songs=songs), online=False)
+        self.assertIsNone(desktop.song_control_at(panel.song_visible_page, disconnected, event.x, event.y))
+        panel.finish_song_control(action, False)
+        self.assertEqual(panel.song_pending, set())
+        self.assertIn("略过失败", panel.song_control_message)
+        panel.finish_song_control(action, True)
+        self.assertIn("已加入", panel.song_control_message)
+        self.assertEqual(panel.last_view["songs"]["singles"][0]["key"], "last-single")
+
+    def test_song_scroll_resets_on_new_round_and_button_can_page_without_wheel(self):
+        songs = {"items": [{"key": f"main-{index}", "title": f"歌曲 {index}", "requests": 2} for index in range(20)]}
+        view = desktop.build_view(state("songs", songs=songs))
+        _texts, _boxes, panel = capture_draw(view, return_panel=True)
+        left, top, right, bottom = panel.metrics["song_next"]
+        panel.press(SimpleNamespace(x=(left + right) / 2, y=(top + bottom) / 2))
+        self.assertEqual(panel.song_scroll, 3)
+        panel.scroll_songs(SimpleNamespace(delta=-120, y=240))
+        self.assertEqual(panel.song_scroll, 6)
+        panel.scroll_songs(SimpleNamespace(delta=-120, y=30))
+        self.assertEqual(panel.song_scroll, 6)
+        next_round = desktop.build_view(state("songs", songs=songs, roundId=4))
+        panel.draw(next_round)
+        self.assertEqual(panel.song_scroll, 0)
+
+    def test_song_gray_http_runs_on_worker_and_errors_reach_ui_without_local_removal(self):
+        action = {"action": "song-gray-add", "key": "晴天", "roundId": 3}
+        panel = desktop.DesktopPanel.__new__(desktop.DesktopPanel)
+        panel.stop_event = threading.Event()
+        panel.song_commands = queue.Queue()
+        panel.queue = queue.Queue(maxsize=32)
+        panel.options = SimpleNamespace(port=5180)
+        panel.song_commands.put(action)
+        calls = []
+        def rejected(payload, port):
+            calls.append((payload, port, threading.get_ident()))
+            raise OSError("拒绝过期轮次。")
+        with patch.object(desktop, "post_control", rejected):
+            worker = threading.Thread(target=panel.song_control_worker)
+            worker.start()
+            try:
+                kind, payload = panel.queue.get(timeout=1)
+                self.assertEqual(kind, "song-control")
+                self.assertEqual(payload, (action, False))
+                self.assertEqual(calls[0][:2], (action, 5180))
+                self.assertNotEqual(calls[0][2], threading.get_ident())
+            finally:
+                panel.stop_event.set()
+                worker.join(timeout=1)
+        self.assertFalse(worker.is_alive())
+
 
 class FakeResponse:
     status = 200
@@ -366,11 +500,12 @@ class HotkeyTests(unittest.TestCase):
         self.assertNotEqual(first, hotkeys.mutex_name(project / "another-project", 5178))
         self.assertNotIn(str(project), first)
 
-    def test_mapping_uses_f7_f8_f9_and_returns_fresh_control_objects(self):
-        self.assertEqual([(item[0], item[1]) for item in hotkeys.KEYS], [(1, 0x76), (2, 0x77), (3, 0x78)])
+    def test_mapping_adds_f6_and_preserves_f7_f8_f9_and_fresh_control_objects(self):
+        self.assertEqual([(item[0], item[1]) for item in hotkeys.KEYS], [(1, 0x76), (2, 0x77), (3, 0x78), (4, 0x75)])
         self.assertEqual(hotkeys.control_for_key(1), {"action": "round", "mode": "hex"})
         self.assertEqual(hotkeys.control_for_key(2), {"action": "round", "mode": "equipment"})
         self.assertEqual(hotkeys.control_for_key(3), {"action": "lock"})
+        self.assertEqual(hotkeys.control_for_key(4), {"action": "round", "mode": "songs", "seconds": 60, "counting": "messages"})
         copy = hotkeys.control_for_key(1)
         copy["mode"] = "changed"
         self.assertEqual(hotkeys.control_for_key(1)["mode"], "hex")
@@ -394,6 +529,10 @@ class HotkeyTests(unittest.TestCase):
             with self.assertRaises(ValueError):
                 hotkeys.post_control({"action": "lock"}, invalid, opener=opener)
         self.assertEqual(len(calls), 1)
+        action = {"action": "song-gray-add", "key": "song:晴天", "roundId": 3}
+        hotkeys.post_control(action, port=5180, opener=opener)
+        self.assertEqual(json.loads(calls[1][0].data), action)
+        self.assertEqual(calls[1][0].get_header("X-panel-control"), "1")
 
     def test_redirects_are_not_followed(self):
         handler = hotkeys.NoRedirect()
@@ -408,12 +547,24 @@ class HotkeyTests(unittest.TestCase):
         self.assertFalse(helper.active)
         self.assertFalse(statuses[0]["active"])
         self.assertIn("F8", statuses[0]["message"])
-        self.assertEqual(sorted(api.unregistered), [1, 3])
-        self.assertEqual(helper.registered_count, 2)
-        self.assertEqual(helper.released_count, 2)
+        self.assertEqual(sorted(api.unregistered), [1, 3, 4])
+        self.assertEqual(helper.registered_count, 3)
+        self.assertEqual(helper.released_count, 3)
         self.assertTrue(helper.cleanup_complete.is_set())
         self.assertEqual(posts, [])
         self.assertIsNone(helper.heartbeat_thread)
+
+    def test_song_hotkey_conflict_releases_all_legacy_registrations(self):
+        api = FakeHotkeyAPI(fail=4)
+        statuses = []
+        helper = hotkeys.HotkeyHelper(on_status=statuses.append, api_factory=lambda: api, post=lambda *_args: None).start()
+        helper.thread.join(timeout=1)
+        self.assertFalse(helper.active)
+        self.assertIn("F6", statuses[0]["message"])
+        self.assertEqual(sorted(api.unregistered), [1, 2, 3])
+        self.assertEqual(helper.registered_count, 3)
+        self.assertEqual(helper.released_count, 3)
+        self.assertTrue(helper.cleanup_complete.is_set())
 
     def test_registered_keys_send_heartbeat_and_actions_then_unregister_on_stop(self):
         api = FakeHotkeyAPI()
@@ -429,19 +580,23 @@ class HotkeyTests(unittest.TestCase):
             heartbeat = posts[0][0]
             self.assertEqual(heartbeat["action"], "helper-heartbeat")
             self.assertTrue(heartbeat["active"])
-            self.assertEqual(heartbeat["registered"], 3)
+            self.assertEqual(heartbeat["registered"], 4)
             self.assertEqual(heartbeat["status"], "keys-registered")
             received.clear()
             api.events.put(3)
             self.assertTrue(received.wait(0.5))
             self.assertTrue(any(action == {"action": "lock"} for action, _port in posts))
+            received.clear()
+            api.events.put(4)
+            self.assertTrue(received.wait(0.5))
+            self.assertTrue(any(action == {"action": "round", "mode": "songs", "seconds": 60, "counting": "messages"} for action, _port in posts))
         finally:
             helper.stop()
         self.assertFalse(helper.active)
         self.assertEqual(api.quit_threads, [123])
-        self.assertEqual(sorted(api.unregistered), [1, 2, 3])
-        self.assertEqual(helper.registered_count, 3)
-        self.assertEqual(helper.released_count, 3)
+        self.assertEqual(sorted(api.unregistered), [1, 2, 3, 4])
+        self.assertEqual(helper.registered_count, 4)
+        self.assertEqual(helper.released_count, 4)
         self.assertTrue(helper.cleanup_complete.is_set())
         before = len(posts)
         helper.enqueue({"action": "round", "mode": "hex"})

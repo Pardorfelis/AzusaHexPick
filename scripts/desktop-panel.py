@@ -1,4 +1,4 @@
-"""副屏只读面板，后台取快照，Tk 主线程绘图，窗口不激活。"""
+"""副屏建议面板，后台取快照及提交操作，Tk 主线程绘图，窗口不激活。"""
 
 import argparse
 import ctypes
@@ -15,7 +15,7 @@ import tkinter as tk
 from tkinter import font as tkfont
 from urllib.request import ProxyHandler, Request, build_opener
 
-from hotkeys import HotkeyHelper, NoRedirect, ProjectMutex, ServerReachability, port_number
+from hotkeys import KEYS, HotkeyHelper, NoRedirect, ProjectMutex, ServerReachability, port_number, post_control
 
 COLORS = {"background": "#0e1125", "card": "#171a32", "border": "#30304d", "text": "#efedf8", "muted": "#b0abc8", "credit": "#868cac", "purple": "#a782ff", "teal": "#5eead4", "amber": "#fbbf24", "red": "#fb7185"}
 HEX_PRIMARY_KEYS = ("1", "2", "3", "1d", "2d", "3d")
@@ -24,6 +24,7 @@ HEX_KEYS = HEX_PRIMARY_KEYS + HEX_EXTRA_KEYS
 HEX_LABELS = {"1": "选 1", "2": "选 2", "3": "选 3", "1d": "刷新 1", "2d": "刷新 2", "3d": "刷新 3",
               "12d": "刷新 1＋2", "13d": "刷新 1＋3", "23d": "刷新 2＋3", "d": "全部刷新"}
 PANEL_HEIGHT = 520
+SONG_VISIBLE_ROWS = 7
 
 
 def nonnegative(value):
@@ -105,6 +106,10 @@ def layout(width=380):
                          margin + index * (small_cell + small_gap) + small_cell, 386) for index in range(4)],
         "equipment": [(16, 214 + index * 44, width - 16, 250 + index * 44) for index in range(3)],
         "unknown_y": (344, 362), "against_y": 381,
+        "song_summary": (16, 76, width - 16, 135),
+        "song_list": (16, 171, width - 16, 388),
+        "song_previous": (width - 76, 141, width - 47, 165),
+        "song_next": (width - 45, 141, width - 16, 165),
         "footer": (16, 399, width - 16, 456), "helper_y": 471,
     }
 
@@ -113,7 +118,7 @@ def build_view(state, online=True, elapsed_ms=0):
     state = state if isinstance(state, dict) else {}
     snapshot = state.get("snapshot", state)
     snapshot = snapshot if isinstance(snapshot, dict) else {}
-    mode = "equipment" if snapshot.get("mode") == "equipment" else "hex"
+    mode = snapshot.get("mode") if snapshot.get("mode") in ("equipment", "songs") else "hex"
     connected = online and snapshot.get("connection") == "connected"
     status = str(snapshot.get("status", "idle"))
     remaining = max(0, nonnegative(snapshot.get("remainingMs")) - nonnegative(elapsed_ms))
@@ -135,7 +140,7 @@ def build_view(state, online=True, elapsed_ms=0):
         indexed = {str(item.get("key")): item for item in raw if isinstance(item, dict)}
         items = [{"key": key, "label": str(indexed.get(key, {}).get("label") or HEX_LABELS[key]),
                   "votes": nonnegative(indexed.get(key, {}).get("votes")) if connected else 0} for key in HEX_KEYS]
-    else:
+    elif mode == "equipment":
         equipment = snapshot.get("equipment", {})
         equipment = equipment if isinstance(equipment, dict) else {}
         raw = equipment.get("top3", [])
@@ -153,6 +158,10 @@ def build_view(state, online=True, elapsed_ms=0):
         leader = "并列：" + "／".join(leaders)
     else:
         leader = f"{len(leaders)} 项并列"
+    if mode == "songs" and connected:
+        leader = "歌曲由你挑选"
+        leaders = []
+        maximum = 0
     equipment = snapshot.get("equipment", {})
     against = equipment.get("against", []) if isinstance(equipment, dict) else []
     against = against if isinstance(against, list) else []
@@ -174,13 +183,66 @@ def build_view(state, online=True, elapsed_ms=0):
     received = nonnegative(snapshot["receivedMessages"]) if connected and "receivedMessages" in snapshot else None
     included = nonnegative(snapshot["validMessages"]) if connected and "validMessages" in snapshot else None
     unresolved = nonnegative(pending) if connected and pending is not None else None
+    raw_songs = snapshot.get("songs", {})
+    raw_songs = raw_songs if isinstance(raw_songs, dict) else {}
+    songs = {name: nonnegative(raw_songs.get(name)) for name in
+             ("totalRequests", "uniqueSongs", "hiddenSingles", "grayCount", "blackCount", "excludedRequests")}
+    for name in ("items", "singles"):
+        rows = raw_songs.get(name, [])
+        songs[name] = []
+        if mode == "songs" and connected and isinstance(rows, list):
+            for item in rows:
+                if not isinstance(item, dict) or not isinstance(item.get("key"), str) or not item["key"].strip() or not isinstance(item.get("title"), str) or not item["title"].strip():
+                    continue
+                requests = nonnegative(item.get("requests"))
+                qualified = requests >= 2 if name == "items" else requests == 1
+                if qualified:
+                    songs[name].append({"key": item["key"], "title": item["title"].strip()[:200],
+                                        "requests": requests, "known": item.get("known") is True})
     return {"mode": mode, "round": nonnegative(snapshot.get("roundId")), "connected": connected,
             "status": status_label, "expired": expired, "source": source_label, "leader": leader,
             "leaders": leaders if connected else [], "leader_votes": maximum if connected else 0,
             "items": items, "remaining": math.ceil(remaining / 1000) if connected and status == "collecting" and not expired else None,
             "pending": nonnegative(snapshot.get("pendingCount")) if connected else 0,
             "received": received, "included": included, "unresolved": unresolved,
-            "counting": str(snapshot.get("countingLabel") or "有效弹幕条数"), "against": against_label, "unknown": unknown}
+            "counting": "每条点歌均计入" if mode == "songs" else str(snapshot.get("countingLabel") or "有效弹幕条数"),
+            "against": against_label, "unknown": unknown, "songs": songs}
+
+
+def song_entries(view):
+    """两个区均可完整滚动，单次候选不会因排名靠后而无法查看。"""
+    if not view.get("connected") or view.get("mode") != "songs":
+        return []
+    entries = []
+    for name, label in (("items", "点歌列表 · 2 次及以上"), ("singles", "单次候选 · 明确点歌")):
+        items = view["songs"][name]
+        if items:
+            entries.append({"kind": "heading", "label": label})
+            entries.extend({"kind": "song", **item} for item in items)
+    return entries
+
+
+def song_page(view, offset, metrics):
+    entries = song_entries(view)
+    maximum = max(0, len(entries) - SONG_VISIBLE_ROWS)
+    offset = min(maximum, nonnegative(offset))
+    left, top, right, _bottom = metrics["song_list"]
+    visible = []
+    for index, item in enumerate(entries[offset:offset + SONG_VISIBLE_ROWS]):
+        rectangle = (left, top + index * 31, right, top + index * 31 + 29)
+        visible.append({**item, "rectangle": rectangle,
+                        "button": (right - 60, rectangle[1], right, rectangle[3])})
+    return {"rows": visible, "offset": offset, "maxOffset": maximum, "total": len(entries)}
+
+
+def song_control_at(page, view, x, y):
+    if view.get("mode") != "songs" or not view.get("connected"):
+        return None
+    for item in page["rows"]:
+        left, top, right, bottom = item["button"]
+        if item["kind"] == "song" and left <= x <= right and top <= y <= bottom:
+            return {"action": "song-gray-add", "key": item["key"], "roundId": view["round"]}
+    return None
 
 
 class WinPanelAPI:
@@ -351,9 +413,16 @@ class DesktopPanel:
         self.helper_status = {"active": False, "message": "快捷键未启用。" if options.no_hotkeys else "快捷键准备中。"}
         self.helper = None
         self.drag_start = None
+        self.song_scroll = 0
+        self.song_view_identity = None
+        self.song_pending = set()
+        self.song_control_message = ""
+        self.song_control_until = 0
+        self.song_commands = queue.Queue(maxsize=16)
         self.canvas.bind("<Button-1>", self.press)
         self.canvas.bind("<B1-Motion>", self.drag)
         self.canvas.bind("<ButtonRelease-1>", lambda _event: setattr(self, "drag_start", None))
+        self.canvas.bind("<MouseWheel>", self.scroll_songs)
         self.root.protocol("WM_DELETE_WINDOW", self.close)
         self.draw(build_view({}, online=False))
         # 直接以不激活方式显示，避免 Tk 的 deiconify 在 Windows 上主动请求焦点。
@@ -361,6 +430,7 @@ class DesktopPanel:
         if not options.no_hotkeys:
             self.helper = HotkeyHelper(options.port, lambda status: self.push(("helper", status))).start()
         threading.Thread(target=self.poll_state, name="panel-state-http", daemon=True).start()
+        threading.Thread(target=self.song_control_worker, name="panel-song-http", daemon=True).start()
         self.root.after(50, self.update)
         if options.smoke_test:
             self.root.after(3000, self.close)
@@ -395,6 +465,25 @@ class DesktopPanel:
                 self.push(("error", time.monotonic()))
             self.stop_event.wait(0.25)
 
+    def song_control_worker(self):
+        while not self.stop_event.is_set():
+            try:
+                action = self.song_commands.get(timeout=0.25)
+            except queue.Empty:
+                continue
+            if self.stop_event.is_set():
+                return
+            try:
+                post_control(action, self.options.port)
+                self.push(("song-control", (action, True)))
+            except (OSError, ValueError):
+                self.push(("song-control", (action, False)))
+
+    def finish_song_control(self, action, successful):
+        self.song_pending.discard((action["roundId"], action["key"]))
+        self.song_control_message = "已加入本场灰名单。" if successful else "略过失败，请确认轮次与连接后重试。"
+        self.song_control_until = time.monotonic() + (4 if successful else 10)
+
     def update(self):
         if self.closed:
             return
@@ -416,6 +505,8 @@ class DesktopPanel:
                 self.server_health.failure(payload)
             elif kind == "helper":
                 self.helper_status = payload
+            elif kind == "song-control":
+                self.finish_song_control(*payload)
         elapsed = (time.monotonic() - self.last_received) * 1000 if self.last_received is not None else 0
         online = self.online and elapsed < 2000
         self.draw(build_view(self.state, online=online, elapsed_ms=elapsed))
@@ -432,12 +523,17 @@ class DesktopPanel:
 
     def draw(self, view):
         self.canvas.delete("all")
+        self.last_view = view
         self.text(16, 13, "梓有妙选｜Azusa HexPick", 13, bold=True)
         self.text(self.width - 19, 12, "×", 18, "muted", anchor="ne")
-        title = "海克斯选择" if view["mode"] == "hex" else "出装建议"
+        title = {"hex": "海克斯选择", "equipment": "出装建议", "songs": "弹幕点歌"}[view["mode"]]
         self.text(16, 49, f"{title} · 第 {view['round']} 轮", 10, "muted")
         source_color = "amber" if view["source"] == "回放验证" else "teal"
         self.text(self.width - 16, 49, view["source"], 10, source_color, anchor="ne")
+        if view["mode"] == "songs":
+            self.draw_songs(view)
+            self.draw_footer(view)
+            return
         self.box(self.metrics["leader"], "purple" if view["connected"] else "red")
         status_text = view["status"] + (f" · 剩余 {view['remaining']} 秒" if view["remaining"] is not None else "")
         self.text(28, 87, status_text, 10, "teal" if view["connected"] else "red")
@@ -473,6 +569,47 @@ class DesktopPanel:
                     self.text(16, self.metrics["unknown_y"][0], "待确认：暂无重复原词", 9, "muted")
             against = fit_one_line(view["against"], self.width - 32, self.statistics_fonts[9].measure)
             self.text(16, self.metrics["against_y"], against, 9, "amber")
+        self.draw_footer(view)
+
+    def draw_songs(self, view):
+        identity = (view["mode"], view["round"])
+        if identity != getattr(self, "song_view_identity", None):
+            self.song_scroll = 0
+            self.song_view_identity = identity
+        self.song_visible_page = song_page(view, getattr(self, "song_scroll", 0), self.metrics)
+        self.song_scroll = self.song_visible_page["offset"]
+        self.box(self.metrics["song_summary"], "purple" if view["connected"] else "red")
+        status = view["status"] + (f" · 剩余 {view['remaining']} 秒" if view["remaining"] is not None else "")
+        self.text(28, 87, status, 10, "teal" if view["connected"] else "red")
+        songs = view["songs"]
+        counts = f"点歌 {format_votes(songs['totalRequests'])} 次 · 本场略过 {format_votes(songs['grayCount'])} 首 · 拉黑 {format_votes(songs['blackCount'])} 首"
+        if not view["connected"]:
+            counts = "连接恢复后显示本轮点歌。"
+        self.text(28, 112, fit_one_line(counts, self.width - 56, self.statistics_fonts[9].measure), 9, "muted")
+        self.text(16, 148, "自主挑歌 · 点击略过仅限本场", 9, "muted")
+        for name, symbol in (("song_previous", "↑"), ("song_next", "↓")):
+            left, top, right, _bottom = self.metrics[name]
+            self.box(self.metrics[name])
+            self.text((left + right) / 2, top + 3, symbol, 11, "teal", anchor="n")
+        rows = self.song_visible_page["rows"]
+        if not rows:
+            message = "等待点歌弹幕" if view["connected"] else "等待恢复统计"
+            self.text(28, 208, message, 15, "muted")
+            self.text(28, 243, "主列表：2 次起；明确点歌 1 次进候选区。", 9, "muted", width=self.width - 56)
+        for item in rows:
+            left, top, right, _bottom = item["rectangle"]
+            if item["kind"] == "heading":
+                self.text(left + 10, top + 7, item["label"], 9, "muted")
+                continue
+            self.box(item["rectangle"])
+            title = ("待确认 · " if not item["known"] else "") + item["title"]
+            title = fit_one_line(title, self.width - 144, self.statistics_fonts[9].measure)
+            self.text(left + 10, top + 6, title, 9, "text" if item["known"] else "amber")
+            self.text(right - 66, top + 6, format_votes(item["requests"]), 10, "purple", anchor="ne")
+            pending = (view["round"], item["key"]) in getattr(self, "song_pending", set())
+            self.text(right - 9, top + 6, "提交中" if pending else "略过", 9, "muted" if pending else "teal", anchor="ne")
+
+    def draw_footer(self, view):
         self.text(16, 402, view["counting"], 10, "muted")
         self.text(self.width - 16, 402, "溣符雨 · 维护", 9, "credit", anchor="ne")
         summary = statistics_line(view)
@@ -480,12 +617,43 @@ class DesktopPanel:
         self.text(16, 425, summary, summary_size, "muted")
         helper = self.helper_status.get("message", "快捷键不可用")
         helper_ok = self.helper_status.get("active") and "不可达" not in helper
+        if view["mode"] == "songs" and getattr(self, "song_control_until", 0) > time.monotonic():
+            helper = self.song_control_message
+            helper_ok = helper.startswith("已加入")
         self.text(16, 452, helper, 9, "teal" if helper_ok else "amber", width=self.width - 32)
-        self.text(16, 480, "Ctrl + Alt + F7：新海克斯轮", 9, "muted")
-        self.text(16, 498, "F8：新出装轮　F9：锁定（均需 Ctrl + Alt）", 9, "muted")
+        self.text(16, 480, "Ctrl + Alt：F6 点歌　F7 海克斯", 9, "muted")
+        self.text(16, 498, "F8 出装　F9 锁定 · 点歌列表可滚轮翻页", 9, "muted")
+
+    def move_song_page(self, change):
+        page = self.song_visible_page
+        self.song_scroll = min(page["maxOffset"], max(0, page["offset"] + change))
+        self.draw(self.last_view)
+
+    def scroll_songs(self, event):
+        if getattr(self, "last_view", {}).get("mode") != "songs" or not 141 <= event.y <= 388 or not event.delta:
+            return
+        self.move_song_page(3 if event.delta < 0 else -3)
 
     def press(self, event):
         if event.y > 44:
+            view = getattr(self, "last_view", {})
+            if view.get("mode") != "songs":
+                return
+            for name, change in (("song_previous", -3), ("song_next", 3)):
+                left, top, right, bottom = self.metrics[name]
+                if left <= event.x <= right and top <= event.y <= bottom:
+                    self.move_song_page(change)
+                    return
+            action = song_control_at(self.song_visible_page, view, event.x, event.y)
+            if action and (action["roundId"], action["key"]) not in self.song_pending:
+                try:
+                    self.song_commands.put_nowait(action)
+                    self.song_pending.add((action["roundId"], action["key"]))
+                    self.song_control_message = "正在加入本场灰名单……"
+                    self.song_control_until = time.monotonic() + 5
+                except queue.Full:
+                    self.song_control_message = "操作过快，请稍候重试。"
+                    self.song_control_until = time.monotonic() + 5
             return
         if event.x >= self.width - 40:
             self.close()
@@ -529,7 +697,7 @@ class DesktopPanel:
                 print(json.dumps(diagnostic), flush=True)
             successful = diagnostic["foregroundUnchanged"] and diagnostic["serverConnected"] and mapped and visible and (captured or not self.options.capture)
             if not self.options.no_hotkeys:
-                successful = successful and active and registered == 3 and released == 3 and keys_released
+                successful = successful and active and registered == len(KEYS) and released == len(KEYS) and keys_released
             self.exit_code = 0 if successful else 2
 
     def run(self):
@@ -538,7 +706,7 @@ class DesktopPanel:
 
 
 def main():
-    parser = argparse.ArgumentParser(description="阿梓副屏只读建议面板")
+    parser = argparse.ArgumentParser(description="梓有妙选副屏建议面板")
     parser.add_argument("--port", type=int, default=5178)
     parser.add_argument("--width", type=int, default=380)
     parser.add_argument("--x", type=int)
