@@ -18,7 +18,7 @@
 
 v0.5.0 统一操作台、网页副屏与 Windows 桌面副屏的视觉风格：以阿梓代表色为强调色，桌面来源与轮次设置并排，结果固定在右侧。使用六幅指定素材，项目名称旁展示阿梓 logo，桌面窗保留紧凑的计票表与歌曲列表。点歌名单、AI 设置及手机链接仍在原页面中。维护署名采用粉色强调，两张操作台动图可暂停。界面素材及字体来源见 [素材说明](public/assets/README.md)。
 
-此版本发布在 [design/v0.5.0 分支](https://github.com/Pardorfelis/AzusaHexPick/tree/design/v0.5.0)，main 保留原界面。切回 main 或 v0.4.0 标签可比较旧版。两个版本使用同一个端口，请先停止正在运行的服务。
+此版本发布在 [ui_design 分支](https://github.com/Pardorfelis/AzusaHexPick/tree/design/v0.5.0)，main 保留原界面。切回 main 或 v0.4.0 标签可比较旧版。两个版本使用同一个端口，请先停止正在运行的服务。
 
 ## 启动
 
