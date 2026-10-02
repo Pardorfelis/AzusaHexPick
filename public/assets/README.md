@@ -7,7 +7,7 @@
 | azusa-snack.jpg | Azitouxiang2.jpg | 操作台来源标题与静态替代图 |
 | azusa-brand.png | 阿梓 logo.png | 操作台项目名称旁 |
 | azusa-computer.png | 阿梓 侧边挂件.png | 桌面副屏结果旁与网页空状态 |
-| azusa-panel-brand.png | 新logo阿梓.png | 桌面副屏模式标题旁 |
+| azusa-panel-brand.png | 新logo阿梓.png | 桌面副屏右下角 |
 | azusa-cheer.gif | 800动图.gif | 操作台来源状态旁 |
 | azusa-sing.gif | 阿梓 同人3.gif | 操作台歌回名单标题旁 |
 

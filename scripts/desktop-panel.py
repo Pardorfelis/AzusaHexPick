@@ -564,10 +564,9 @@ class DesktopPanel:
         self.canvas.create_line(self.width - 28, 15, self.width - 16, 27, fill=COLORS["muted"], width=1.5)
         self.canvas.create_line(self.width - 28, 27, self.width - 16, 15, fill=COLORS["muted"], width=1.5)
         self.canvas.create_line(16, 39, self.width - 16, 39, fill=COLORS["border"])
-        self.artwork("logo", 16, 42)
         title = {"hex": "海克斯选择", "equipment": "出装建议", "songs": "弹幕点歌"}[view["mode"]]
-        title_line = fit_one_line(f"{title} · 第 {view['round']} 轮", self.width - 220, self.statistics_fonts[10].measure)
-        self.text(132, 49, title_line, 10, "text", bold=True)
+        title_line = fit_one_line(f"{title} · 第 {view['round']} 轮", self.width - 112, self.statistics_fonts[10].measure)
+        self.text(16, 49, title_line, 10, "text", bold=True)
         source_color = "amber" if view["source"] == "回放验证" else "teal"
         self.text(self.width - 16, 49, view["source"], 10, source_color, anchor="ne")
         if view["mode"] == "songs":
@@ -631,7 +630,8 @@ class DesktopPanel:
         if not view["connected"]:
             counts = "连接恢复后显示本轮点歌。"
         self.text(summary_x, 112, fit_one_line(counts, self.width - summary_x - 28, self.statistics_fonts[9].measure), 9, "muted")
-        self.text(16, 148, "自主挑歌 · 点击略过仅限本场", 9, "muted")
+        self.text(16, 140, "自主挑歌 · 点击略过仅限本场", 9, "muted")
+        self.text(16, 156, "点歌列表可滚轮翻页", 9, "muted")
         for name, symbol in (("song_previous", "↑"), ("song_next", "↓")):
             left, top, right, _bottom = self.metrics[name]
             self.box(self.metrics[name])
@@ -672,7 +672,8 @@ class DesktopPanel:
             helper_ok = helper.startswith("已加入")
         self.text(16, 452, helper, 9, "teal" if helper_ok else "amber", width=self.width - 32)
         self.text(16, 480, "Ctrl＋Alt：F6 点歌　F7 海克斯", 9, "muted")
-        self.text(16, 498, "F8 出装　F9 锁定 · 点歌列表可滚轮翻页", 9, "muted")
+        self.text(16, 498, "F8 出装　F9 锁定", 9, "muted")
+        self.artwork("logo", self.width - 120, 479)
 
     def move_song_page(self, change):
         page = self.song_visible_page
