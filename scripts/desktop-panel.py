@@ -31,7 +31,7 @@ def artwork_sample(crop, bounds):
     return max(1, math.ceil(max(width / bounds[0], height / bounds[1])))
 
 
-def load_artwork(root):
+def load_artwork(root, zoom=1):
     images = {}
     assets = Path(__file__).resolve().parent.parent / "public" / "assets"
     for key, (name, crop, bounds) in ARTWORK.items():
@@ -39,7 +39,7 @@ def load_artwork(root):
             original = tk.PhotoImage(master=root, file=str(assets / name))
             content = tk.PhotoImage(master=root)
             content.tk.call(str(content), "copy", str(original), "-from", *crop)
-            sample = artwork_sample(crop, bounds)
+            sample = artwork_sample(crop, tuple(size * zoom for size in bounds))
             images[key] = content.subsample(sample, sample)
         except (OSError, tk.TclError):
             continue
@@ -50,8 +50,62 @@ HEX_EXTRA_KEYS = ("12d", "13d", "23d", "d")
 HEX_KEYS = HEX_PRIMARY_KEYS + HEX_EXTRA_KEYS
 HEX_LABELS = {"1": "选 1", "2": "选 2", "3": "选 3", "1d": "刷新 1", "2d": "刷新 2", "3d": "刷新 3",
               "12d": "刷新 1＋2", "13d": "刷新 1＋3", "23d": "刷新 2＋3", "d": "全部刷新"}
-PANEL_HEIGHT = 520
-SONG_VISIBLE_ROWS = 7
+PANEL_HEIGHT = 560
+SONG_ROW_HEIGHT = 38
+DISPLAY_DEFAULTS = {"width": 480, "height": 760, "zoom": 1.25}
+
+
+def display_settings(value, max_width=2560, max_height=2160):
+    """尺寸与字号独立，先保证最小布局，再限制在可用屏幕内。"""
+    value = value if isinstance(value, dict) else {}
+    raw_zoom = value.get("zoom", DISPLAY_DEFAULTS["zoom"])
+    try:
+        zoom = float(raw_zoom)
+        if isinstance(raw_zoom, bool) or not math.isfinite(zoom):
+            raise ValueError()
+    except (ValueError, TypeError, OverflowError):
+        zoom = DISPLAY_DEFAULTS["zoom"]
+    maximum_zoom = max(1, math.floor(min(2, max_width / 360, max_height / PANEL_HEIGHT) * 4) / 4)
+    zoom = min(maximum_zoom, max(1, round(zoom * 4) / 4))
+    result = {"zoom": zoom}
+    for name, minimum, maximum in (("width", 360, max_width), ("height", PANEL_HEIGHT, max_height)):
+        raw = value.get(name, DISPLAY_DEFAULTS[name])
+        number = nonnegative(raw)
+        number = number or DISPLAY_DEFAULTS[name]
+        result[name] = max(math.ceil(minimum * zoom), min(maximum, number))
+    return result
+
+
+def read_display_settings(path):
+    try:
+        if path.stat().st_size > 4096:
+            return dict(DISPLAY_DEFAULTS)
+        return display_settings(json.loads(path.read_text(encoding="utf-8")))
+    except (OSError, ValueError, TypeError):
+        return dict(DISPLAY_DEFAULTS)
+
+
+def write_display_settings(path, value):
+    path.parent.mkdir(parents=True, exist_ok=True)
+    temporary = path.with_suffix(".tmp")
+    temporary.write_text(json.dumps(display_settings(value)), encoding="utf-8")
+    temporary.replace(path)
+
+
+def resize_edge(x, y, width, height):
+    horizontal = "w" if x <= 7 else "e" if x >= width - 7 else ""
+    vertical = "n" if y <= 7 else "s" if y >= height - 7 else ""
+    if x >= width - 22 and y >= height - 22:
+        return "se"
+    return vertical + horizontal
+
+
+def resized_rectangle(start, edge, dx, dy, minimum, maximum):
+    x, y, width, height = start
+    new_width = min(maximum[0], max(minimum[0], width + (dx if "e" in edge else -dx if "w" in edge else 0)))
+    new_height = min(maximum[1], max(minimum[1], height + (dy if "s" in edge else -dy if "n" in edge else 0)))
+    return (x + width - new_width if "w" in edge else x,
+            y + height - new_height if "n" in edge else y, new_width, new_height)
 
 
 def nonnegative(value):
@@ -118,14 +172,15 @@ def choose_position(monitors, width=380, height=PANEL_HEIGHT):
     return x, y
 
 
-def layout(width=380):
-    width = max(360, min(640, int(width)))
+def layout(width=380, height=PANEL_HEIGHT):
+    width = max(360, min(2560, int(width)))
+    height = max(PANEL_HEIGHT, min(2160, int(height)))
     margin, gap = 16, 0
     cell = (width - margin * 2 - gap * 2) / 3
     small_gap = 0
     small_cell = (width - margin * 2 - small_gap * 3) / 4
     return {
-        "width": width, "height": PANEL_HEIGHT,
+        "width": width, "height": height,
         "header": (0, 0, width, 44), "leader": (16, 76, width - 16, 182),
         "cards": [(margin + (index % 3) * (cell + gap), 214 + (index // 3) * 62,
                    margin + ((index % 3) + 1) * (width - margin * 2) / 3, 276 + (index // 3) * 62) for index in range(6)],
@@ -134,10 +189,14 @@ def layout(width=380):
         "equipment": [(16, 214 + index * 44, width - 16, 250 + index * 44) for index in range(3)],
         "unknown_y": (344, 362), "against_y": 381,
         "song_summary": (16, 76, width - 16, 135),
-        "song_list": (16, 171, width - 16, 388),
+        "song_list": (16, 171, width - 16, height - 150),
+        "song_rows": max(1, (height - 150 - 171) // SONG_ROW_HEIGHT),
         "song_previous": (width - 76, 141, width - 47, 165),
         "song_next": (width - 45, 141, width - 16, 165),
-        "footer": (16, 399, width - 16, 456), "helper_y": 471,
+        "footer": (16, height - 139, width - 16, height - 79),
+        "zoom_out": (68, height - 76, 100, height - 44),
+        "zoom_in": (160, height - 76, 192, height - 44),
+        "zoom_reset": (206, height - 76, 256, height - 44),
     }
 
 
@@ -251,12 +310,13 @@ def song_entries(view):
 
 def song_page(view, offset, metrics):
     entries = song_entries(view)
-    maximum = max(0, len(entries) - SONG_VISIBLE_ROWS)
+    capacity = metrics["song_rows"]
+    maximum = max(0, len(entries) - capacity)
     offset = min(maximum, nonnegative(offset))
     left, top, right, _bottom = metrics["song_list"]
     visible = []
-    for index, item in enumerate(entries[offset:offset + SONG_VISIBLE_ROWS]):
-        rectangle = (left, top + index * 31, right, top + index * 31 + 29)
+    for index, item in enumerate(entries[offset:offset + capacity]):
+        rectangle = (left, top + index * SONG_ROW_HEIGHT, right, top + index * SONG_ROW_HEIGHT + 36)
         visible.append({**item, "rectangle": rectangle,
                         "button": (right - 60, rectangle[1], right, rectangle[3])})
     return {"rows": visible, "offset": offset, "maxOffset": maximum, "total": len(entries)}
@@ -402,6 +462,10 @@ class WinPanelAPI:
     def move(self, hwnd, x, y):
         self.user32.SetWindowPos(hwnd, -1, x, y, 0, 0, 0x0010 | 0x0001)
 
+    def resize(self, hwnd, x, y, width, height):
+        if not self.user32.SetWindowPos(hwnd, -1, x, y, width, height, 0x0010):
+            raise OSError("无法调整副屏窗口大小。")
+
     def position(self, hwnd):
         rect = wintypes.RECT()
         self.user32.GetWindowRect(hwnd, ctypes.byref(rect))
@@ -418,17 +482,25 @@ class DesktopPanel:
         self.root.withdraw()
         self.root.overrideredirect(True)
         self.root.configure(background=COLORS["background"])
-        self.metrics = layout(options.width)
-        self.width = self.metrics["width"]
-        self.height = self.metrics["height"]
-        self.statistics_fonts = {size: tkfont.Font(root=self.root, family="Microsoft YaHei UI", size=size) for size in (9, 10)}
-        x, y = choose_position(self.native.monitors(), self.width, self.height)
+        self.display_path = Path(__file__).resolve().parent.parent / ".runtime" / f"desktop-display-{options.port}.json"
+        monitors = self.native.monitors()
+        self.work_area = next((item for item in monitors if not item.get("primary")), monitors[0] if monitors else
+                              {"left": 0, "top": 0, "right": 1920, "bottom": 1080})
+        settings = dict(DISPLAY_DEFAULTS) if options.smoke_test else read_display_settings(self.display_path)
+        settings.update({name: getattr(options, name) for name in ("width", "height", "zoom") if getattr(options, name) is not None})
+        settings = display_settings(settings, *self.display_limits())
+        self.zoom = settings["zoom"]
+        self.pixel_width, self.pixel_height = settings["width"], settings["height"]
+        self.metrics = layout(self.pixel_width / self.zoom, self.pixel_height / self.zoom)
+        self.width, self.height = self.metrics["width"], self.metrics["height"]
+        self.make_fonts()
+        x, y = choose_position(monitors, self.pixel_width, self.pixel_height)
         x = options.x if options.x is not None else x
         y = options.y if options.y is not None else y
-        self.root.geometry(f"{self.width}x{self.height}{x:+d}{y:+d}")
-        self.canvas = tk.Canvas(self.root, width=self.width, height=self.height, highlightthickness=0, background=COLORS["background"])
+        self.root.geometry(f"{self.pixel_width}x{self.pixel_height}{x:+d}{y:+d}")
+        self.canvas = tk.Canvas(self.root, width=self.pixel_width, height=self.pixel_height, highlightthickness=0, background=COLORS["background"])
         self.canvas.pack(fill="both", expand=True)
-        self.artwork_images = load_artwork(self.root)
+        self.artwork_images = load_artwork(self.root, self.zoom)
         self.root.update_idletasks()
         self.hwnd = self.native.prepare(self.root.winfo_id())
         self.state = {}
@@ -442,6 +514,7 @@ class DesktopPanel:
         self.helper_status = {"active": False, "message": "快捷键未启用。" if options.no_hotkeys else "快捷键准备中。"}
         self.helper = None
         self.drag_start = None
+        self.resize_start = None
         self.song_scroll = 0
         self.song_view_identity = None
         self.song_pending = set()
@@ -450,12 +523,14 @@ class DesktopPanel:
         self.song_commands = queue.Queue(maxsize=16)
         self.canvas.bind("<Button-1>", self.press)
         self.canvas.bind("<B1-Motion>", self.drag)
-        self.canvas.bind("<ButtonRelease-1>", lambda _event: setattr(self, "drag_start", None))
+        self.canvas.bind("<ButtonRelease-1>", self.release)
+        self.canvas.bind("<Motion>", self.hover)
+        self.canvas.bind("<Leave>", lambda _event: self.canvas.configure(cursor="arrow"))
         self.canvas.bind("<MouseWheel>", self.scroll_songs)
         self.root.protocol("WM_DELETE_WINDOW", self.close)
         self.draw(build_view({}, online=False))
         # 直接以不激活方式显示，避免 Tk 的 deiconify 在 Windows 上主动请求焦点。
-        self.native.show(self.hwnd, x, y, self.width, self.height)
+        self.native.show(self.hwnd, x, y, self.pixel_width, self.pixel_height)
         if not options.no_hotkeys:
             self.helper = HotkeyHelper(options.port, lambda status: self.push(("helper", status))).start()
         threading.Thread(target=self.poll_state, name="panel-state-http", daemon=True).start()
@@ -463,6 +538,75 @@ class DesktopPanel:
         self.root.after(50, self.update)
         if options.smoke_test:
             self.root.after(3000, self.close)
+
+    def display_limits(self):
+        area = getattr(self, "work_area", {"left": 0, "top": 0, "right": 1920, "bottom": 1080})
+        return (max(360, min(2560, area["right"] - area["left"])),
+                max(PANEL_HEIGHT, min(2160, area["bottom"] - area["top"])))
+
+    def make_fonts(self):
+        zoom = getattr(self, "zoom", 1)
+        self.statistics_fonts = {size: tkfont.Font(root=self.root, family="Microsoft YaHei UI", size=round(size * zoom))
+                                 for size in (9, 10, 12)}
+
+    def measure(self, label, size=10):
+        return self.statistics_fonts[size].measure(label) / getattr(self, "zoom", 1)
+
+    def apply_display(self, width, height, zoom, x=None, y=None):
+        settings = display_settings({"width": width, "height": height, "zoom": zoom}, *self.display_limits())
+        if settings["zoom"] != self.zoom:
+            self.zoom = settings["zoom"]
+            self.make_fonts()
+            self.artwork_images = load_artwork(self.root, self.zoom)
+        self.pixel_width, self.pixel_height = settings["width"], settings["height"]
+        self.metrics = layout(self.pixel_width / self.zoom, self.pixel_height / self.zoom)
+        self.width, self.height = self.metrics["width"], self.metrics["height"]
+        old_x, old_y = self.native.position(self.hwnd)
+        x, y = old_x if x is None else x, old_y if y is None else y
+        self.root.geometry(f"{self.pixel_width}x{self.pixel_height}{x:+d}{y:+d}")
+        self.native.resize(self.hwnd, x, y, self.pixel_width, self.pixel_height)
+        self.draw(self.last_view)
+
+    def set_zoom(self, zoom=None):
+        x, y = self.native.position(self.hwnd)
+        center = (x + self.pixel_width / 2, y + self.pixel_height / 2)
+        self.work_area = next((area for area in self.native.monitors() if area["left"] <= center[0] < area["right"] and
+                              area["top"] <= center[1] < area["bottom"]), self.work_area)
+        desired = display_settings({"zoom": zoom}, *self.display_limits())["zoom"] if zoom is not None else DISPLAY_DEFAULTS["zoom"]
+        if zoom is not None and desired == self.zoom:
+            return
+        ratio = desired / self.zoom
+        width, height = (round(self.pixel_width * ratio), round(self.pixel_height * ratio)) if zoom is not None else (DISPLAY_DEFAULTS["width"], DISPLAY_DEFAULTS["height"])
+        settings = display_settings({"width": width, "height": height, "zoom": desired}, *self.display_limits())
+        area = self.work_area
+        x = max(area["left"], min(x, area["right"] - settings["width"]))
+        y = max(area["top"], min(y, area["bottom"] - settings["height"]))
+        self.apply_display(settings["width"], settings["height"], settings["zoom"], x, y)
+        self.save_display()
+
+    def save_display(self):
+        if self.options.smoke_test:
+            return
+        try:
+            write_display_settings(self.display_path, {"width": self.pixel_width, "height": self.pixel_height, "zoom": self.zoom})
+        except OSError:
+            self.helper_status["message"] = "显示设置未能保存，本次调整仍有效。"
+
+    def release(self, _event):
+        changed = self.resize_start is not None
+        if self.drag_start is not None:
+            x, y = self.native.position(self.hwnd)
+            self.work_area = next((area for area in self.native.monitors() if area["left"] <= x + self.pixel_width / 2 < area["right"] and
+                                  area["top"] <= y + self.pixel_height / 2 < area["bottom"]), self.work_area)
+        self.drag_start = self.resize_start = None
+        if changed:
+            self.save_display()
+
+    def hover(self, event):
+        edge = resize_edge(event.x, event.y, self.pixel_width, self.pixel_height)
+        cursor = {"w": "size_we", "e": "size_we", "n": "size_ns", "s": "size_ns",
+                  "nw": "size_nw_se", "se": "size_nw_se", "ne": "size_ne_sw", "sw": "size_ne_sw"}.get(edge, "arrow")
+        self.canvas.configure(cursor=cursor)
 
     def push(self, event):
         try:
@@ -545,27 +689,34 @@ class DesktopPanel:
         self.root.after(100, self.update)
 
     def text(self, x, y, text, size=12, color="text", anchor="nw", bold=False, width=None):
-        return self.canvas.create_text(x, y, text=text, fill=COLORS[color], font=("Microsoft YaHei UI", size, "bold" if bold else "normal"), anchor=anchor, width=width or 0)
+        zoom = getattr(self, "zoom", 1)
+        return self.canvas.create_text(x * zoom, y * zoom, text=text, fill=COLORS[color], font=("Microsoft YaHei UI", round(size * zoom), "bold" if bold else "normal"), anchor=anchor, width=(width or 0) * zoom)
+
+    def line(self, *coordinates, **options):
+        zoom = getattr(self, "zoom", 1)
+        return self.canvas.create_line(*(value * zoom for value in coordinates), **options)
 
     def box(self, rectangle, outline="border", fill="card"):
-        return self.canvas.create_rectangle(*rectangle, fill=COLORS[fill], outline=COLORS[outline], width=1)
+        zoom = getattr(self, "zoom", 1)
+        return self.canvas.create_rectangle(*(value * zoom for value in rectangle), fill=COLORS[fill], outline=COLORS[outline], width=1)
 
     def artwork(self, key, x, y):
         image = getattr(self, "artwork_images", {}).get(key)
         if image is None:
             return False
-        self.canvas.create_image(x, y, image=image, anchor="nw")
+        zoom = getattr(self, "zoom", 1)
+        self.canvas.create_image(x * zoom, y * zoom, image=image, anchor="nw")
         return True
 
     def draw(self, view):
         self.canvas.delete("all")
         self.last_view = view
         self.text(16, 13, "梓有妙选｜Azusa HexPick", 13, bold=True)
-        self.canvas.create_line(self.width - 28, 15, self.width - 16, 27, fill=COLORS["muted"], width=1.5)
-        self.canvas.create_line(self.width - 28, 27, self.width - 16, 15, fill=COLORS["muted"], width=1.5)
-        self.canvas.create_line(16, 39, self.width - 16, 39, fill=COLORS["border"])
+        self.line(self.width - 28, 15, self.width - 16, 27, fill=COLORS["muted"], width=1.5)
+        self.line(self.width - 28, 27, self.width - 16, 15, fill=COLORS["muted"], width=1.5)
+        self.line(16, 39, self.width - 16, 39, fill=COLORS["border"])
         title = {"hex": "海克斯选择", "equipment": "出装建议", "songs": "弹幕点歌"}[view["mode"]]
-        title_line = fit_one_line(f"{title} · 第 {view['round']} 轮", self.width - 112, self.statistics_fonts[10].measure)
+        title_line = fit_one_line(f"{title} · 第 {view['round']} 轮", self.width - 112, self.measure)
         self.text(16, 49, title_line, 10, "text", bold=True)
         source_color = "amber" if view["source"] == "回放验证" else "teal"
         self.text(self.width - 16, 49, view["source"], 10, source_color, anchor="ne")
@@ -605,11 +756,11 @@ class DesktopPanel:
                 self.text(self.width - 28, rectangle[1] + 7, format_votes(item["votes"]), 14, "purple", anchor="ne", bold=True)
             if view["connected"]:
                 for y, item in zip(self.metrics["unknown_y"], view["unknown"]):
-                    label = fit_one_line(unknown_line(item), self.width - 32, self.statistics_fonts[9].measure)
+                    label = fit_one_line(unknown_line(item), self.width - 32, lambda text: self.measure(text, 9))
                     self.text(16, y, label, 9, "amber")
                 if not view["unknown"]:
                     self.text(16, self.metrics["unknown_y"][0], "待确认：暂无重复原词", 9, "muted")
-            against = fit_one_line(view["against"], self.width - 32, self.statistics_fonts[9].measure)
+            against = fit_one_line(view["against"], self.width - 32, lambda text: self.measure(text, 9))
             self.text(16, self.metrics["against_y"], against, 9, "amber")
         self.draw_footer(view)
 
@@ -629,7 +780,7 @@ class DesktopPanel:
         counts = f"点歌 {format_votes(songs['totalRequests'])} 次 · 本场略过 {format_votes(songs['grayCount'])} 首 · 拉黑 {format_votes(songs['blackCount'])} 首"
         if not view["connected"]:
             counts = "连接恢复后显示本轮点歌。"
-        self.text(summary_x, 112, fit_one_line(counts, self.width - summary_x - 28, self.statistics_fonts[9].measure), 9, "muted")
+        self.text(summary_x, 112, fit_one_line(counts, self.width - summary_x - 28, lambda text: self.measure(text, 9)), 9, "muted")
         self.text(16, 140, "自主挑歌 · 点击略过仅限本场", 9, "muted")
         self.text(16, 156, "点歌列表可滚轮翻页", 9, "muted")
         for name, symbol in (("song_previous", "↑"), ("song_next", "↓")):
@@ -637,9 +788,9 @@ class DesktopPanel:
             self.box(self.metrics[name])
             center = (left + right) / 2
             tip_y, tail_y = (top + 7, top + 17) if symbol == "↑" else (top + 17, top + 7)
-            self.canvas.create_line(center, tail_y, center, tip_y, fill=COLORS["teal"], width=1.5)
+            self.line(center, tail_y, center, tip_y, fill=COLORS["teal"], width=1.5)
             edge_y = tip_y + 4 if symbol == "↑" else tip_y - 4
-            self.canvas.create_line(center - 4, edge_y, center, tip_y, center + 4, edge_y, fill=COLORS["teal"], width=1.5)
+            self.line(center - 4, edge_y, center, tip_y, center + 4, edge_y, fill=COLORS["teal"], width=1.5)
         rows = self.song_visible_page["rows"]
         if not rows:
             message = "等待点歌弹幕" if view["connected"] else "等待恢复统计"
@@ -652,28 +803,48 @@ class DesktopPanel:
                 continue
             self.box(item["rectangle"])
             title = ("待确认 · " if not item["known"] else "") + item["title"]
-            title = fit_one_line(title, self.width - 144, self.statistics_fonts[9].measure)
-            self.text(left + 10, top + 6, title, 9, "text" if item["known"] else "amber")
-            self.text(right - 66, top + 6, format_votes(item["requests"]), 10, "purple", anchor="ne")
+            requests = format_votes(item["requests"])
+            title_width = right - 66 - (left + 10) - self.measure(requests, 12) - 14
+            title = fit_one_line(title, title_width, lambda text: self.measure(text, 12))
+            self.text(left + 10, top + 7, title, 12, "text" if item["known"] else "amber")
+            self.text(right - 66, top + 7, requests, 12, "purple", anchor="ne")
             pending = (view["round"], item["key"]) in getattr(self, "song_pending", set())
-            self.text(right - 9, top + 6, "提交中" if pending else "略过", 9, "muted" if pending else "teal", anchor="ne")
+            self.text(right - 9, top + 8, "提交中" if pending else "略过", 10, "muted" if pending else "teal", anchor="ne")
 
     def draw_footer(self, view):
-        self.text(16, 402, view["counting"], 10, "muted")
-        self.canvas.create_line(16, 397, self.width - 16, 397, fill=COLORS["border"])
-        self.text(self.width - 16, 402, "溣符雨 · 维护", 10, "credit", anchor="ne", bold=True)
+        bottom = getattr(self, "height", self.metrics["height"])
+        self.text(16, bottom - 136, view["counting"], 10, "muted")
+        self.line(16, bottom - 141, self.width - 16, bottom - 141, fill=COLORS["border"])
+        self.text(self.width - 16, bottom - 136, "溣符雨 · 维护", 10, "credit", anchor="ne", bold=True)
         summary = statistics_line(view)
-        summary_size = statistics_font_size(summary, self.width - 32, lambda label, size: self.statistics_fonts[size].measure(label))
-        self.text(16, 425, summary, summary_size, "muted")
+        summary_size = statistics_font_size(summary, self.width - 32, self.measure)
+        self.text(16, bottom - 113, summary, summary_size, "muted")
         helper = self.helper_status.get("message", "快捷键不可用")
         helper_ok = self.helper_status.get("active") and "不可达" not in helper
         if view["mode"] == "songs" and getattr(self, "song_control_until", 0) > time.monotonic():
             helper = self.song_control_message
             helper_ok = helper.startswith("已加入")
-        self.text(16, 452, helper, 9, "teal" if helper_ok else "amber", width=self.width - 32)
-        self.text(16, 480, "Ctrl＋Alt：F6 点歌　F7 海克斯", 9, "muted")
-        self.text(16, 498, "F8 出装　F9 锁定", 9, "muted")
-        self.artwork("logo", self.width - 120, 479)
+        helper = fit_one_line(helper, self.width - 32, lambda text: self.measure(text, 9))
+        self.text(16, bottom - 91, helper, 9, "teal" if helper_ok else "amber")
+        self.text(16, bottom - 69, "显示", 10, "muted")
+        zoom = getattr(self, "zoom", 1)
+        self.text(130, bottom - 69, f"{zoom:.0%}", 10, "text", anchor="n")
+        for name, enabled in (("zoom_out", zoom > 1), ("zoom_in", display_settings({"zoom": zoom + .25}, *self.display_limits())["zoom"] > zoom), ("zoom_reset", True)):
+            left, top, right, lower = self.metrics[name]
+            self.box((left, top, right, lower))
+            if name == "zoom_reset":
+                self.text((left + right) / 2, top + 7, "默认", 10, "teal", anchor="n")
+            else:
+                cx, cy = (left + right) / 2, (top + lower) / 2
+                color = COLORS["teal" if enabled else "muted"]
+                self.line(cx - 5, cy, cx + 5, cy, fill=color, width=1.5)
+                if name == "zoom_in":
+                    self.line(cx, cy - 5, cx, cy + 5, fill=color, width=1.5)
+        self.text(16, bottom - 38, "Ctrl＋Alt：F6 点歌　F7 海克斯", 9, "muted")
+        self.text(16, bottom - 20, "F8 出装　F9 锁定", 9, "muted")
+        self.artwork("logo", self.width - 120, bottom - 41)
+        for offset in (5, 10, 15):
+            self.line(self.width - offset - 3, bottom - 3, self.width - 3, bottom - offset - 3, fill=COLORS["muted"])
 
     def move_song_page(self, change):
         page = self.song_visible_page
@@ -681,21 +852,34 @@ class DesktopPanel:
         self.draw(self.last_view)
 
     def scroll_songs(self, event):
-        if getattr(self, "last_view", {}).get("mode") != "songs" or not 141 <= event.y <= 388 or not event.delta:
+        y = event.y / getattr(self, "zoom", 1)
+        if getattr(self, "last_view", {}).get("mode") != "songs" or not 141 <= y <= self.metrics["song_list"][3] or not event.delta:
             return
         self.move_song_page(3 if event.delta < 0 else -3)
 
     def press(self, event):
-        if event.y > 44:
+        zoom = getattr(self, "zoom", 1)
+        edge = resize_edge(event.x, event.y, getattr(self, "pixel_width", self.width * zoom), getattr(self, "pixel_height", self.metrics["height"] * zoom))
+        if edge:
+            x, y = self.native.position(self.hwnd)
+            self.resize_start = (edge, event.x_root, event.y_root, x, y, self.pixel_width, self.pixel_height)
+            return
+        px, py = event.x / zoom, event.y / zoom
+        for name, amount in (("zoom_out", -.25), ("zoom_in", .25), ("zoom_reset", None)):
+            left, top, right, bottom = self.metrics[name]
+            if left <= px <= right and top <= py <= bottom:
+                self.set_zoom(zoom + amount if amount is not None else None)
+                return
+        if py > 44:
             view = getattr(self, "last_view", {})
             if view.get("mode") != "songs":
                 return
             for name, change in (("song_previous", -3), ("song_next", 3)):
                 left, top, right, bottom = self.metrics[name]
-                if left <= event.x <= right and top <= event.y <= bottom:
+                if left <= px <= right and top <= py <= bottom:
                     self.move_song_page(change)
                     return
-            action = song_control_at(self.song_visible_page, view, event.x, event.y)
+            action = song_control_at(self.song_visible_page, view, px, py)
             if action and (action["roundId"], action["key"]) not in self.song_pending:
                 try:
                     self.song_commands.put_nowait(action)
@@ -706,14 +890,19 @@ class DesktopPanel:
                     self.song_control_message = "操作过快，请稍候重试。"
                     self.song_control_until = time.monotonic() + 5
             return
-        if event.x >= self.width - 40:
+        if px >= self.width - 40:
             self.close()
             return
         x, y = self.native.position(self.hwnd)
         self.drag_start = (event.x_root, event.y_root, x, y)
 
     def drag(self, event):
-        if self.drag_start:
+        if getattr(self, "resize_start", None):
+            edge, mouse_x, mouse_y, x, y, width, height = self.resize_start
+            x, y, width, height = resized_rectangle((x, y, width, height), edge, event.x_root - mouse_x, event.y_root - mouse_y,
+                                                   (math.ceil(360 * self.zoom), math.ceil(PANEL_HEIGHT * self.zoom)), self.display_limits())
+            self.apply_display(width, height, self.zoom, x, y)
+        elif self.drag_start:
             mouse_x, mouse_y, x, y = self.drag_start
             self.native.move(self.hwnd, x + event.x_root - mouse_x, y + event.y_root - mouse_y)
 
@@ -759,7 +948,9 @@ class DesktopPanel:
 def main():
     parser = argparse.ArgumentParser(description="梓有妙选副屏建议面板")
     parser.add_argument("--port", type=int, default=5178)
-    parser.add_argument("--width", type=int, default=380)
+    parser.add_argument("--width", type=int)
+    parser.add_argument("--height", type=int)
+    parser.add_argument("--zoom", type=float, help="显示倍率，1 至 2，按 0.25 分档；受屏幕可用高度限制")
     parser.add_argument("--x", type=int)
     parser.add_argument("--y", type=int)
     parser.add_argument("--no-hotkeys", action="store_true")

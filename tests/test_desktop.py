@@ -5,6 +5,7 @@ import json
 from pathlib import Path
 import queue
 import sys
+import tempfile
 import threading
 import time
 from types import SimpleNamespace
@@ -33,7 +34,7 @@ def state(mode="hex", **extra):
     return {"snapshot": snapshot, "sourceKind": "live"}
 
 
-def capture_draw(view, width=380, return_panel=False):
+def capture_draw(view, width=380, return_panel=False, height=desktop.PANEL_HEIGHT, zoom=1):
     class Font:
         def measure(self, label):
             return len(label) * 7
@@ -44,9 +45,11 @@ def capture_draw(view, width=380, return_panel=False):
             pass
     panel = desktop.DesktopPanel.__new__(desktop.DesktopPanel)
     panel.width = width
-    panel.metrics = desktop.layout(width)
+    panel.height, panel.zoom = height, zoom
+    panel.pixel_width, panel.pixel_height = width * zoom, height * zoom
+    panel.metrics = desktop.layout(width, height)
     panel.canvas = Canvas()
-    panel.statistics_fonts = {9: Font(), 10: Font()}
+    panel.statistics_fonts = {size: Font() for size in (9, 10, 12)}
     panel.helper_status = {"message": "快捷键未启用。", "active": False}
     panel.song_pending = set()
     panel.song_commands = queue.Queue(maxsize=16)
@@ -58,6 +61,91 @@ def capture_draw(view, width=380, return_panel=False):
 
 
 class ViewTests(unittest.TestCase):
+    def test_display_preferences_recover_invalid_files_and_round_trip(self):
+        with tempfile.TemporaryDirectory() as folder:
+            path = Path(folder) / "display.json"
+            self.assertEqual(desktop.read_display_settings(path), desktop.DISPLAY_DEFAULTS)
+            for content in ("broken", "[]", "{}", "x" * 5000):
+                path.write_text(content, encoding="utf-8")
+                self.assertEqual(desktop.read_display_settings(path), desktop.DISPLAY_DEFAULTS)
+            desktop.write_display_settings(path, {"width": 800, "height": 1000, "zoom": 1.5})
+            self.assertEqual(desktop.read_display_settings(path), {"width": 800, "height": 1000, "zoom": 1.5})
+            self.assertFalse(path.with_suffix(".tmp").exists())
+
+    def test_display_limits_keep_content_readable_and_on_screen(self):
+        for raw in (None, {}, {"width": -1, "height": "bad", "zoom": float("inf")},
+                    {"width": 99999, "height": 99999, "zoom": 9}, {"zoom": True}):
+            result = desktop.display_settings(raw, 1280, 1040)
+            self.assertGreaterEqual(result["width"], 360 * result["zoom"])
+            self.assertGreaterEqual(result["height"], desktop.PANEL_HEIGHT * result["zoom"])
+            self.assertLessEqual(result["width"], 1280)
+            self.assertLessEqual(result["height"], 1040)
+            self.assertIn(result["zoom"], (1, 1.25, 1.5, 1.75))
+        self.assertEqual(desktop.display_settings({"zoom": 2}, 2560, 1400)["zoom"], 2)
+
+    def test_resize_edges_and_clamped_drag_preserve_opposite_corner(self):
+        self.assertEqual(desktop.resize_edge(3, 300, 480, 760), "w")
+        self.assertEqual(desktop.resize_edge(470, 750, 480, 760), "se")
+        self.assertEqual(desktop.resize_edge(240, 20, 480, 760), "")
+        initial = (100, 50, 480, 760)
+        self.assertEqual(desktop.resized_rectangle(initial, "se", 200, 100, (450, 700), (1920, 1040)), (100, 50, 680, 860))
+        result = desktop.resized_rectangle(initial, "nw", 999, 999, (450, 700), (1920, 1040))
+        self.assertEqual(result, (130, 110, 450, 700))
+        self.assertEqual(result[0] + result[2], initial[0] + initial[2])
+        self.assertEqual(result[1] + result[3], initial[1] + initial[3])
+
+    def test_taller_windows_add_song_rows_and_every_candidate_remains_reachable(self):
+        songs = {"items": [{"key": str(index), "title": "一首有较长名称的歌曲", "requests": 2, "known": True} for index in range(80)],
+                 "singles": [{"key": "single", "title": "新歌候选", "requests": 1}]}
+        view = desktop.build_view(state("songs", songs=songs))
+        self.assertGreater(desktop.layout(480, 1000)["song_rows"], desktop.layout(480, 560)["song_rows"])
+        for width, height in ((360, 560), (480, 800), (1000, 1400)):
+            metrics = desktop.layout(width, height)
+            maximum = desktop.song_page(view, 9999, metrics)["maxOffset"]
+            shown = set()
+            for offset in range(maximum + 1):
+                page = desktop.song_page(view, offset, metrics)
+                for row in page["rows"]:
+                    self.assertLessEqual(row["rectangle"][3], metrics["song_list"][3])
+                    if row["kind"] == "song":
+                        shown.add(row["key"])
+            self.assertEqual(len(shown), 81)
+
+    def test_scaled_song_hit_and_wheel_use_displayed_coordinates(self):
+        songs = {"items": [{"key": str(index), "title": "晴天", "requests": 2, "known": True} for index in range(12)]}
+        view = desktop.build_view(state("songs", songs=songs))
+        for zoom in (1, 1.25, 1.5, 1.75, 2):
+            _texts, _boxes, panel = capture_draw(view, return_panel=True, zoom=zoom, height=800)
+            row = panel.song_visible_page["rows"][1]
+            left, top, right, bottom = row["button"]
+            panel.press(SimpleNamespace(x=(left + right) * zoom / 2, y=(top + bottom) * zoom / 2))
+            self.assertEqual(panel.song_commands.get_nowait(), {"action": "song-gray-add", "key": "0", "roundId": 3})
+            panel.scroll_songs(SimpleNamespace(y=300 * zoom, delta=-120))
+            self.assertEqual(panel.song_scroll, min(3, panel.song_visible_page["maxOffset"]))
+
+    def test_resize_drag_applies_size_without_sending_song_commands(self):
+        view = desktop.build_view(state("songs"))
+        _texts, _boxes, panel = capture_draw(view, return_panel=True, zoom=1.25)
+        panel.drag_start = None
+        panel.hwnd = 1
+        panel.native = SimpleNamespace(position=lambda _hwnd: (100, 50))
+        calls = []
+        panel.apply_display = lambda *args: calls.append(args)
+        panel.press(SimpleNamespace(x=panel.pixel_width - 1, y=panel.pixel_height - 1, x_root=700, y_root=800))
+        panel.drag(SimpleNamespace(x_root=800, y_root=900))
+        self.assertEqual(calls[0], (575, 800, 1.25, 100, 50))
+        self.assertTrue(panel.song_commands.empty())
+
+    def test_text_scales_font_and_wrap_width_with_coordinates(self):
+        panel = desktop.DesktopPanel.__new__(desktop.DesktopPanel)
+        panel.zoom = 1.5
+        captured = []
+        panel.canvas = SimpleNamespace(create_text=lambda *args, **kwargs: captured.append((args, kwargs)))
+        panel.text(10, 20, "晴天", size=12, width=100)
+        self.assertEqual(captured[0][0], (15, 30))
+        self.assertEqual(captured[0][1]["font"][1], 18)
+        self.assertEqual(captured[0][1]["width"], 150)
+
     def test_artwork_fits_panel_bounds_without_changing_pixel_files(self):
         for _name, crop, bounds in desktop.ARTWORK.values():
             sample = desktop.artwork_sample(crop, bounds)
@@ -94,7 +182,7 @@ class ViewTests(unittest.TestCase):
         self.assertEqual(desktop.HEX_EXTRA_KEYS, ("12d", "13d", "23d", "d"))
         self.assertTrue(all(item["votes"] == 0 for item in view["items"]))
         texts, boxes = capture_draw(view)
-        self.assertEqual(len(boxes), 11)
+        self.assertEqual(len(boxes), 14)
         displayed = [item[2] for item in texts]
         for key in desktop.HEX_KEYS:
             self.assertIn(desktop.HEX_LABELS[key], displayed)
@@ -251,7 +339,7 @@ class ViewTests(unittest.TestCase):
         panel.draw(desktop.build_view(state(receivedMessages=100000, validMessages=80000, pendingTotal=2000)))
         statistics = [item for item in texts if item[2].startswith("收到 ")]
         self.assertEqual(len(statistics), 1)
-        self.assertEqual(statistics[0][:4], (16, 425, "收到 10.0 万 · 计入 8.0 万 · 未决 2000", 9))
+        self.assertEqual(statistics[0][:4], (16, desktop.PANEL_HEIGHT - 113, "收到 10.0 万 · 计入 8.0 万 · 未决 2000", 9))
         self.assertNotIn("width", statistics[0][4])
         self.assertLess(statistics[0][1], 452)
 
@@ -302,7 +390,7 @@ class ViewTests(unittest.TestCase):
             self.assertGreaterEqual(result["unknown_y"][1] - result["unknown_y"][0], 18)
             self.assertLess(result["unknown_y"][1] + 17, result["against_y"])
             self.assertLess(result["against_y"] + 17, 402)
-            self.assertEqual(result["height"], 520)
+            self.assertEqual(result["height"], desktop.PANEL_HEIGHT)
 
     def test_secondary_work_area_and_primary_fallback(self):
         monitors = [{"left": 0, "top": 0, "right": 1920, "bottom": 1040, "primary": True}, {"left": -1920, "top": 0, "right": 0, "bottom": 1040, "primary": False}]
@@ -359,7 +447,7 @@ class ViewTests(unittest.TestCase):
             shown = set()
             for offset in range(maximum + 1):
                 page = desktop.song_page(view, offset, metrics)
-                self.assertLessEqual(len(page["rows"]), desktop.SONG_VISIBLE_ROWS)
+                self.assertLessEqual(len(page["rows"]), metrics["song_rows"])
                 for item in page["rows"]:
                     left, top, right, bottom = item["rectangle"]
                     self.assertGreaterEqual(left, 16)

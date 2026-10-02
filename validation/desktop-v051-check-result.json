@@ -1,0 +1,23 @@
+{
+  "version": "0.5.1",
+  "date": "2026-10-02",
+  "platform": "Windows 11 / Python 3.11 / Tkinter",
+  "source": "azusa-singing-p1 replay, isolated local service",
+  "paidApiCalls": 0,
+  "defaultSize": [480, 760],
+  "defaultZoom": 1.25,
+  "songTitleBasePoints": 12,
+  "nativeChecks": [
+    {"size": [480, 760], "zoom": 1.25, "visibleRows": 7},
+    {"size": [780, 960], "zoom": 1.25, "visibleRows": 11},
+    {"size": [936, 1152], "zoom": 1.5, "visibleRows": 11},
+    {"size": [1092, 1344], "zoom": 1.75, "visibleRows": 11},
+    {"size": [480, 760], "zoom": 1.25, "visibleRows": 7}
+  ],
+  "canvasSizesMatchWindow": true,
+  "resizeCallsPreservedForeground": true,
+  "panelRemainedInactive": true,
+  "restoredDefault": true,
+  "unitCoverage": ["scaled song clicks and scrolling at five zoom levels", "all candidates reachable at varying heights", "edge drag minimum constraints", "invalid preferences and persistence", "font and wrap scaling"],
+  "verificationLimits": ["Resize and zoom exercised through the application methods", "Actual mouse edge dragging and game full-screen focus still need user validation", "No new paid AI or long-duration live test"]
+}
