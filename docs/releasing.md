@@ -12,6 +12,8 @@
 
 ## 发布顺序
 
+v0.6.0 从 v0.5.1 建立独立 design/v0.6.0 分支，推送新分支和 v0.6.0 附注标签，保留 main、design/v0.5.0 与旧标签。内置背景、主题库和素材说明随源码及便携包发布，个人外观与图库不发布。
+
 1. 更新 package.json 的版本号和 CHANGELOG.md，对齐使用、架构及验证文档。
 2. 查看 git status 和 git diff，复核新增、修改和删除文件。
 3. 运行 scripts/check.ps1；构建便携包，再运行 scripts/verify-package.py，核查解压目录的完整套件。
@@ -36,7 +38,7 @@ git ls-remote origin refs/heads/main refs/tags/v0.3.0 'refs/tags/v0.3.0^{}'
 
 源码、脚本、文档、标准名资料及必要的脱敏回归资料进入仓库。validation 使用显式白名单；新增可公开报告需同时更新 .gitignore，保持必要测试资料可用。
 
-.env.local、其他真实环境配置、.runtime、dist、Python 缓存、原始 XML／ASS、本机截图和本地工作记录忽略。界面使用的六幅图片及字体属于公开界面资源，附来源和字体许可，可以随源码及便携包发布。便携包在本地构建，GitHub 标签提供可复核的源码快照。
+.env.local、其他真实环境配置、.runtime、dist、Python 缓存、原始 XML／ASS、本机截图和本地工作记录忽略。界面使用的六幅图片、内置背景及字体属于公开界面资源，附来源和字体许可，可以随源码及便携包发布。便携包在本地构建，GitHub 标签提供可复核的源码快照。
 
 ## 历史记录
 

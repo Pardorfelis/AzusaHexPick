@@ -1,0 +1,74 @@
+{
+  "version": "0.6.0",
+  "automated": {
+    "nodePassed": 232,
+    "pythonPassed": 51,
+    "paidApiCalls": 0
+  },
+  "web": {
+    "testedWidths": [
+      1440,
+      1280,
+      390
+    ],
+    "horizontalOverflow": false,
+    "themeChangesPreserveRound": true,
+    "defaultArtistVisible": false,
+    "translucentContrastExtremeWallpapersPassed": true,
+    "backgroundImportDuplicateEditDelete": true,
+    "panelOuterTransparent": true,
+    "consoleThemesTested": [
+      "mist",
+      "fluent",
+      "paper",
+      "sakura",
+      "mint",
+      "graphite"
+    ],
+    "songReplay": {
+      "dataset": "azusa-singing-p1",
+      "atSeconds": 6300,
+      "receivedMessages": 266,
+      "recognizedMessages": 122,
+      "totalRequests": 127,
+      "visibleMainAndSingles": true
+    }
+  },
+  "native": {
+    "syntheticFixtures": true,
+    "themeModeChecks": 18,
+    "zoomRequests": [
+      1,
+      1.5,
+      2
+    ],
+    "focusAndHitCoordinatesPassed": true,
+    "startupSmoke": {
+      "foregroundUnchanged": true,
+      "serverConnected": true,
+      "canvasMapped": true,
+      "windowVisible": true,
+      "registeredHotkeys": 4,
+      "releasedHotkeys": 4,
+      "hotkeysReleased": true,
+      "captureSucceeded": true
+    },
+    "gameFullscreenUserAcceptanceRequired": true
+  },
+  "security": {
+    "localWritesOnly": true,
+    "pairedCustomBackgroundReadsOnly": true,
+    "controlJsonLimitUnchanged": 65536,
+    "imageUploadLimit": 10485760,
+    "importedImagesExcludedFromPackage": true
+  },
+  "wallpaper": {
+    "originalBytesPreserved": true,
+    "sha256": "4677f528989073dd8f3748dadb186a7999612ea7b7bd7b1ab26ba143a781d861"
+  },
+  "manualAcceptanceRemaining": [
+    "OBS 实际合成",
+    "实际手机网络与锁屏恢复",
+    "游戏全屏下的焦点与扫读"
+  ]
+}

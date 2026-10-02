@@ -21,6 +21,35 @@ COLORS = {"background": "#11151d", "card": "#1b222e", "border": "#384455",
           "text": "#f1f4fa", "muted": "#aab5c5", "credit": "#f6b6d5",
           "purple": "#a1aaff", "brand": "#7d89fb", "selection": "#272f4d", "header": "#242e3e",
           "teal": "#8bd4bc", "amber": "#e8bb86", "red": "#f1a4ae"}
+
+def load_themes():
+    try:
+        value = json.loads((Path(__file__).resolve().parent.parent / "public/themes.json").read_text(encoding="utf-8"))
+        return {item["id"]: item for item in value if all(name in item["native"] for name in COLORS)}
+    except (OSError, ValueError, TypeError, KeyError):
+        return {}
+
+
+def system_light():
+    try:
+        import winreg
+        with winreg.OpenKey(winreg.HKEY_CURRENT_USER, r"Software\Microsoft\Windows\CurrentVersion\Themes\Personalize") as key:
+            return bool(winreg.QueryValueEx(key, "AppsUseLightTheme")[0])
+    except (ImportError, OSError):
+        return False
+
+
+def desktop_theme(value, themes, light=False):
+    settings = value.get("settings", {}) if isinstance(value, dict) else {}
+    settings = settings if isinstance(settings, dict) else {}
+    desktop = settings.get("desktop", {})
+    desktop = desktop if isinstance(desktop, dict) else {}
+    requested = desktop.get("theme", "mist")
+    requested = requested if isinstance(requested, str) else "mist"
+    if requested == "system":
+        requested = "fluent" if light else "mist"
+    return themes.get(requested, themes.get("mist", {"id": "classic", "native": COLORS, "radius": 0, "material": "classic"}))
+
 ARTWORK = {"logo": ("azusa-panel-brand.png", (56, 51, 988, 342), (104, 34)),
            "computer": ("azusa-computer.png", (48, 15, 503, 487), (74, 74)),
            "computer-small": ("azusa-computer.png", (48, 15, 503, 487), (42, 42))}
@@ -475,13 +504,20 @@ class WinPanelAPI:
 class DesktopPanel:
     def __init__(self, options):
         self.options = options
+        self.themes = load_themes()
+        self.theme_id = "classic"
+        self.theme_radius = 0
+        self.material = "classic"
+        self._palette = COLORS.copy()
+        self.system_checked = 0
+        self.system_is_light = False
         self.native = WinPanelAPI()
         self.before_foreground = self.native.foreground()
         self.root = tk.Tk()
         self.root.title("梓有妙选｜Azusa HexPick")
         self.root.withdraw()
         self.root.overrideredirect(True)
-        self.root.configure(background=COLORS["background"])
+        self.root.configure(background=self.colors["background"])
         self.display_path = Path(__file__).resolve().parent.parent / ".runtime" / f"desktop-display-{options.port}.json"
         monitors = self.native.monitors()
         self.work_area = next((item for item in monitors if not item.get("primary")), monitors[0] if monitors else
@@ -498,7 +534,7 @@ class DesktopPanel:
         x = options.x if options.x is not None else x
         y = options.y if options.y is not None else y
         self.root.geometry(f"{self.pixel_width}x{self.pixel_height}{x:+d}{y:+d}")
-        self.canvas = tk.Canvas(self.root, width=self.pixel_width, height=self.pixel_height, highlightthickness=0, background=COLORS["background"])
+        self.canvas = tk.Canvas(self.root, width=self.pixel_width, height=self.pixel_height, highlightthickness=0, background=self.colors["background"])
         self.canvas.pack(fill="both", expand=True)
         self.artwork_images = load_artwork(self.root, self.zoom)
         self.root.update_idletasks()
@@ -538,6 +574,31 @@ class DesktopPanel:
         self.root.after(50, self.update)
         if options.smoke_test:
             self.root.after(3000, self.close)
+
+    @property
+    def colors(self):
+        return getattr(self, "_palette", COLORS)
+
+    def apply_theme(self, appearance):
+        now = time.monotonic()
+        if now - self.system_checked > 2:
+            self.system_checked = now
+            self.system_is_light = system_light()
+        theme = desktop_theme(appearance, self.themes, self.system_is_light)
+        if theme["id"] == self.theme_id:
+            return
+        self.theme_id = theme["id"]
+        self._palette = theme["native"]
+        self.theme_radius = min(16, max(0, theme.get("radius", 0)))
+        self.material = theme.get("material", "classic")
+        self.canvas.configure(background=self.colors["background"])
+        try:
+            dwm = ctypes.WinDLL("dwmapi")
+            dwm.DwmSetWindowAttribute.argtypes = [wintypes.HWND, wintypes.DWORD, ctypes.c_void_p, wintypes.DWORD]
+            preference = ctypes.c_int(2 if self.material != "classic" else 1)
+            dwm.DwmSetWindowAttribute(self.hwnd, 33, ctypes.byref(preference), ctypes.sizeof(preference))
+        except (OSError, AttributeError):
+            pass
 
     def display_limits(self):
         area = getattr(self, "work_area", {"left": 0, "top": 0, "right": 1920, "bottom": 1080})
@@ -682,6 +743,7 @@ class DesktopPanel:
                 self.finish_song_control(*payload)
         elapsed = (time.monotonic() - self.last_received) * 1000 if self.last_received is not None else 0
         online = self.online and elapsed < 2000
+        self.apply_theme(self.state.get("appearance", {}))
         self.draw(build_view(self.state, online=online, elapsed_ms=elapsed))
         if self.server_health.should_exit(time.monotonic()):
             self.close()
@@ -690,7 +752,7 @@ class DesktopPanel:
 
     def text(self, x, y, text, size=12, color="text", anchor="nw", bold=False, width=None):
         zoom = getattr(self, "zoom", 1)
-        return self.canvas.create_text(x * zoom, y * zoom, text=text, fill=COLORS[color], font=("Microsoft YaHei UI", round(size * zoom), "bold" if bold else "normal"), anchor=anchor, width=(width or 0) * zoom)
+        return self.canvas.create_text(x * zoom, y * zoom, text=text, fill=self.colors[color], font=("Microsoft YaHei UI", round(size * zoom), "bold" if bold else "normal"), anchor=anchor, width=(width or 0) * zoom)
 
     def line(self, *coordinates, **options):
         zoom = getattr(self, "zoom", 1)
@@ -698,7 +760,21 @@ class DesktopPanel:
 
     def box(self, rectangle, outline="border", fill="card"):
         zoom = getattr(self, "zoom", 1)
-        return self.canvas.create_rectangle(*(value * zoom for value in rectangle), fill=COLORS[fill], outline=COLORS[outline], width=1)
+        material = getattr(self, "material", "classic")
+        radius = getattr(self, "theme_radius", 0)
+        if material == "classic" or radius == 0:
+            return self.canvas.create_rectangle(*(value * zoom for value in rectangle), fill=self.colors[fill], outline=self.colors[outline], width=1)
+        left, top, right, bottom = rectangle
+        # 相邻票格保留原有边界与命中区，只有材质改变。
+        radius = min(radius, (right - left) / 4, (bottom - top) / 4)
+        if material == "paper":
+            radius = min(5, radius)
+        color = self.colors[fill]
+        stroke = color if material in ("paper", "graphite") else self.colors[outline]
+        points = (left+radius,top,right-radius,top,right,top,right,top+radius,
+                  right,bottom-radius,right,bottom,right-radius,bottom,left+radius,bottom,
+                  left,bottom,left,bottom-radius,left,top+radius,left,top)
+        return self.canvas.create_polygon(*(value * zoom for value in points), fill=color, outline=stroke, width=1, smooth=True, splinesteps=20)
 
     def artwork(self, key, x, y):
         image = getattr(self, "artwork_images", {}).get(key)
@@ -711,10 +787,14 @@ class DesktopPanel:
     def draw(self, view):
         self.canvas.delete("all")
         self.last_view = view
+        material = getattr(self, "material", "classic")
+        if material in ("fluent", "sakura", "mint"):
+            zoom = getattr(self, "zoom", 1)
+            self.canvas.create_rectangle(0, 0, self.width * zoom, 39 * zoom, fill=self.colors["header"], outline="")
         self.text(16, 13, "梓有妙选｜Azusa HexPick", 13, bold=True)
-        self.line(self.width - 28, 15, self.width - 16, 27, fill=COLORS["muted"], width=1.5)
-        self.line(self.width - 28, 27, self.width - 16, 15, fill=COLORS["muted"], width=1.5)
-        self.line(16, 39, self.width - 16, 39, fill=COLORS["border"])
+        self.line(self.width - 28, 15, self.width - 16, 27, fill=self.colors["muted"], width=1.5)
+        self.line(self.width - 28, 27, self.width - 16, 15, fill=self.colors["muted"], width=1.5)
+        self.line(16, 39, self.width - 16, 39, fill=self.colors["border"])
         title = {"hex": "海克斯选择", "equipment": "出装建议", "songs": "弹幕点歌"}[view["mode"]]
         title_line = fit_one_line(f"{title} · 第 {view['round']} 轮", self.width - 112, self.measure)
         self.text(16, 49, title_line, 10, "text", bold=True)
@@ -788,9 +868,9 @@ class DesktopPanel:
             self.box(self.metrics[name])
             center = (left + right) / 2
             tip_y, tail_y = (top + 7, top + 17) if symbol == "↑" else (top + 17, top + 7)
-            self.line(center, tail_y, center, tip_y, fill=COLORS["teal"], width=1.5)
+            self.line(center, tail_y, center, tip_y, fill=self.colors["teal"], width=1.5)
             edge_y = tip_y + 4 if symbol == "↑" else tip_y - 4
-            self.line(center - 4, edge_y, center, tip_y, center + 4, edge_y, fill=COLORS["teal"], width=1.5)
+            self.line(center - 4, edge_y, center, tip_y, center + 4, edge_y, fill=self.colors["teal"], width=1.5)
         rows = self.song_visible_page["rows"]
         if not rows:
             message = "等待点歌弹幕" if view["connected"] else "等待恢复统计"
@@ -814,7 +894,7 @@ class DesktopPanel:
     def draw_footer(self, view):
         bottom = getattr(self, "height", self.metrics["height"])
         self.text(16, bottom - 136, view["counting"], 10, "muted")
-        self.line(16, bottom - 141, self.width - 16, bottom - 141, fill=COLORS["border"])
+        self.line(16, bottom - 141, self.width - 16, bottom - 141, fill=self.colors["border"])
         self.text(self.width - 16, bottom - 136, "溣符雨 · 维护", 10, "credit", anchor="ne", bold=True)
         summary = statistics_line(view)
         summary_size = statistics_font_size(summary, self.width - 32, self.measure)
@@ -836,7 +916,7 @@ class DesktopPanel:
                 self.text((left + right) / 2, top + 7, "默认", 10, "teal", anchor="n")
             else:
                 cx, cy = (left + right) / 2, (top + lower) / 2
-                color = COLORS["teal" if enabled else "muted"]
+                color = self.colors["teal" if enabled else "muted"]
                 self.line(cx - 5, cy, cx + 5, cy, fill=color, width=1.5)
                 if name == "zoom_in":
                     self.line(cx, cy - 5, cx, cy + 5, fill=color, width=1.5)
@@ -844,7 +924,7 @@ class DesktopPanel:
         self.text(16, bottom - 20, "F8 出装　F9 锁定", 9, "muted")
         self.artwork("logo", self.width - 120, bottom - 41)
         for offset in (5, 10, 15):
-            self.line(self.width - offset - 3, bottom - 3, self.width - 3, bottom - offset - 3, fill=COLORS["muted"])
+            self.line(self.width - offset - 3, bottom - 3, self.width - 3, bottom - offset - 3, fill=self.colors["muted"])
 
     def move_song_page(self, change):
         page = self.song_visible_page

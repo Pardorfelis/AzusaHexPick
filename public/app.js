@@ -298,6 +298,7 @@ function update(snapshot) {
   if (!snapshot || typeof snapshot !== 'object') return;
   if (serviceOnline && current && Number.isFinite(snapshot.revision) && Number.isFinite(current.revision) && snapshot.revision < current.revision) return;
   current = snapshot;
+  window.HexAppearance?.update(snapshot.appearance);
   if (!readOnly && songLists && snapshot.songs?.sessionId && songLists.sessionId !== snapshot.songs.sessionId) {
     songLists = null;
     byId('song-gray-list').replaceChildren();
@@ -715,6 +716,7 @@ function bindPageLifecycle() {
 }
 
 function bindMotionControl() {
+  if (window.HexAppearance) return;
   if (readOnly) return;
   const button = byId('motion-toggle');
   if (!button) return;
@@ -723,7 +725,7 @@ function bindMotionControl() {
     paused = !paused;
     document.body.classList.toggle('motion-paused', paused);
     button.setAttribute('aria-pressed', String(paused));
-    button.textContent = paused ? '启用动图' : '暂停动图';
+    button.textContent = paused ? '启用动效' : '暂停动效';
   });
 }
 

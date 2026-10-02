@@ -33,8 +33,8 @@ REPORT_FILES = ("validation/replay-inspection.json",
                 "validation/automated-v03-check-result.json", "validation/song-catalog-sources.md",
                 "validation/song-replay-inspection.json", "validation/song-replay-review.mjs",
                 "validation/song-replay-review-result.json", "validation/song-v04-check-result.json", "validation/frontend-v05-check-result.json",
-                "validation/desktop-v051-check-result.json")
-ASSET_FILES = ("public/assets/azusa-snack.jpg", "public/assets/azusa-brand.png",
+                "validation/desktop-v051-check-result.json", "validation/appearance-v06-check-result.json")
+ASSET_FILES = ("public/assets/azusa-wallpaper.jpg", "public/assets/azusa-snack.jpg", "public/assets/azusa-brand.png",
                "public/assets/azusa-computer.png", "public/assets/azusa-panel-brand.png",
                "public/assets/azusa-cheer.gif", "public/assets/azusa-sing.gif",
                "public/assets/fonts/Manrope.ttf", "public/assets/fonts/OFL.txt")

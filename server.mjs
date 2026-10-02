@@ -10,9 +10,12 @@ import { ReplaySource } from './src/replay-source.mjs';
 import { AiService, loadLocalKey } from './src/ai-service.mjs';
 import { allowedEquipment } from './src/equipment.mjs';
 import { SongLists } from './src/song-lists.mjs';
+import { AppearanceStore, AppearanceError, MAX_IMAGE_BYTES } from './src/appearance.mjs';
 
 const root = dirname(fileURLToPath(import.meta.url));
 const appVersion = JSON.parse(await readFile(new URL('./package.json', import.meta.url), 'utf8')).version;
+const themes = JSON.parse(await readFile(new URL('./public/themes.json', import.meta.url), 'utf8'));
+const appearance = await new AppearanceStore({ directory: process.env.AZUSA_APPEARANCE_DIR || resolve(root, 'data'), themes }).load();
 const port = Number(process.env.AZUSA_PORT || 5178);
 if (!Number.isInteger(port) || port < 1024 || port > 65535) throw new Error('端口无效。');
 const origin = 'http://127.0.0.1:' + port;
@@ -83,7 +86,7 @@ const replay = new ReplaySource({
 function snapshot() {
   const value = engine.snapshot();
   return {
-    ...value, revision, sourceKind,
+    ...value, revision, sourceKind, appearance: appearance.snapshot(),
     source: sourceKind === 'live' ? liveStatus : replay.snapshot(),
     ai: ai.snapshot(), helperConnected: Date.now() - helperSeenAt < 10000,
     supportedEquipment: allowedEquipment().length,
@@ -227,6 +230,9 @@ const publicFiles = new Map([
   ['/panel', ['index.html', 'text/html; charset=utf-8']],
   ['/style.css', ['style.css', 'text/css; charset=utf-8']],
   ['/app.js', ['app.js', 'text/javascript; charset=utf-8']],
+  ['/appearance.js', ['appearance.js', 'text/javascript; charset=utf-8']],
+  ['/themes.json', ['themes.json', 'application/json; charset=utf-8']],
+  ['/assets/azusa-wallpaper.jpg', ['assets/azusa-wallpaper.jpg', 'image/jpeg']],
   ['/assets/azusa-snack.jpg', ['assets/azusa-snack.jpg', 'image/jpeg']],
   ['/assets/azusa-brand.png', ['assets/azusa-brand.png', 'image/png']],
   ['/assets/azusa-computer.png', ['assets/azusa-computer.png', 'image/png']],
@@ -246,11 +252,39 @@ const server = http.createServer(async (request, response) => {
   const local = isLocal(request);
   if (!local) {
     const staticAsset = publicFiles.has(url.pathname) && !['/', '/panel'].includes(url.pathname);
-    const readonly = ['/panel', '/api/state', '/api/events'].includes(url.pathname);
+    const readonly = ['/panel', '/api/state', '/api/events'].includes(url.pathname) || /^\/backgrounds\/[a-f0-9]{64}$/.test(url.pathname);
     if (request.method !== 'GET' || !lanEnabled || (!staticAsset && (!readonly || !validViewerToken(url.searchParams.get('token')))))
       return json(response, 403, {error: '手机只读页需要本机提供的配对链接。'});
   }
   try {
+    if (url.pathname.startsWith('/api/appearance') || url.pathname.startsWith('/api/backgrounds')) {
+      if (!local) return json(response, 403, {error: '外观设置仅允许本机操作。'});
+      if (request.method === 'GET' && url.pathname === '/api/appearance') return json(response, 200, appearance.read());
+      if (request.method !== 'POST' || request.headers['x-panel-control'] !== '1')
+        return json(response, 403, {error: '外观控制请求无效。'});
+      let result;
+      if (url.pathname === '/api/appearance') result = await appearance.update(await body(request));
+      else if (url.pathname === '/api/backgrounds/import') {
+        if (request.headers['content-type'] !== 'application/octet-stream') throw new AppearanceError('请使用文件导入背景。');
+        let size = 0; const chunks = [];
+        for await (const chunk of request) {
+          size += chunk.length;
+          if (size > MAX_IMAGE_BYTES) throw new AppearanceError('背景图片不能超过 10 MB。');
+          chunks.push(chunk);
+        }
+        result = await appearance.import(Buffer.concat(chunks), Object.fromEntries(url.searchParams));
+      } else if (url.pathname === '/api/backgrounds/edit') result = await appearance.edit(await body(request));
+      else if (url.pathname === '/api/backgrounds/delete') result = await appearance.delete((await body(request)).id);
+      else return json(response, 404, {error: '外观操作不存在。'});
+      changed();
+      return json(response, 200, result);
+    }
+    if (request.method === 'GET' && /^\/backgrounds\/[a-f0-9]{64}$/.test(url.pathname)) {
+      const image = await appearance.image(url.pathname.split('/').at(-1));
+      if (!image) return json(response, 404, {error: '背景图片不存在，请重新选择。'});
+      response.writeHead(200, {'Content-Type': image.type, 'Cache-Control': 'private, no-store'});
+      return response.end(image.content);
+    }
     if (request.method === 'GET' && url.pathname === '/api/health')
       return json(response, 200, {
         app: 'azusa-validation', version: appVersion, aiConfigured: Boolean(ai.key),
@@ -296,6 +330,8 @@ const server = http.createServer(async (request, response) => {
     }
     json(response, 404, {error: '页面不存在。'});
   } catch (error) {
+    if (url.pathname.startsWith('/api/appearance') || url.pathname.startsWith('/api/backgrounds'))
+      return json(response, 400, {error: error instanceof AppearanceError ? error.message : '外观操作未完成，请检查输入后重试。'});
     const safeMessages = [
       '需要 JSON 请求。', '请求过大。', '无效的模式。', '无效的计票口径。',
       '请选择支持的收集时长。', '回放速度无效。', '回放位置无效。', '直播间编号无效。', '请先选择回放。', '未知操作。',
