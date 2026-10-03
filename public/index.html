@@ -9,6 +9,7 @@
   <link rel="stylesheet" href="/style.css">
   <script src="/appearance.js" defer></script>
   <script src="/app.js" defer></script>
+  <script src="/application.js" defer></script>
 </head>
 <body>
   <div class="wallpaper-layer" aria-hidden="true"><img id="wallpaper-image" src="/assets/azusa-wallpaper.jpg" alt=""><div class="wallpaper-veil"></div></div>
@@ -20,12 +21,13 @@
     <symbol id="icon-phone" viewBox="0 0 24 24"><rect x="6" y="2" width="12" height="20" rx="3"/><path d="M10 5h4M11 19h2"/></symbol>
     <symbol id="icon-open" viewBox="0 0 24 24"><path d="M14 4h6v6M20 4 10 14M10 4H5a1 1 0 0 0-1 1v14a1 1 0 0 0 1 1h14a1 1 0 0 0 1-1v-5"/></symbol>
     <symbol id="icon-palette" viewBox="0 0 24 24"><path d="M21 12a9 9 0 1 0-9 9h1a2 2 0 0 0 1-3.7 1.8 1.8 0 0 1 .9-3.3H19a2 2 0 0 0 2-2Z"/><path d="M7 8h.01M12 6h.01M17 9h.01M6 13h.01" stroke-width="3"/></symbol>
+    <symbol id="icon-power" viewBox="0 0 24 24"><path d="M12 3v9M7 5.7a8 8 0 1 0 10 0"/></symbol>
   </defs></svg>
   <div class="app-shell">
     <header class="app-header operator-only">
       <div class="brand-lockup">
         <svg class="brand-art" viewBox="269 286 912 451" aria-hidden="true"><image href="/assets/azusa-brand.png" width="1439" height="1080"/></svg>
-        <div class="brand-copy"><div class="brand-title"><h1>梓有妙选</h1><span class="brand-english">Azusa HexPick</span><span class="version-tag">v0.6.0</span></div><p class="muted">从真实回放开始验证，也可以接入正在开播的直播间。</p></div>
+        <div class="brand-copy"><div class="brand-title"><h1>梓有妙选</h1><span class="brand-english">Azusa HexPick</span><span class="version-tag">v0.7.0</span></div><p class="muted">整理海克斯、出装和点歌建议。</p></div>
       </div>
       <div class="header-actions">
         <span class="service-status"><span id="service-dot" class="status-dot"></span><span id="service-text">正在连接</span></span>
@@ -34,17 +36,28 @@
       </div>
     </header>
 
+    <nav class="application-toolbar operator-only" aria-label="应用常用操作">
+      <div class="application-tools"><button type="button" id="application-desktop" class="button secondary"><svg class="icon" aria-hidden="true"><use href="#icon-source"/></svg>显示桌面副屏</button><button type="button" id="application-settings" class="button secondary"><svg class="icon" aria-hidden="true"><use href="#icon-tune"/></svg>启动器设置</button></div>
+      <button id="application-exit" class="button exit-button" type="button"><svg class="icon" aria-hidden="true"><use href="#icon-power"/></svg>退出全部</button>
+      <p id="application-message" class="application-toolbar-message" role="status" hidden></p>
+    </nav>
+
     <div id="page-error" class="error-notice" role="alert" hidden></div>
+
+    <section id="onboarding" class="onboarding operator-only" aria-labelledby="onboarding-title">
+      <div class="onboarding-heading"><h2 id="onboarding-title">第一次使用</h2><button id="onboard-dismiss" class="text-button" type="button">收起提示</button></div>
+      <ol class="onboarding-steps"><li><strong>按需配置 AI</strong><span>在启动器里填入密钥并保存，以后会自动记住。不使用 AI 也能统计。</span><button id="onboard-settings" class="text-button" type="button">打开启动器设置</button></li><li><strong>接入阿梓直播间</strong><span>点击「接入直播间」，再选择海克斯、出装或点歌。</span></li><li><strong>打开桌面副屏</strong><span>把小窗移到副屏。Ctrl＋Alt＋F6 点歌，F7 海克斯，F8 出装，F9 锁定。</span><a href="/guide.html" target="_blank" rel="noopener">查看图文教程</a></li></ol>
+    </section>
 
     <main class="workspace">
       <section class="operator-only controls-column" aria-label="建议台操作">
         <section class="control-card source-card">
           <div class="section-heading"><svg class="section-icon icon" aria-hidden="true"><use href="#icon-source"/></svg><h2>选择弹幕来源</h2><img class="section-character" src="/assets/azusa-snack.jpg" width="40" height="40" alt=""></div>
           <div class="source-tabs" role="group" aria-label="弹幕来源">
-            <button type="button" id="replay-tab" class="source-tab active" aria-pressed="true">回放验证</button>
-            <button type="button" id="live-tab" class="source-tab" aria-pressed="false">直播间</button>
+            <button type="button" id="live-tab" class="source-tab active" aria-pressed="true">直播间</button>
+            <button type="button" id="replay-tab" class="source-tab" aria-pressed="false">回放体验</button>
           </div>
-          <div id="replay-controls">
+          <div id="replay-controls" hidden>
             <label class="field-label" for="dataset-select">阿梓回放</label>
             <select id="dataset-select" disabled><option value="">正在读取回放</option></select>
             <p id="dataset-description" class="field-hint">仅统计提供的回放弹幕文件。</p>
@@ -62,7 +75,7 @@
             <div id="candidate-windows" class="candidate-windows" aria-label="候选回放片段"></div>
             <p class="field-hint">点击片段会跳转、播放并开始新轮。候选按弹幕密度筛选。</p>
           </div>
-          <div id="live-controls" hidden>
+          <div id="live-controls">
             <label class="field-label" for="room-input">直播间号</label>
             <input id="room-input" type="text" value="510" inputmode="numeric" autocomplete="off" placeholder="510">
             <p class="field-hint">阿梓：510。七海：21452505。接入后再开始一轮建议。</p>
@@ -112,13 +125,26 @@
           <div class="ai-topline"><label class="toggle-label" for="ai-enabled"><input id="ai-enabled" type="checkbox"><span>启用装备 AI</span></label><span id="key-status" class="small-badge">正在检查配置</span></div>
           <label class="toggle-label" for="hex-ai-enabled"><input id="hex-ai-enabled" type="checkbox"><span>启用海克斯 AI，仅建议较少时</span></label>
           <label class="field-label" for="ai-model">使用模型</label><select id="ai-model"><option value="deepseek-v4-pro">DeepSeek V4 Pro</option><option value="deepseek-flash">DeepSeek Flash</option></select>
-          <p class="field-hint">两个开关默认关闭。海克斯明确建议不足 20 条时，仅在最后 7 秒补充近期复杂表达；不映射无编号技能名。启用后会产生 API 费用。</p>
+          <p class="field-hint">应用版首次配置密钥后默认启用装备 AI，海克斯 AI 默认关闭。海克斯明确建议不足 20 条时，仅在最后 7 秒补充复杂表达。启用后会产生 API 费用，开关偏好会保存。</p>
           <p id="hex-ai-policy" class="field-hint">海克斯 AI 已关闭。</p>
           <p id="equipment-ai-policy" class="field-hint">装备明确建议先由本地识别，复杂表达可由 AI 补充。</p>
           <p id="equipment-ai-diagnostics" class="field-hint" hidden></p>
           <div id="ai-summary" class="ai-summary">AI 已关闭</div>
           <p id="ai-error" class="inline-error" hidden></p>
         </section>
+        <details class="control-card application-card" id="application-card">
+          <summary>更新与帮助 <span id="application-version" class="muted">v0.7.0</span></summary>
+          <div class="application-body">
+            <div class="button-row"><button type="button" id="onboard-show" class="text-button">重看上手提示</button><a href="/guide.html" target="_blank" rel="noopener">图文教程</a></div>
+            <div class="application-update"><h3>应用更新</h3><p id="application-update-state" class="field-hint">正在检查启动器是否已连接。</p><p id="application-update-notes" class="field-hint"></p><progress id="application-progress" max="100" value="0" aria-label="更新下载进度" hidden></progress><div class="button-row"><button id="application-check" type="button" class="button secondary">检查更新</button><button id="application-update" type="button" class="button primary" hidden>更新并重新打开</button></div><p class="field-hint">更新时会重新启动。本场灰名单会清空，其他设置和长期黑名单保留。</p></div>
+          </div>
+        </details>
+        <details class="control-card feedback-card">
+          <summary>问题反馈 <span class="muted">发给溣符雨</span></summary>
+          <div class="application-body"><p id="feedback-state" class="field-hint"></p>
+            <div class="button-row"><button id="feedback-open" type="button" class="button primary" disabled>填写问题反馈</button><button id="feedback-diagnostics" type="button" class="text-button">查看诊断信息</button></div><textarea id="feedback-diagnostic-text" rows="6" aria-label="可复制到问卷的诊断信息" readonly hidden></textarea><p id="feedback-result" class="field-hint" role="status"></p>
+          </div>
+        </details>
         <section class="control-card phone-card">
           <div class="section-heading"><svg class="section-icon icon" aria-hidden="true"><use href="#icon-phone"/></svg><h2>手机只读展示</h2><span class="optional-tag">可选</span></div>
           <p id="phone-status" class="field-hint">正在检查手机模式。</p>
@@ -178,5 +204,6 @@
     </div>
     <p id="appearance-status" class="appearance-status" role="status" aria-live="polite"></p>
   </section>
+<dialog id="feedback-dialog" class="feedback-dialog" aria-labelledby="feedback-dialog-title"><header><div><h2 id="feedback-dialog-title">问题反馈</h2><p>提交后溣符雨会收到提醒。看到问卷提示提交成功即可。</p></div><button id="feedback-close" class="button secondary" type="button">关闭</button></header><p class="feedback-fallback">如果问卷没有显示，可以<a id="feedback-external" target="_blank" rel="noopener noreferrer">在浏览器中打开</a>。</p><iframe id="feedback-frame" title="梓有妙选腾讯问卷" referrerpolicy="no-referrer"></iframe></dialog>
 </body>
 </html>

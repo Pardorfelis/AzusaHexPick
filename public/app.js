@@ -10,7 +10,7 @@ let current = null;
 let datasets = [];
 let serviceOnline = false;
 let busy = false;
-let selectedSource = 'replay';
+let selectedSource = 'live';
 let positionDirty = true;
 let settingsDirty = false;
 let aiDraftDirty = false;
@@ -203,7 +203,7 @@ function selectSource(kind) {
 function refreshControls() {
   if (readOnly) return;
   const blocked = busy || !serviceOnline;
-  document.querySelectorAll('.operator-only button, .operator-only input, .operator-only select').forEach((node) => { node.disabled = blocked || node.dataset.copying === 'true'; });
+  document.querySelectorAll('.operator-only button:not([data-application-control]), .operator-only input, .operator-only select').forEach((node) => { node.disabled = blocked || node.dataset.copying === 'true'; });
   const noReplay = !byId('dataset-select').value;
   for (const id of ['dataset-select', 'replay-position', 'replay-speed', 'replay-load', 'replay-play']) byId(id).disabled = blocked || noReplay;
   byId('replay-pause').disabled = blocked || current?.sourceKind !== 'replay' || current?.source?.state !== 'playing';
@@ -250,7 +250,7 @@ async function loadPhoneState() {
     const health = await request('/api/health');
     byId('phone-links').replaceChildren();
     if (!health.lanEnabled) {
-      text('phone-status', '手机模式未开启。可用启动脚本的手机模式启用。');
+      text('phone-status', '手机模式未开启。可在启动器设置中启用，保存后重启服务。');
       byId('phone-note').hidden = true;
       return;
     }
@@ -295,6 +295,7 @@ async function loadReplay(selection = replaySelection()) {
 }
 
 function update(snapshot) {
+  window.HexApplication?.snapshot(snapshot);
   if (!snapshot || typeof snapshot !== 'object') return;
   if (serviceOnline && current && Number.isFinite(snapshot.revision) && Number.isFinite(current.revision) && snapshot.revision < current.revision) return;
   current = snapshot;
@@ -750,7 +751,7 @@ async function initialize() {
   try {
     const initial = await request('/api/state');
     update(initial);
-    if (!readOnly) selectSource(initial.sourceKind === 'live' ? 'live' : 'replay');
+    if (!readOnly) selectSource(initial.sourceKind === 'replay' ? 'replay' : 'live');
   } catch (error) { clientError = error.message; renderError(); }
   if (!readOnly) {
     try {

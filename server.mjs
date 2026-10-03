@@ -11,11 +11,19 @@ import { AiService, loadLocalKey } from './src/ai-service.mjs';
 import { allowedEquipment } from './src/equipment.mjs';
 import { SongLists } from './src/song-lists.mjs';
 import { AppearanceStore, AppearanceError, MAX_IMAGE_BYTES } from './src/appearance.mjs';
+import { LauncherBridge, atomicJson, readSettings, diagnostic, feedbackUrl } from './src/application.mjs';
 
 const root = dirname(fileURLToPath(import.meta.url));
+const userDirectory = process.env.AZUSA_USER_DATA || resolve(root, 'data');
+const runtimeDirectory = process.env.AZUSA_USER_DATA ? resolve(userDirectory, 'runtime') : resolve(root, '.runtime');
+const launcher = new LauncherBridge();
+const delivery = JSON.parse(await readFile(resolve(root, 'delivery.json'), 'utf8').catch(() => '{}'));
 const appVersion = JSON.parse(await readFile(new URL('./package.json', import.meta.url), 'utf8')).version;
 const themes = JSON.parse(await readFile(new URL('./public/themes.json', import.meta.url), 'utf8'));
-const appearance = await new AppearanceStore({ directory: process.env.AZUSA_APPEARANCE_DIR || resolve(root, 'data'), themes }).load();
+const appearance = await new AppearanceStore({ directory: process.env.AZUSA_APPEARANCE_DIR || userDirectory, themes }).load();
+if (process.env.AZUSA_USER_DATA && !await readFile(resolve(userDirectory, 'appearance.json')).then(() => true, error => {
+  if (error.code === 'ENOENT') return false; throw error;
+})) await appearance.update({ target: 'console', patch: {theme: 'fluent'}, sync: true });
 const port = Number(process.env.AZUSA_PORT || 5178);
 if (!Number.isInteger(port) || port < 1024 || port > 65535) throw new Error('端口无效。');
 const origin = 'http://127.0.0.1:' + port;
@@ -30,7 +38,7 @@ function validViewerToken(value) {
   if (typeof value !== 'string' || !/^[a-f0-9]{48}$/.test(value)) return false;
   return timingSafeEqual(Buffer.from(value), Buffer.from(viewerToken));
 }
-const songLists = new SongLists({ path: process.env.AZUSA_SONG_BLACKLIST_FILE || resolve(root, 'data/song-blacklist.json') });
+const songLists = new SongLists({ path: process.env.AZUSA_SONG_BLACKLIST_FILE || resolve(userDirectory, 'song-blacklist.json') });
 const engine = new PanelEngine({ songLists });
 const listeners = new Set();
 let sourceKind = 'none';
@@ -39,11 +47,21 @@ let sourceGeneration = '';
 let helperSeenAt = 0;
 let lastError = '';
 let shuttingDown = false;
+let updatePrepared = false;
+let aiSaving = false;
 let revision = 0;
 let roundOptions = {mode: 'hex', counting: 'messages', seconds: 20};
 
 function changed() { revision += 1; broadcast(); }
-const ai = new AiService({engine, key: await loadLocalKey(resolve(root, '.env.local')), onChange: changed});
+const ai = new AiService({engine, key: process.env.AZUSA_USER_DATA
+  ? process.env.DEEPSEEK_API_KEY?.trim() || '' : await loadLocalKey(resolve(root, '.env.local')), onChange: changed});
+// 打包版保存开关；开发模式保持原有的默认关闭行为。
+if (process.env.AZUSA_USER_DATA && ai.key) {
+  const preferences = await readSettings(userDirectory);
+  const settings = preferences || { enabled: true, hexEnabled: false, model: 'deepseek-flash' };
+  ai.configure(settings);
+  if (!preferences) await atomicJson(resolve(userDirectory, 'app-settings.json'), settings);
+}
 
 function accept(message) {
   const result = engine.ingest(message);
@@ -140,7 +158,20 @@ function roundSettings(value) {
 
 async function control(value) {
   lastError = '';
+  if (updatePrepared && !['shutdown', 'cancel-update', 'helper-heartbeat'].includes(value.action))
+    throw new Error('正在准备重启，请稍候。');
   switch (value.action) {
+    case 'prepare-update':
+      if (!launcher.available || engine.snapshot().status === 'collecting') throw new Error('本轮收集结束后才能更新。');
+      updatePrepared = true;
+      break;
+    case 'cancel-update':
+      updatePrepared = false;
+      break;
+    case 'exit-all':
+      if (launcher.available) await launcher.call('exit');
+      else setTimeout(shutdown, 100);
+      break;
     case 'round':
       roundOptions = roundSettings(value);
       engine.startRound(roundOptions);
@@ -190,11 +221,22 @@ async function control(value) {
       engine.setConnection('disconnected', sourceGeneration);
       sourceKind = 'none';
       break;
-    case 'ai':
+    case 'ai': {
+      if (aiSaving) throw new Error('正在保存 AI 偏好，请稍后重试。');
       for (const field of ['enabled', 'hexEnabled'])
         if (value[field] !== undefined && typeof value[field] !== 'boolean') throw new Error('AI 开关必须是布尔值。');
-      ai.configure({enabled: value.enabled ?? ai.enabled, hexEnabled: value.hexEnabled ?? ai.hexEnabled, model: value.model});
+      const previous = { enabled: ai.enabled, hexEnabled: ai.hexEnabled, model: ai.model };
+      aiSaving = true;
+      try {
+        ai.configure({enabled: value.enabled ?? ai.enabled, hexEnabled: value.hexEnabled ?? ai.hexEnabled, model: value.model});
+        if (process.env.AZUSA_USER_DATA) await atomicJson(resolve(userDirectory, 'app-settings.json'),
+          { enabled: ai.enabled, hexEnabled: ai.hexEnabled, model: ai.model });
+      } catch (error) {
+        Object.assign(ai, previous);
+        throw error;
+      } finally { aiSaving = false; }
       break;
+    }
     case 'helper-heartbeat':
       helperSeenAt = value.active === false ? 0 : Date.now();
       break;
@@ -230,6 +272,12 @@ const publicFiles = new Map([
   ['/panel', ['index.html', 'text/html; charset=utf-8']],
   ['/style.css', ['style.css', 'text/css; charset=utf-8']],
   ['/app.js', ['app.js', 'text/javascript; charset=utf-8']],
+  ['/application.js', ['application.js', 'text/javascript; charset=utf-8']],
+  ['/guide.html', ['guide.html', 'text/html; charset=utf-8']],
+  ['/guide.css', ['guide.css', 'text/css; charset=utf-8']],
+  ['/guide-assets/launcher.png', ['guide-assets/launcher.png', 'image/png']],
+  ['/guide-assets/console.png', ['guide-assets/console.png', 'image/png']],
+  ['/guide-assets/panel.png', ['guide-assets/panel.png', 'image/png']],
   ['/appearance.js', ['appearance.js', 'text/javascript; charset=utf-8']],
   ['/themes.json', ['themes.json', 'application/json; charset=utf-8']],
   ['/assets/azusa-wallpaper.jpg', ['assets/azusa-wallpaper.jpg', 'image/jpeg']],
@@ -244,7 +292,7 @@ const publicFiles = new Map([
 const server = http.createServer(async (request, response) => {
   response.setHeader('X-Content-Type-Options', 'nosniff');
   response.setHeader('Referrer-Policy', 'no-referrer');
-  response.setHeader('Content-Security-Policy', "default-src 'self'; script-src 'self'; style-src 'self'; connect-src 'self'; img-src 'self' data:; frame-ancestors 'none'");
+  response.setHeader('Content-Security-Policy', "default-src 'self'; script-src 'self'; style-src 'self'; connect-src 'self'; img-src 'self' data:; frame-src https://wj.qq.com; frame-ancestors 'none'");
   if (!allowedHosts.includes(request.headers.host)) return json(response, 403, {error: '仅允许本机访问。'});
   if (request.headers.origin && request.headers.origin !== 'http://' + request.headers.host)
     return json(response, 403, {error: '跨站请求已拒绝。'});
@@ -257,6 +305,24 @@ const server = http.createServer(async (request, response) => {
       return json(response, 403, {error: '手机只读页需要本机提供的配对链接。'});
   }
   try {
+    if (url.pathname.startsWith('/api/application')) {
+      if (!local) return json(response, 403, {error: '应用管理仅允许本机操作。'});
+      if (request.method === 'GET' && url.pathname === '/api/application') {
+        const managed = await launcher.call().catch(() => ({available: false, message: '启动器暂时未连接。'}));
+        return json(response, 200, {version: appVersion, launcher: managed,
+          feedbackUrl: managed.feedbackUrl || feedbackUrl(delivery.feedbackUrl), collecting: engine.snapshot().status === 'collecting'});
+      }
+      if (request.method === 'GET' && url.pathname === '/api/application/diagnostics')
+        return json(response, 200, diagnostic(appVersion, snapshot(), launcher.available));
+      if (request.method === 'POST' && url.pathname === '/api/application' && request.headers['x-panel-control'] === '1') {
+        const value = await body(request);
+        if (!['check-update', 'update', 'settings', 'show', 'desktop'].includes(value.action)) return json(response, 400, {error:'应用操作无效。'});
+        if (!launcher.available) return json(response, 409, {error:'请使用梓有妙选.exe 启动后再操作。'});
+        if (value.action === 'update' && engine.snapshot().status === 'collecting') return json(response, 409, {error:'本轮收集结束后才能更新。'});
+        return json(response, 200, await launcher.call(value.action));
+      }
+      return json(response, 403, {error:'应用管理请求无效。'});
+    }
     if (url.pathname.startsWith('/api/appearance') || url.pathname.startsWith('/api/backgrounds')) {
       if (!local) return json(response, 403, {error: '外观设置仅允许本机操作。'});
       if (request.method === 'GET' && url.pathname === '/api/appearance') return json(response, 200, appearance.read());
@@ -334,6 +400,7 @@ const server = http.createServer(async (request, response) => {
       return json(response, 400, {error: error instanceof AppearanceError ? error.message : '外观操作未完成，请检查输入后重试。'});
     const safeMessages = [
       '需要 JSON 请求。', '请求过大。', '无效的模式。', '无效的计票口径。',
+      '本轮收集结束后才能更新。', '正在准备重启，请稍候。', '启动器暂时无法响应，请从托盘打开。',
       '请选择支持的收集时长。', '回放速度无效。', '回放位置无效。', '直播间编号无效。', '请先选择回放。', '未知操作。',
       '无效的回放编号。', '回放格式不正确。', '不支持的模型。',
       '未配置本机 DeepSeek 密钥。', '上次请求费用未知，请重启后再启用。',
@@ -352,7 +419,7 @@ const server = http.createServer(async (request, response) => {
 });
 
 const updateTimer = setInterval(broadcast, 250);
-const aiTimer = setInterval(() => ai.tick().catch(() => {}), 350);
+const aiTimer = setInterval(() => { if (!aiSaving) ai.tick().catch(() => {}); }, 350);
 updateTimer.unref();
 aiTimer.unref();
 
@@ -365,16 +432,16 @@ async function shutdown() {
   live.stop();
   replay.stop();
   for (const response of listeners) response.end();
-  await unlink(resolve(root, '.runtime/server-' + port + '.json')).catch(() => {});
+  await unlink(resolve(runtimeDirectory, 'server-' + port + '.json')).catch(() => {});
   server.close();
   setTimeout(() => process.exit(0), 500).unref();
 }
 process.on('SIGINT', shutdown);
 process.on('SIGTERM', shutdown);
 server.listen(port, lanEnabled ? '0.0.0.0' : '127.0.0.1', async () => {
-  await mkdir(resolve(root, '.runtime'), {recursive: true});
-  await writeFile(resolve(root, '.runtime/server-' + port + '.json'), JSON.stringify({port, pid: process.pid}), 'utf8');
-  console.log('梓有妙选已启动：' + origin + '。AI 默认关闭。');
+  await mkdir(runtimeDirectory, {recursive: true});
+  await writeFile(resolve(runtimeDirectory, 'server-' + port + '.json'), JSON.stringify({port, pid: process.pid}), 'utf8');
+  console.log('梓有妙选已启动：' + origin + '。');
 });
 server.on('error', () => {
   console.error('启动失败，请检查端口是否被占用。');

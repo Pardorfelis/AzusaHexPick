@@ -116,6 +116,14 @@ test('实际 HTTP 服务、回放与局域网只读权限集成', { timeout: 450
     });
 
     await t.test('Host、Origin、控制请求头和 JSON 输入受到限制', async () => {
+      const application = parsed(await request(port, '/api/application'));
+      assert.equal(application.launcher.available, false);
+      assert.equal(application.feedbackUrl, 'https://wj.qq.com/s2/28082013/eqvo/');
+      const diagnostics = parsed(await request(port, '/api/application/diagnostics'));
+      assert.equal(diagnostics.application, 'Azusa HexPick');
+      assert.equal(JSON.stringify(diagnostics).includes('DEEPSEEK'), false);
+      assert.equal((await request(port, '/api/application', {method:'POST', headers:{'Content-Type':'application/json'}, body:'{"action":"update"}'})).status,403);
+      assert.equal((await request(port, '/api/application', {method:'POST', headers:{'Content-Type':'application/json','x-panel-control':'1'}, body:'{"action":"update"}'})).status,409);
       assert.equal((await request(port, '/api/health', { headers: { Host: 'invalid.example' } })).status, 403);
       assert.equal((await request(port, '/api/state', { headers: { Origin: 'http://invalid.example' } })).status, 403);
       assert.equal((await request(port, '/api/state', { headers: { Origin: `http://127.0.0.1:${port}` } })).status, 200);
@@ -258,13 +266,13 @@ test('实际 HTTP 服务、回放与局域网只读权限集成', { timeout: 450
       const hostname = viewer.hostname;
       const token = viewer.searchParams.get('token');
       assert.equal(typeof token, 'string');
-      for (const path of ['/panel', '/api/state', '/api/health', '/api/replays', '/api/hex-audit', '/api/equipment-audit']) {
+      for (const path of ['/panel', '/api/state', '/api/health', '/api/replays', '/api/hex-audit', '/api/equipment-audit', '/api/application', '/api/application/diagnostics']) {
         assert.equal((await request(port, path, { hostname })).status, 403);
       }
       assert.equal((await request(port, viewer.pathname + viewer.search, { hostname })).status, 200);
       const paired = await request(port, '/api/state?token=' + encodeURIComponent(token), { hostname });
       assert.equal(paired.status, 200); privateSnapshotCheck(parsed(paired));
-      for (const path of ['/api/health', '/api/replays', '/api/hex-audit', '/api/equipment-audit']) {
+      for (const path of ['/api/health', '/api/replays', '/api/hex-audit', '/api/equipment-audit', '/api/application', '/api/application/diagnostics']) {
         assert.equal((await request(port, path + '?token=' + encodeURIComponent(token), { hostname })).status, 403);
       }
       for (const badToken of ['0'.repeat(48), '中文'.repeat(24)]) {

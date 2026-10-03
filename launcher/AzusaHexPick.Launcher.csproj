@@ -1,0 +1,24 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net10.0-windows</TargetFramework>
+    <UseWPF>true</UseWPF>
+    <UseWindowsForms>true</UseWindowsForms>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <StartupObject>AzusaHexPick.Program</StartupObject>
+    <AssemblyName>梓有妙选</AssemblyName>
+    <RootNamespace>AzusaHexPick</RootNamespace>
+    <Version>0.7.0</Version>
+    <ApplicationIcon>Assets/app.ico</ApplicationIcon>
+    <SelfContained>true</SelfContained>
+    <RuntimeIdentifier>win-x64</RuntimeIdentifier>
+    <DebugType>none</DebugType>
+    <IncludeNativeLibrariesForSelfExtract>false</IncludeNativeLibrariesForSelfExtract>
+  </PropertyGroup>
+  <ItemGroup>
+    <PackageReference Include="Velopack" Version="1.2.161" />
+    <FrameworkReference Include="Microsoft.AspNetCore.App" />
+    <Resource Include="Assets/*" />
+  </ItemGroup>
+</Project>

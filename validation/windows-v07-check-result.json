@@ -1,0 +1,26 @@
+{
+  "version": "0.7.0",
+  "date": "2026-10-04",
+  "automated": { "node": 239, "python": 56, "passed": true },
+  "selfContainedPortableStartup": true,
+  "singletonVerified": true,
+  "managedControlsVerified": true,
+  "allOwnedProcessesExited": true,
+  "portableManifestFiles": 1658,
+  "manifestHashesMatchPackage": true,
+  "personalDataIncluded": false,
+  "updateTests": {
+    "source": "isolated test channel",
+    "from": "0.7.907",
+    "to": "0.7.908",
+    "casesPassed": ["corrupt", "interrupt", "cancel", "new-round", "success", "concurrent"],
+    "preservedPersonalFiles": 6,
+    "encryptedKeyDecrypts": true,
+    "diskSpaceCheck": "simulated insufficient capacity",
+    "fileLockRecovery": "separate real Windows file lock test passed"
+  },
+  "feedback": { "submissionVerified": true, "wechatReminderConfirmedByMaintainer": true, "embeddedFormLoaded": true },
+  "demo": { "seconds": 54, "format": "1080p H.264 30fps", "type": "captioned real screenshots", "replayLabelVisible": true },
+  "paidApiCalls": 0,
+  "notVerifiedThisRelease": ["fresh Windows 10 VM", "real game fullscreen", "physical phone", "streamer viewing distance", "long live session"]
+}

@@ -43,6 +43,8 @@ def capture_draw(view, width=380, return_panel=False, height=desktop.PANEL_HEIGH
             pass
         def create_line(self, *_args, **_options):
             pass
+        def create_arc(self, *_args, **_options):
+            pass
     panel = desktop.DesktopPanel.__new__(desktop.DesktopPanel)
     panel.width = width
     panel.height, panel.zoom = height, zoom
@@ -61,6 +63,103 @@ def capture_draw(view, width=380, return_panel=False, height=desktop.PANEL_HEIGH
 
 
 class ViewTests(unittest.TestCase):
+    def test_exit_all_first_click_opens_dialog_and_cancel_preserves_round_at_each_zoom(self):
+        for zoom in (1, 1.25, 1.5, 1.75, 2):
+            panel = desktop.DesktopPanel.__new__(desktop.DesktopPanel)
+            panel.width, panel.height, panel.zoom = 480, 650, zoom
+            panel.pixel_width, panel.pixel_height = 480 * zoom, 650 * zoom
+            panel.metrics = desktop.layout(480, 650)
+            panel.song_commands = queue.Queue(maxsize=16)
+            panel.root = object()
+            panel.last_view = {"round": 3, "status": "正在收集", "mode": "songs"}
+            panel.song_pending = {(3, "晴天")}
+            panel.draw = lambda _view: None
+            event = SimpleNamespace(x=(480-55)*zoom, y=23*zoom)
+            with patch.object(desktop, "confirm_exit_all", return_value=False) as dialog:
+                panel.press(event)
+                dialog.assert_called_once_with(panel.root, desktop.COLORS, zoom, None)
+                self.assertTrue(panel.song_commands.empty())
+                self.assertEqual(panel.last_view, {"round": 3, "status": "正在收集", "mode": "songs"})
+                self.assertEqual(panel.song_pending, {(3, "晴天")})
+                self.assertFalse(panel.exit_confirmation_open)
+
+    def test_confirm_enqueues_once_and_does_not_offer_duplicate_dialogs(self):
+        for zoom in (1, 1.25, 1.5, 1.75, 2):
+            panel = desktop.DesktopPanel.__new__(desktop.DesktopPanel)
+            panel.width, panel.height, panel.zoom = 480, 650, zoom
+            panel.pixel_width, panel.pixel_height = 480 * zoom, 650 * zoom
+            panel.metrics = desktop.layout(480, 650)
+            panel.song_commands = queue.Queue(maxsize=16)
+            panel.root = object()
+            panel.last_view = {}
+            panel.draw = lambda _view: None
+            event = SimpleNamespace(x=(480-55)*zoom, y=23*zoom)
+
+            def confirm(*_arguments):
+                panel.press(event)
+                self.assertTrue(panel.song_commands.empty())
+                return True
+
+            with patch.object(desktop, "confirm_exit_all", side_effect=confirm) as dialog:
+                panel.press(event)
+                self.assertEqual(panel.song_commands.get_nowait(), {"action": "exit-all"})
+                panel.press(event)
+                self.assertTrue(panel.song_commands.empty())
+                dialog.assert_called_once()
+                self.assertTrue(panel.exit_pending)
+
+    def test_exit_dialog_closed_with_window_or_error_does_not_send_exit(self):
+        panel = desktop.DesktopPanel.__new__(desktop.DesktopPanel)
+        panel.root = object()
+        panel.song_commands = queue.Queue(maxsize=16)
+        with patch.object(desktop, "confirm_exit_all", side_effect=desktop.tk.TclError("closed")):
+            panel.request_exit_all()
+        self.assertTrue(panel.song_commands.empty())
+        self.assertFalse(panel.exit_confirmation_open)
+
+        def window_closed(*_arguments):
+            panel.closed = True
+            return True
+
+        with patch.object(desktop, "confirm_exit_all", side_effect=window_closed):
+            panel.request_exit_all()
+        self.assertTrue(panel.song_commands.empty())
+
+    def test_exit_queue_full_or_http_failure_allows_retry_without_closing_window(self):
+        panel = desktop.DesktopPanel.__new__(desktop.DesktopPanel)
+        panel.root = object()
+        panel.song_commands = queue.Queue(maxsize=1)
+        panel.song_commands.put_nowait({"action": "song-gray-add"})
+        panel.helper_status = {}
+        panel.last_view = {}
+        panel.draw = lambda _view: None
+        panel.close = lambda: self.fail("失败时不应关闭副屏。")
+        with patch.object(desktop, "confirm_exit_all", return_value=True):
+            panel.request_exit_all()
+            self.assertFalse(getattr(panel, "exit_pending", False))
+            self.assertEqual(panel.song_commands.get_nowait(), {"action": "song-gray-add"})
+            panel.request_exit_all()
+            self.assertTrue(panel.exit_pending)
+            self.assertEqual(panel.song_commands.get_nowait(), {"action": "exit-all"})
+            panel.finish_song_control({"action": "exit-all"}, False)
+            self.assertFalse(panel.exit_pending)
+            panel.request_exit_all()
+            self.assertEqual(panel.song_commands.get_nowait(), {"action": "exit-all"})
+
+    def test_original_close_icon_only_closes_desktop_panel(self):
+        panel = desktop.DesktopPanel.__new__(desktop.DesktopPanel)
+        panel.width, panel.height, panel.zoom = 480, 650, 1.5
+        panel.pixel_width, panel.pixel_height = 720, 975
+        panel.metrics = desktop.layout(480, 650)
+        panel.song_commands = queue.Queue(maxsize=16)
+        closed = []
+        panel.close = lambda: closed.append(True)
+        with patch.object(desktop, "confirm_exit_all") as dialog:
+            panel.press(SimpleNamespace(x=(480-22)*1.5, y=23*1.5))
+        self.assertEqual(closed, [True])
+        self.assertTrue(panel.song_commands.empty())
+        dialog.assert_not_called()
+
     def test_display_preferences_recover_invalid_files_and_round_trip(self):
         with tempfile.TemporaryDirectory() as folder:
             path = Path(folder) / "display.json"
@@ -331,7 +430,8 @@ class ViewTests(unittest.TestCase):
         panel.width = 360
         panel.metrics = desktop.layout(360)
         panel.canvas = Canvas()
-        panel.statistics_fonts = {9: Font(), 10: Font()}
+        panel.canvas.create_arc = lambda *_args, **_options: None
+        panel.statistics_fonts = {9: Font(), 10: Font(), 12: Font()}
         panel.helper_status = {"message": "快捷键未启用。", "active": False}
         texts = []
         panel.text = lambda x, y, label, size=12, color="text", **options: texts.append((x, y, label, size, options))

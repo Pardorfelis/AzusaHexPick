@@ -9,10 +9,10 @@ import zipfile
 ROOT = Path(__file__).resolve().parent.parent
 VERSION = json.loads((ROOT / "package.json").read_text(encoding="utf-8"))["version"]
 TOP_FILES = (
-    "README.md", "package.json", "server.mjs", ".env.example", ".gitignore", ".gitattributes", "CHANGELOG.md",
+    "README.md", "package.json", "server.mjs", "delivery.json", ".env.example", ".gitignore", ".gitattributes", "CHANGELOG.md",
     "启动.cmd", "启动手机模式.cmd", "停止.cmd", "验证.cmd",
 )
-APP_DIRS = ("src", "public", "scripts", "docs", "tests")
+APP_DIRS = ("src", "public", "scripts", "docs", "tests", "launcher")
 DATA_FILES = ("data/equipment-aliases.json", "data/riot-equipment-names.json", "data/song-catalog.json",
               "data/replays/azusa-p3.json", "data/replays/azusa-p4.json",
               "data/replays/azusa-singing-p1.json", "data/replays/azusa-singing-p2.json")
@@ -37,8 +37,10 @@ REPORT_FILES = ("validation/replay-inspection.json",
 ASSET_FILES = ("public/assets/azusa-wallpaper.jpg", "public/assets/azusa-snack.jpg", "public/assets/azusa-brand.png",
                "public/assets/azusa-computer.png", "public/assets/azusa-panel-brand.png",
                "public/assets/azusa-cheer.gif", "public/assets/azusa-sing.gif",
-               "public/assets/fonts/Manrope.ttf", "public/assets/fonts/OFL.txt")
-EXTENSIONS = {".mjs", ".js", ".css", ".html", ".py", ".ps1", ".md", ".json"}
+               "public/assets/fonts/Manrope.ttf", "public/assets/fonts/OFL.txt",
+               "launcher/Assets/avatar.jpg", "launcher/Assets/signature.png", "launcher/Assets/help.jpg", "launcher/Assets/hero.png", "launcher/Assets/app.ico",
+               "public/guide-assets/launcher.png", "public/guide-assets/console.png", "public/guide-assets/panel.png")
+EXTENSIONS = {".mjs", ".js", ".css", ".html", ".py", ".ps1", ".md", ".json", ".cs", ".xaml", ".csproj"}
 LOCAL_DOCUMENTS = {"docs/plan.md"}
 LOCAL_NAMES = {"AGENTS.md", "CLAUDE.md", "GEMINI.md"}
 
@@ -49,7 +51,7 @@ def package_files(root=ROOT):
         for path in (root / directory).rglob("*"):
             if (path.is_file() and path.suffix in EXTENSIONS and "__pycache__" not in path.parts
                     and path.name not in LOCAL_NAMES
-                    and not {".agents", ".codex", ".claude", ".impeccable"}.intersection(path.parts)
+                    and not {".agents", ".codex", ".claude", ".impeccable", "bin", "obj"}.intersection(path.parts)
                     and path.relative_to(root).as_posix() not in LOCAL_DOCUMENTS):
                 files.add(path)
     for path in files:

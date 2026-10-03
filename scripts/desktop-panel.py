@@ -5,6 +5,7 @@ import ctypes
 from ctypes import wintypes
 import json
 import math
+import os
 from pathlib import Path
 import queue
 import struct
@@ -22,9 +23,11 @@ COLORS = {"background": "#11151d", "card": "#1b222e", "border": "#384455",
           "purple": "#a1aaff", "brand": "#7d89fb", "selection": "#272f4d", "header": "#242e3e",
           "teal": "#8bd4bc", "amber": "#e8bb86", "red": "#f1a4ae"}
 
+RESOURCE_ROOT = Path(os.environ.get("AZUSA_RESOURCE_ROOT", Path(__file__).resolve().parent.parent))
+
 def load_themes():
     try:
-        value = json.loads((Path(__file__).resolve().parent.parent / "public/themes.json").read_text(encoding="utf-8"))
+        value = json.loads((RESOURCE_ROOT / "public/themes.json").read_text(encoding="utf-8"))
         return {item["id"]: item for item in value if all(name in item["native"] for name in COLORS)}
     except (OSError, ValueError, TypeError, KeyError):
         return {}
@@ -62,7 +65,7 @@ def artwork_sample(crop, bounds):
 
 def load_artwork(root, zoom=1):
     images = {}
-    assets = Path(__file__).resolve().parent.parent / "public" / "assets"
+    assets = RESOURCE_ROOT / "public" / "assets"
     for key, (name, crop, bounds) in ARTWORK.items():
         try:
             original = tk.PhotoImage(master=root, file=str(assets / name))
@@ -73,6 +76,68 @@ def load_artwork(root, zoom=1):
         except (OSError, tk.TclError):
             continue
     return images
+
+
+def confirm_exit_all(root, colors, zoom=1, work_area=None):
+    """仅由用户主动点击电源时打开；默认焦点放在取消按钮。"""
+    dialog = tk.Toplevel(root)
+    dialog.withdraw()
+    dialog.title("梓有妙选")
+    dialog.transient(root)
+    dialog.resizable(False, False)
+    dialog.configure(background=colors["background"])
+    dialog.attributes("-topmost", True)
+    try:
+        icon = tk.PhotoImage(master=dialog, file=str(RESOURCE_ROOT / "public/assets/azusa-computer.png"))
+        icon = icon.subsample(max(1, math.ceil(max(icon.width(), icon.height()) / 32)))
+        dialog.iconphoto(False, icon)
+    except (OSError, tk.TclError):
+        pass
+    accepted = False
+
+    def finish(value=False):
+        nonlocal accepted
+        accepted = value
+        dialog.destroy()
+
+    font_size = round(11 * min(1.5, max(1, zoom)))
+    content = tk.Frame(dialog, background=colors["background"], padx=24, pady=22)
+    content.pack(fill="both", expand=True)
+    tk.Label(content, text="确认退出全部吗？", background=colors["background"], foreground=colors["text"],
+             font=("Microsoft YaHei UI", font_size + 2, "bold"), anchor="w").pack(fill="x")
+    tk.Label(content, text="控制台服务和桌面副屏会一起关闭。", background=colors["background"],
+             foreground=colors["muted"], font=("Microsoft YaHei UI", font_size), anchor="w").pack(fill="x", pady=(12, 24))
+    buttons = tk.Frame(content, background=colors["background"])
+    buttons.pack(fill="x")
+    confirm = tk.Button(buttons, text="确认", command=lambda: finish(True), width=8, padx=8, pady=5,
+                        background=colors["selection"], foreground=colors["text"],
+                        activebackground=colors["header"], activeforeground=colors["text"],
+                        font=("Microsoft YaHei UI", font_size), relief="flat", cursor="hand2")
+    confirm.pack(side="right", padx=(10, 0))
+    cancel = tk.Button(buttons, text="取消", command=finish, width=8, padx=8, pady=5,
+                       background=colors["card"], foreground=colors["text"],
+                       activebackground=colors["header"], activeforeground=colors["text"],
+                       font=("Microsoft YaHei UI", font_size), relief="flat", cursor="hand2")
+    cancel.pack(side="right")
+    dialog.bind("<Escape>", lambda _event: finish())
+    cancel.bind("<Return>", lambda _event: finish())
+    confirm.bind("<Return>", lambda _event: finish(True))
+    dialog.protocol("WM_DELETE_WINDOW", finish)
+    dialog.update_idletasks()
+    width, height = dialog.winfo_reqwidth(), dialog.winfo_reqheight()
+    x = root.winfo_rootx() + (root.winfo_width() - width) // 2
+    y = root.winfo_rooty() + (root.winfo_height() - height) // 2
+    area = work_area or {"left": 0, "top": 0, "right": root.winfo_screenwidth(), "bottom": root.winfo_screenheight()}
+    x = max(area["left"], min(x, area["right"] - width))
+    y = max(area["top"], min(y, area["bottom"] - height))
+    dialog.geometry(f"{width}x{height}{x:+d}{y:+d}")
+    dialog.deiconify()
+    dialog.wait_visibility()
+    dialog.grab_set()
+    # 日常副屏仍为不激活窗口；此处仅响应明确的退出操作，让确认框可使用键盘。
+    cancel.focus_force()
+    root.wait_window(dialog)
+    return accepted
 
 HEX_PRIMARY_KEYS = ("1", "2", "3", "1d", "2d", "3d")
 HEX_EXTRA_KEYS = ("12d", "13d", "23d", "d")
@@ -518,7 +583,8 @@ class DesktopPanel:
         self.root.withdraw()
         self.root.overrideredirect(True)
         self.root.configure(background=self.colors["background"])
-        self.display_path = Path(__file__).resolve().parent.parent / ".runtime" / f"desktop-display-{options.port}.json"
+        runtime = Path(os.environ["AZUSA_USER_DATA"]) / "runtime" if os.environ.get("AZUSA_USER_DATA") else RESOURCE_ROOT / ".runtime"
+        self.display_path = runtime / f"desktop-display-{options.port}.json"
         monitors = self.native.monitors()
         self.work_area = next((item for item in monitors if not item.get("primary")), monitors[0] if monitors else
                               {"left": 0, "top": 0, "right": 1920, "bottom": 1080})
@@ -557,6 +623,8 @@ class DesktopPanel:
         self.song_control_message = ""
         self.song_control_until = 0
         self.song_commands = queue.Queue(maxsize=16)
+        self.exit_confirmation_open = False
+        self.exit_pending = False
         self.canvas.bind("<Button-1>", self.press)
         self.canvas.bind("<B1-Motion>", self.drag)
         self.canvas.bind("<ButtonRelease-1>", self.release)
@@ -714,6 +782,13 @@ class DesktopPanel:
                 self.push(("song-control", (action, False)))
 
     def finish_song_control(self, action, successful):
+        if action.get("action") == "exit-all":
+            if successful:
+                self.close()
+            else:
+                self.exit_pending = False
+                self.helper_status["message"] = "退出未完成，请从启动器托盘重试。"
+            return
         self.song_pending.discard((action["roundId"], action["key"]))
         self.song_control_message = "已加入本场灰名单。" if successful else "略过失败，请确认轮次与连接后重试。"
         self.song_control_until = time.monotonic() + (4 if successful else 10)
@@ -791,7 +866,13 @@ class DesktopPanel:
         if material in ("fluent", "sakura", "mint"):
             zoom = getattr(self, "zoom", 1)
             self.canvas.create_rectangle(0, 0, self.width * zoom, 39 * zoom, fill=self.colors["header"], outline="")
-        self.text(16, 13, "梓有妙选｜Azusa HexPick", 13, bold=True)
+        heading = fit_one_line("梓有妙选｜Azusa HexPick", self.width - 96, lambda text: self.measure(text, 12))
+        self.text(16, 13, heading, 12, bold=True)
+        power = self.colors["red" if getattr(self, "exit_pending", False) else "muted"]
+        zoom = getattr(self, "zoom", 1)
+        self.canvas.create_arc((self.width - 63) * zoom, 15 * zoom, (self.width - 47) * zoom, 31 * zoom,
+                               start=135, extent=270, style="arc", outline=power, width=1.6 * zoom)
+        self.line(self.width - 55, 12, self.width - 55, 23, fill=power, width=1.6 * zoom)
         self.line(self.width - 28, 15, self.width - 16, 27, fill=self.colors["muted"], width=1.5)
         self.line(self.width - 28, 27, self.width - 16, 15, fill=self.colors["muted"], width=1.5)
         self.line(16, 39, self.width - 16, 39, fill=self.colors["border"])
@@ -900,6 +981,8 @@ class DesktopPanel:
         summary_size = statistics_font_size(summary, self.width - 32, self.measure)
         self.text(16, bottom - 113, summary, summary_size, "muted")
         helper = self.helper_status.get("message", "快捷键不可用")
+        if getattr(self, "exit_pending", False):
+            helper = "正在退出……"
         helper_ok = self.helper_status.get("active") and "不可达" not in helper
         if view["mode"] == "songs" and getattr(self, "song_control_until", 0) > time.monotonic():
             helper = self.song_control_message
@@ -945,6 +1028,9 @@ class DesktopPanel:
             self.resize_start = (edge, event.x_root, event.y_root, x, y, self.pixel_width, self.pixel_height)
             return
         px, py = event.x / zoom, event.y / zoom
+        if 8 <= py <= 36 and self.width - 72 <= px < self.width - 40:
+            self.request_exit_all()
+            return
         for name, amount in (("zoom_out", -.25), ("zoom_in", .25), ("zoom_reset", None)):
             left, top, right, bottom = self.metrics[name]
             if left <= px <= right and top <= py <= bottom:
@@ -975,6 +1061,26 @@ class DesktopPanel:
             return
         x, y = self.native.position(self.hwnd)
         self.drag_start = (event.x_root, event.y_root, x, y)
+
+    def request_exit_all(self):
+        if getattr(self, "exit_confirmation_open", False) or getattr(self, "exit_pending", False):
+            return
+        self.exit_confirmation_open = True
+        self.drag_start = self.resize_start = None
+        try:
+            accepted = confirm_exit_all(self.root, self.colors, getattr(self, "zoom", 1), getattr(self, "work_area", None))
+        except tk.TclError:
+            accepted = False
+        finally:
+            self.exit_confirmation_open = False
+        if not accepted or getattr(self, "closed", False):
+            return
+        try:
+            self.song_commands.put_nowait({"action": "exit-all"})
+            self.exit_pending = True
+        except queue.Full:
+            self.helper_status["message"] = "还有操作正在处理，请稍后再试。"
+        self.draw(self.last_view)
 
     def drag(self, event):
         if getattr(self, "resize_start", None):

@@ -1,0 +1,18 @@
+{
+  "archive": "azusa-hexpick-0.7.0.zip",
+  "manifestFiles": 154,
+  "sha256": "5506ea94e139e1229b06308ffb17b523ab8b1296e80de55403f0b91c8f352d84",
+  "privateConfigIncluded": false,
+  "originalXmlIncluded": false,
+  "extractedTests": [
+    {
+      "runner": "node",
+      "exitCode": 0
+    },
+    {
+      "runner": "python",
+      "exitCode": 0
+    }
+  ],
+  "paidApiCalls": 0
+}
