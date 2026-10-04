@@ -1,12 +1,122 @@
 <!doctype html>
-<html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>梓有妙选｜使用教程</title><link rel="stylesheet" href="guide.css"></head>
-<body><main id="top"><header><h1>梓有妙选使用教程</h1><p class="subtitle">海克斯、出装和点歌，都可以在副屏看。先打开程序，再连接直播间。</p><p class="credit">溣符雨 · 维护</p></header>
-<nav aria-label="教程目录"><a href="#start">第一次打开</a><a href="#live">接入直播</a><a href="#keys">快捷键</a><a href="#songs">点歌与名单</a><a href="#appearance">副屏与字号</a><a href="#updates">退出与更新</a><a href="#feedback">反馈与排查</a></nav>
-<section id="start"><h2>第一次打开</h2><ol><li>把收到的压缩包<strong>完整解压到一个固定文件夹</strong>，例如桌面的「梓有妙选」。不要在压缩包预览里直接运行，也不要只移走其中一个 EXE。</li><li>双击<strong>梓有妙选.exe</strong>。无需安装 Node、Python 或 .NET。</li><li>如果溣符雨提供了 DeepSeek API Key，展开「首次设置与偏好」，粘贴一次并点击「保存密钥」。没有 Key 也能先用海克斯与点歌。</li><li>点击<strong>开始使用</strong>。网页控制台和桌面副屏会打开，启动器收起到右下角托盘。</li></ol><figure><img src="guide-assets/launcher.png" alt="启动器中的开始使用按钮、首次设置和更新区域" width="830" height="710"><figcaption>窗口右上角关闭后，运行中的程序仍会留在托盘。结束使用请选「退出全部」。</figcaption></figure><p class="note">Key 仅保存在当前 Windows 用户的加密文件中，不会随反馈上传。换电脑或换 Windows 用户，需要重新填写。不要把密钥发到公开评论里。</p></section>
-<section id="live"><h2>接入阿梓直播间</h2><ol><li>控制台默认选中「直播间」，编号 <strong>510</strong> 已填好，点击「接入直播间」。</li><li>在「建议类型」选择海克斯技能、出装建议或弹幕点歌。</li><li>需要弹幕帮忙时，按下对应快捷键开始一轮收集，也可以点控制台的按钮。</li><li>扭头看副屏里的统计，再挑自己想选的项。按 F9 可以锁定结果，不让列表继续变化。</li></ol><figure><img src="guide-assets/console.png" alt="控制台左侧选择直播间与轮次，右侧显示建议结果" width="1440" height="1000"><figcaption>未开播时可以切换「回放体验」。回放结果用于练习，不是当前直播间的实时弹幕。</figcaption></figure><p>控制台页头下方一直显示「显示桌面副屏」「启动器设置」和红色「退出全部」。副屏关掉后，点「显示桌面副屏」就能再打开，不用去找折叠菜单。</p><p>直播画面约有 5 秒延迟，观众看到问题并回复还需要一点时间。技能刷新后要开始新轮，避免混入上一轮建议。断开来源会暂停收集。</p></section>
-<section id="keys"><h2>开始统计与快捷键</h2><p>先确认控制台显示桌面助手已连接。按住 <kbd>Ctrl</kbd> 和 <kbd>Alt</kbd>，再按对应功能键。</p><table><thead><tr><th>按键</th><th>做什么</th></tr></thead><tbody><tr><td>Ctrl＋Alt＋F7</td><td>海克斯：开始新轮</td></tr><tr><td>Ctrl＋Alt＋F8</td><td>出装：开始新轮</td></tr><tr><td>Ctrl＋Alt＋F6</td><td>点歌：收集 60 秒</td></tr><tr><td>Ctrl＋Alt＋F9</td><td>锁定当前结果；点歌不再继续跳动</td></tr></tbody></table><h3>海克斯与出装分别怎么看</h3><p>海克斯统计选择 1／2／3、刷新单项、同时刷新两项，以及全部刷新。长串重复数字和明确的数字建议也会识别。</p><p>出装会归并已知装备昵称。启用 AI 后可辅助整理部分复杂表达，但仍可能漏掉含糊、反话或新昵称；「待确认」不会冒充确定装备。结果表示观众建议，不保证是最优出装。</p></section>
-<section id="songs"><h2>点歌与名单</h2><div class="guide-pair"><div><p>同一人多次发点歌弹幕也会逐条计入。一条弹幕里连写同一歌名，仍是一条建议。</p><ul><li><strong>大家点的歌</strong>：出现 2 次及以上。</li><li><strong>单次点歌</strong>：明确点歌表达出现 1 次也能进入候选。</li><li><strong>略过</strong>：点在歌曲右侧，本场后续轮次不再展示。</li></ul><p>本场灰名单适合已经唱过、今天不想唱的歌。新一轮保留灰名单；开始新歌回或重启服务后清空。</p><p>某首歌一段时间都不想唱，可以在控制台名单管理中加入长期黑名单，选择一周、一个月、三个月、半年、一年或永久。到期自动恢复，应用更新会保留这份名单。</p></div><figure><img src="guide-assets/panel.png" alt="桌面副屏中的点歌主列表、单次候选和略过按钮" width="440" height="620"><figcaption>在桌面副屏点击「略过」，无需切回控制台。</figcaption></figure></div></section>
-<section id="appearance"><h2>副屏、字号和主题</h2><ul><li>拖动标题栏摆放窗口；拖动边缘调整大小。</li><li>底部「显示」的加减按钮调整字号倍率，最大 200％，也可恢复默认。</li><li>控制台「外观」分别设置控制台、网页副屏和桌面窗，也能同步主题。</li><li>六套主题可以随时换，切换不清空计票。网页副屏适合 OBS，默认外层透明；日常扭头查看优先用桌面窗。</li><li>手机查看需先在启动器开启手机模式，再使用控制台生成的配对链接；手机只能看结果。</li></ul></section>
-<section id="updates"><h2>结束使用与更新</h2><p><strong>关闭副屏的叉号只关副屏。</strong>要结束使用，可以点控制台页头的红色「退出全部」，或在托盘选择同名菜单。点副屏电源图标会弹出确认窗口：选「取消」继续使用，选「确认」才关闭全部。</p><ol><li>启动时会检查新版；也可展开控制台「更新与帮助」，点击「检查更新」。</li><li>看到更新内容后，在结束本轮收集时点击<strong>更新并重新打开</strong>。</li><li>程序下载、校验并更新，然后重新打开。不需要重新解压，个人背景、主题、字号、密钥和长期黑名单都会保留。</li></ol><p>更新会结束本轮统计和本场灰名单，建议下播后操作。下载或联网失败时旧版仍可使用，稍后重试即可。不会在直播中强制重启。</p></section>
-<section id="feedback"><h2>问题反馈</h2><p>展开控制台「问题反馈」，点击「填写问题反馈」。在弹出的问卷里写下遇到的问题，再点提交，溣符雨会收到提醒。需要时可以先查看诊断信息，复制到问卷的选填项中。以问卷显示提交成功为准；页面加载失败时可以点击备用链接在浏览器中打开。启动器也有反馈入口，服务没启动时仍可使用。</p><p>诊断只包含版本、模式和运行状态等必要信息，不含密钥、完整弹幕、昵称或电脑私人路径。程序不会自动上传诊断信息。</p><h3>常见情况</h3><ul><li><strong>没有建议</strong>：确认主播正在征求建议、来源已连接，并且本轮正在收集。闲聊不会当成建议，所以收到弹幕的数量通常比计入的数量多。</li><li><strong>快捷键没反应</strong>：确认副屏已打开、助手已连接；也可以先用控制台按钮操作。其他程序占用快捷键时需要关闭冲突功能。</li><li><strong>找不到窗口</strong>：在控制台页头点击「显示桌面副屏」，或从右下角托盘选择「打开控制台」「显示桌面副屏」。</li><li><strong>端口被占用</strong>：先用旧版的停止入口退出，再启动新版；不要同时运行两份服务。</li><li><strong>软件文件不完整</strong>：重新完整解压首次交付包，不要只复制 EXE。</li><li><strong>更新源连接失败</strong>：可以继续使用当前版本，网络恢复后重试。</li></ul></section>
-<footer><p class="credit">梓有妙选｜Azusa HexPick · 溣符雨维护</p><a href="#top" class="top-link">回到教程开头</a></footer></main></body></html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>梓有妙选｜使用教程</title>
+  <link rel="stylesheet" href="guide.css">
+</head>
+<body>
+<main id="top">
+  <header>
+    <h1>梓有妙选使用教程</h1>
+    <p class="subtitle">梓神，这个小工具会帮你数好弹幕里的技能和点歌建议。下面从安装开始，照着做就能试用。</p>
+    <p class="credit">溣符雨 · 维护</p>
+    <a class="website-home" data-website-home hidden>返回官网</a>
+  </header>
+  <nav aria-label="教程目录"><a href="#start">安装与首次打开</a><a href="#live">接入直播</a><a href="#keys">快捷键</a><a href="#songs">点歌与名单</a><a href="#appearance">副屏与字号</a><a href="#updates">退出与更新</a><a href="#feedback">反馈与排查</a></nav>
+
+  <section id="start">
+    <h2>安装与首次打开</h2>
+    <p>两种下载方式选一种就好。想像普通软件一样安装，可以选<strong>安装版</strong>；喜欢放在自己选的文件夹里，可以选<strong>便携版</strong>。两种版本功能一样，都不需要另装 Node、Python 或 .NET。</p>
+    <h3 id="install">安装版，推荐先选这个</h3>
+    <ol>
+      <li>在官网下载<strong>安装版</strong>，下载完成后双击安装包。</li>
+      <li>按照向导选择安装位置。保留默认位置最省事，也可以换成自己方便找到、可以写入的文件夹。</li>
+      <li>保留<strong>创建桌面快捷方式</strong>的勾选，完成安装。以后双击桌面的「梓有妙选」就能打开。</li>
+    </ol>
+    <h3 id="portable">便携版，不需要安装</h3>
+    <ol>
+      <li>在官网下载<strong>便携版 ZIP</strong>，把压缩包<strong>完整解压到一个固定文件夹</strong>，例如 D 盘的「梓有妙选」。不要在压缩包预览里直接运行。</li>
+      <li>打开解压后的文件夹，找到根目录的<strong>梓有妙选.exe</strong>。右键它，选择<strong>发送到 → 桌面快捷方式</strong>。Windows 11 如果没有看到「发送到」，先点<strong>显示更多选项</strong>。</li>
+      <li>以后从桌面快捷方式打开。保留原来的完整文件夹，<strong>不要只把 EXE 移到桌面</strong>，也不要移走旁边的文件。</li>
+    </ol>
+    <h3>打开后先做这几步</h3>
+    <ol>
+      <li>双击桌面上的「梓有妙选」。</li>
+      <li><strong>（可选）</strong>如果我另外给了你 DeepSeek API Key，展开「首次设置与偏好」，粘贴一次并点击「保存密钥」。不使用 Key 也能先用海克斯和点歌。</li>
+      <li>点击<strong>开始使用</strong>。网页控制台和桌面副屏会打开，启动器收起到右下角托盘。</li>
+    </ol>
+    <figure><img src="guide-assets/launcher.png" alt="启动器中的开始使用按钮、首次设置和更新区域" width="830" height="710"><figcaption>窗口右上角关闭后，运行中的程序仍会留在托盘。结束使用请选「退出全部」。</figcaption></figure>
+    <p class="note">Key 只保存在当前 Windows 用户的加密文件中，不会随反馈上传。换电脑或换 Windows 用户，需要重新填写。这份专用 Key 只给你使用，请不要公开或转发。</p>
+    <p><strong>目前可以优先试海克斯技能选择和弹幕点歌统计，这两个功能比较成熟。</strong>海斗装备建议还在测试：本地知识库可能没有收录一些非官方别称，AI 也可能漏读或误读，暂时不能保证较高的准确率。</p>
+  </section>
+
+  <section id="live">
+    <h2>接入直播间</h2>
+    <ol>
+      <li>控制台默认选中「直播间」，编号 <strong>510</strong> 已填好，点击「接入直播间」。</li>
+      <li>在「建议类型」选择海克斯技能、出装建议或弹幕点歌。出装这一项标为「测试中」。</li>
+      <li>需要弹幕帮忙时，按下对应快捷键开始一轮收集，也可以点控制台的按钮。</li>
+      <li>扭头看副屏里的统计，再挑自己想选的项。按 <strong>Ctrl＋Alt＋F9</strong> 可以锁定结果，不让列表继续变化。</li>
+    </ol>
+    <figure><img src="guide-assets/console.png" alt="控制台左侧选择直播间与轮次，右侧显示建议结果" width="1440" height="1000"><figcaption>未开播时可以切换「回放体验」。回放结果用于练习，不是当前直播间的实时弹幕。</figcaption></figure>
+    <p>控制台页头下方一直显示「显示桌面副屏」「启动器设置」和红色「退出全部」。副屏关掉后，点「显示桌面副屏」就能再打开，不用去找折叠菜单。</p>
+    <p>直播画面约有 5 秒延迟，观众看到问题并回复还需要一点时间，你可以根据实际节奏调整收集时间。技能刷新后记得开始新轮，避免混入上一轮建议。断开来源会暂停收集。</p>
+  </section>
+
+  <section id="keys">
+    <h2>开始统计与快捷键</h2>
+    <p>先确认控制台显示桌面助手已连接。<strong>下面每组按键都要按住 Ctrl 和 Alt</strong>，再按对应功能键，不是只按 F6～F9。</p>
+    <table><thead><tr><th>按键</th><th>做什么</th></tr></thead><tbody>
+      <tr><td>Ctrl＋Alt＋F7</td><td>海克斯：开始新轮</td></tr>
+      <tr><td>Ctrl＋Alt＋F8</td><td>出装：开始新轮，测试中</td></tr>
+      <tr><td>Ctrl＋Alt＋F6</td><td>点歌：收集 60 秒</td></tr>
+      <tr><td>Ctrl＋Alt＋F9</td><td>锁定当前结果；点歌不再继续跳动</td></tr>
+    </tbody></table>
+    <h3>海克斯与出装分别怎么看</h3>
+    <p>海克斯统计选择 1／2／3、刷新单项、同时刷新两项，以及全部刷新。长串重复数字和明确的数字建议也会识别。</p>
+    <p><strong>海斗装备建议仍在测试。</strong>它会归并已知装备昵称；未收录的非官方别称可能漏掉。启用 AI 后可以辅助整理部分复杂表达，但不保证准确识别含糊、反话或新昵称。「待确认」不会混进确定推荐，结果也不保证是最优出装。</p>
+  </section>
+
+  <section id="songs">
+    <h2>点歌与名单</h2>
+    <div class="guide-pair"><div>
+      <p>同一人多次发点歌弹幕也会逐条计入。一条弹幕里连写同一歌名，仍是一条建议。</p>
+      <ul><li><strong>大家点的歌</strong>：出现 2 次及以上。</li><li><strong>单次点歌</strong>：明确点歌表达出现 1 次也能进入候选。</li><li><strong>略过</strong>：点在歌曲右侧，本场后续轮次不再展示。</li></ul>
+      <p>唱过或今天不想唱的歌，点「略过」就会加入本场灰名单。新一轮保留灰名单；开始新歌回或重启服务后清空。</p>
+      <p>某首歌一段时间都不想唱，可以在控制台名单管理中加入长期黑名单，选择一周、一个月、三个月、半年、一年或永久。到期自动恢复，应用更新会保留这份名单。</p>
+    </div><figure><img src="guide-assets/panel.png" alt="桌面副屏中的点歌主列表、单次候选和略过按钮" width="440" height="620"><figcaption>在桌面副屏点击「略过」，无需切回控制台。</figcaption></figure></div>
+  </section>
+
+  <section id="appearance">
+    <h2>副屏、字号和主题</h2>
+    <ul>
+      <li>拖动标题栏摆放窗口；拖动边缘调整大小。</li>
+      <li>底部「显示」的加减按钮调整字号倍率，最大 200％，也可恢复默认。扭头看不清时，可以先试 150％。</li>
+      <li>控制台「外观」分别设置控制台、网页副屏和桌面窗，也能同步主题。</li>
+      <li>六套主题可以随时换，切换不清空计票。网页副屏适合 OBS，默认外层透明；日常扭头查看优先用桌面窗。</li>
+      <li>手机查看需先在启动器开启手机模式，再使用控制台推荐的配对地址。手机与电脑需要在同一网络，手机只能看结果；首选地址无法打开时，再展开「其他网络地址」尝试。</li>
+    </ul>
+  </section>
+
+  <section id="updates">
+    <h2>结束使用与更新</h2>
+    <p><strong>关闭副屏的叉号只关副屏。</strong>要结束使用，可以点控制台页头的红色「退出全部」，或在托盘选择同名菜单。点副屏电源图标会弹出确认窗口：选「取消」继续使用，选「确认」才关闭全部。</p>
+    <ol>
+      <li>启动时会检查新版；也可展开控制台「更新与帮助」，点击「检查更新」。</li>
+      <li>看到更新内容后，在结束本轮收集时点击<strong>更新并重新打开</strong>。</li>
+      <li>程序下载、校验并更新，然后重新打开。安装版和便携版都不需要再下载安装包，个人背景、主题、字号、密钥和长期黑名单都会保留。</li>
+    </ol>
+    <p>更新会结束本轮统计和本场灰名单，建议下播后操作。下载或联网失败时旧版仍可使用，稍后重试即可。不会在直播中强制重启。</p>
+  </section>
+
+  <section id="feedback">
+    <h2>问题反馈</h2>
+    <p>用起来遇到问题，可以在这里告诉我：展开控制台「问题反馈」，点击「填写问题反馈」，在问卷里描述一下发生了什么，再点提交。我会收到提醒，并根据反馈继续修复。</p>
+    <p>需要时可以先查看诊断信息，复制到问卷的选填项中。以问卷显示提交成功为准；页面加载失败时可以点击备用链接在浏览器中打开。启动器也有反馈入口，服务没启动时仍可使用。</p>
+    <p>诊断只包含版本、模式和运行状态等必要信息，不含密钥、完整弹幕、昵称或电脑私人路径。程序不会自动上传诊断信息。</p>
+    <h3>常见情况</h3>
+    <ul>
+      <li><strong>没有建议</strong>：确认来源已连接、本轮正在收集，观众也在回答你刚才的问题。闲聊不会当成建议，所以收到弹幕的数量通常比计入的数量多。</li>
+      <li><strong>快捷键没反应</strong>：确认副屏已打开、助手已连接，并且同时按住 Ctrl 和 Alt。也可以先用控制台按钮操作；其他程序占用快捷键时需要关闭冲突功能。</li>
+      <li><strong>找不到窗口</strong>：在控制台页头点击「显示桌面副屏」，或从右下角托盘选择「打开控制台」「显示桌面副屏」。</li>
+      <li><strong>端口被占用</strong>：先用旧版的停止入口退出，再启动新版；不要同时运行两份服务。</li>
+      <li><strong>软件文件不完整</strong>：便携版请重新完整解压下载包；安装版请先退出全部，再重新运行安装向导。不要只复制 EXE。</li>
+      <li><strong>更新源连接失败</strong>：可以继续使用当前版本，网络恢复后重试。</li>
+    </ul>
+  </section>
+  <footer><p class="credit">梓有妙选｜Azusa HexPick · 溣符雨 · 维护</p><a href="#top" class="top-link">回到教程开头</a></footer>
+</main>
+</body>
+</html>

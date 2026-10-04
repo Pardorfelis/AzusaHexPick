@@ -1,0 +1,10 @@
+{
+  "baseUrl": "https://azusa510.top",
+  "background": "azusa",
+  "backgrounds": [
+    { "id": "azusa", "file": "../public/assets/azusa-wallpaper.jpg", "name": "默认插画", "position": "center 42%" },
+    { "id": "none", "file": "", "name": "无背景", "position": "center" }
+  ],
+  "parallax": true,
+  "feedbackUrl": "https://wj.qq.com/s2/28082013/eqvo/"
+}

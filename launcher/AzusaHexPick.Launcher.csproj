@@ -9,7 +9,7 @@
     <StartupObject>AzusaHexPick.Program</StartupObject>
     <AssemblyName>梓有妙选</AssemblyName>
     <RootNamespace>AzusaHexPick</RootNamespace>
-    <Version>0.7.0</Version>
+    <Version>0.7.1</Version>
     <ApplicationIcon>Assets/app.ico</ApplicationIcon>
     <SelfContained>true</SelfContained>
     <RuntimeIdentifier>win-x64</RuntimeIdentifier>

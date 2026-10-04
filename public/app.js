@@ -246,28 +246,42 @@ function renderCandidates() {
 
 async function loadPhoneState() {
   if (readOnly) return;
+  const area = byId('phone-links');
+  if (area.dataset.loading === 'true') return;
+  area.dataset.loading = 'true';
+  let refresh;
   try {
-    const health = await request('/api/health');
-    byId('phone-links').replaceChildren();
+    text('phone-status', '正在确认手机可以使用的网络地址。');
+    byId('phone-status').setAttribute('role', 'status');
+    const health = await request('/api/health?network=refresh');
+    area.replaceChildren();
     if (!health.lanEnabled) {
       text('phone-status', '手机模式未开启。可在启动器设置中启用，保存后重启服务。');
       byId('phone-note').hidden = true;
       return;
     }
-    const links = Array.isArray(health.viewerUrls) ? health.viewerUrls : [];
-    text('phone-status', links.length ? '手机模式已开启。将下方配对地址发到自己的手机后打开。' : '手机模式已开启，暂未找到可用的局域网地址。');
-    byId('phone-note').hidden = !links.length;
-    for (const address of links) {
+    const network = health.phoneNetwork;
+    const fallback = Array.isArray(health.viewerUrls) ? health.viewerUrls : [];
+    const recommended = network ? network.recommended : fallback.length ? {url: fallback[0], label: '配对地址'} : null;
+    text('phone-status', network?.message || (recommended
+      ? '手机模式已开启。把下面的配对地址发到手机上，再打开就可以了。'
+      : '暂时没有找到电脑的局域网地址。连上网络后，再点“刷新地址”。'));
+    byId('phone-note').hidden = !recommended;
+    const makeRow = candidate => {
       let url;
-      try { url = new URL(address); } catch { continue; }
-      if (url.protocol !== 'http:' || url.pathname !== '/panel' || !url.searchParams.get('token')) continue;
+      try { url = new URL(candidate?.url); } catch { return null; }
+      if (url.protocol !== 'http:' || url.pathname !== '/panel' || !url.searchParams.get('token')
+        || url.username || url.password || !/^(?:\d{1,3}\.){3}\d{1,3}$/.test(url.hostname)) return null;
       const row = element('div', 'phone-link-row');
-      const link = element('a', 'phone-link', url.hostname + ' · 打开手机只读页');
+      const address = element('div', 'phone-address');
+      address.append(element('span', 'phone-network-label', candidate.label || '局域网'));
+      const link = element('a', 'phone-link', url.hostname + ' · 打开手机页');
       link.href = url.href;
       link.target = '_blank';
       link.rel = 'noopener noreferrer';
       const copy = element('button', 'button secondary phone-copy', '复制配对地址');
       copy.type = 'button';
+      copy.setAttribute('aria-label', '复制 ' + (candidate.label || '局域网') + ' 的手机配对地址');
       copy.addEventListener('click', async () => {
         if (copy.disabled) return;
         copy.dataset.copying = 'true';
@@ -282,10 +296,55 @@ async function loadPhoneState() {
           setTimeout(() => { delete copy.dataset.copying; copy.textContent = '复制配对地址'; refreshControls(); }, 1400);
         }
       });
-      row.append(link, copy);
-      byId('phone-links').append(row);
-    }
-  } catch (error) { text('phone-status', error.message || '手机模式状态暂时无法读取。'); }
+      address.append(link);
+      row.append(address, copy);
+      return row;
+    };
+    const row = makeRow(recommended);
+    if (row) area.append(row);
+    const additional = Array.isArray(network?.others) ? network.others : fallback.slice(1).map(url => ({url, label: '其他地址（未确认网卡类型）'}));
+    const appendAlternatives = (values, title, note) => {
+      const rows = values.map(makeRow).filter(Boolean);
+      if (!rows.length) return;
+      const details = element('details', 'phone-alternatives');
+      const summary = element('summary', '', title + '（' + rows.length + '）');
+      details.append(summary);
+      if (note) details.append(element('p', 'field-hint', note));
+      details.append(...rows);
+      area.append(details);
+    };
+    appendAlternatives(additional, '其他网络地址', '如果手机连的是另一个网络，可以展开这里，使用对应的地址。');
+    appendAlternatives(Array.isArray(network?.advanced) ? network.advanced : [], '高级网络地址',
+      '这些来自热点或虚拟网络，不能保证手机可以打开。只有确认手机连接到对应网络时再使用。');
+    const tools = element('div', 'phone-tools');
+    refresh = element('button', 'button secondary phone-refresh', '换了网络？刷新地址');
+    refresh.type = 'button';
+    refresh.dataset.copying = 'true';
+    refresh.disabled = true;
+    refresh.addEventListener('click', async () => {
+      refresh.disabled = true;
+      refresh.dataset.copying = 'true';
+      await loadPhoneState();
+    });
+    tools.append(refresh);
+    area.append(tools);
+  } catch (error) {
+    area.replaceChildren();
+    byId('phone-note').hidden = true;
+    text('phone-status', error.message || '手机模式状态暂时无法读取。');
+    refresh = element('button', 'button secondary phone-refresh', '刷新地址');
+    refresh.type = 'button';
+    refresh.addEventListener('click', async () => {
+      refresh.disabled = true;
+      refresh.dataset.copying = 'true';
+      await loadPhoneState();
+    });
+    area.append(refresh);
+  } finally {
+    delete area.dataset.loading;
+    if (refresh) delete refresh.dataset.copying;
+    refreshControls();
+  }
 }
 
 async function loadReplay(selection = replaySelection()) {

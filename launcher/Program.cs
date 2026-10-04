@@ -11,7 +11,17 @@ public static class Program
     public static void Main(string[] args)
     {
         VelopackApp.Build().SetAutoApplyOnStartup(false).Run();
+        using var installationGate = new Mutex(false, @"Local\AzusaHexPick.Installing");
+        bool enteredGate;
+        try { enteredGate = installationGate.WaitOne(0); }
+        catch (AbandonedMutexException) { enteredGate = true; }
+        if (!enteredGate)
+        {
+            System.Windows.MessageBox.Show("梓有妙选正在安装，等安装完成后再打开即可。", "正在安装", MessageBoxButton.OK, MessageBoxImage.Information);
+            return;
+        }
         using var singleton = new Mutex(true, @"Local\AzusaHexPick.Launcher", out bool first);
+        installationGate.ReleaseMutex();
         if (!first)
         {
             try

@@ -84,6 +84,22 @@ public partial class MainWindow
                 if (updateState != "ready" || !downloaded || !processes.Running || !await processes.Collecting()) throw new Exception("download-end-collection-guard-failed");
                 await Post("/api/control", new { action = "replay-pause" });
             }
+            if (fault == "cached")
+            {
+                await updates.DownloadUpdatesAsync(pending);
+                downloaded = true;
+                string cache = Path.Combine(Velopack.Locators.VelopackLocator.Current.PackagesDir!, pending.TargetFullRelease.FileName);
+                using (var file = new FileStream(cache, FileMode.Open, FileAccess.ReadWrite, FileShare.None))
+                {
+                    int first = file.ReadByte(); file.Position = 0; file.WriteByte((byte)(first ^ 1));
+                }
+                var beforeFailure = PersonalHashes();
+                await ApplyUpdate();
+                if (updateState != "error" || downloaded || File.Exists(cache) || !processes.Running || beforeFailure.Any(pair => PersonalHashes()[pair.Key] != pair.Value))
+                    throw new Exception("cached-checksum-failure-did-not-preserve-old-app");
+                File.WriteAllText(Path.Combine(UserSettings.DirectoryPath, "smoke-cache.json"),
+                    JsonSerializer.Serialize(new { success = true, corruptCacheRejected = true, cacheRemovedForRetry = true, oldVersionKeptRunning = true }));
+            }
             Directory.CreateDirectory(Path.Combine(UserSettings.DirectoryPath, "runtime"));
             File.WriteAllText(Path.Combine(UserSettings.DirectoryPath, "runtime/desktop-display-5178.json"), "{\"width\":660,\"height\":850,\"zoom\":1.5}");
             await processes.Stop();

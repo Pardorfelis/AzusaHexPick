@@ -4,6 +4,7 @@ import json
 from pathlib import Path
 import shutil
 import sys
+from package import is_local_file, release_files, safe_release_file
 
 ROOT = Path(__file__).resolve().parent.parent
 
@@ -17,12 +18,17 @@ def stage(destination):
              "scripts/migrate-user-data.mjs", "validation/replay-inspection.json")]
     for directory, extensions in (("public", {".js", ".css", ".html", ".json", ".png", ".jpg", ".gif", ".ttf", ".txt", ".md"}),
                                   ("src", {".mjs"}), ("data/replays", {".json"}), ("docs", {".md"})):
-        for path in (ROOT / directory).rglob("*"):
+        for path in release_files(ROOT / directory):
             if path.is_file() and path.suffix in extensions and path.name not in {"AGENTS.md", "plan.md"}:
+                if is_local_file(path):
+                    continue
+                if "temp" in path.relative_to(ROOT / directory).parts:
+                    continue
                 if directory == "data/replays" and path.name not in {"azusa-p3.json", "azusa-p4.json", "azusa-singing-p1.json", "azusa-singing-p2.json"}:
                     continue
                 files.append(path)
     for path in files:
+        safe_release_file(path)
         if not path.is_file() or path.is_symlink():
             raise ValueError("交付资源缺失或不支持符号链接。")
         target = app / path.relative_to(ROOT)

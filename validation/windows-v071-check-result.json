@@ -1,0 +1,359 @@
+{
+  "version": "0.7.1",
+  "formalReleaseReady": true,
+  "paidApiCalls": 0,
+  "installerUpgrade": {
+    "passed": 13,
+    "personalDataPreserved": true,
+    "syntheticEncryptedKeyPreserved": true
+  },
+  "installerPackageIntegrity": {
+    "passed": 11
+  },
+  "updatePolicy": {
+    "passed": 35,
+    "includesCachedPackageSizeAndHash": true,
+    "includesProtectedRebuiltCache": true,
+    "actualRebuiltCacheVerifiedByFreshProcess": true
+  },
+  "actualIsolatedUpdates": {
+    "passed": 8,
+    "scenarios": [
+      "corrupt-download",
+      "interrupted-download",
+      "cancel-download",
+      "new-round-during-download",
+      "concurrent-fixed-target",
+      "cross-version-apply-and-reopen",
+      "corrupted-cache-rejected-and-retried",
+      "two-delta-apply-and-reopen"
+    ],
+    "configAndSyntheticKeyPreserved": true
+  },
+  "pending": [
+    "clean-Windows-machine-installation"
+  ],
+  "pendingReason": "发布前软件与官网更新检查均已通过；无开发环境独立 Windows 电脑仍需现场验证，实体手机与实际游戏测试另保留对应边界。",
+  "nativeLauncher": {
+    "capturedVersion": "0.7.1",
+    "beginUseOpensConsoleAndPanel": true,
+    "capturesContainSecrets": false
+  },
+  "phone": {
+    "offlineCasesPassed": 45,
+    "windowsHttpCasesPassed": 12,
+    "realPhoneOnWifiVerified": false
+  },
+  "notes": [
+    "隔离更新测试版本不进入正式渠道。",
+    "教程截图与早期安装实测使用本地预览包；最终 v0.7.1 软件包已从最新源码完整重建，并另行通过载荷、便携包及独立解压启动检查。",
+    "最终修复后重新通过损坏缓存重试及双差量升级，不将完整包回退计为差量成功。",
+    "35 项离线策略检查通过；新进程核验真实重建缓存后，总检查记录为 36 项。",
+    "最终便携包通过移除开发工具 PATH 的独立解压启动检查；这不等同于在一台无开发环境的独立 Windows 电脑上实测。",
+    "最终便携包装备模式使用海克斯数字片段，只验证切换与锁定，有效建议为 0，不作为装备识别准确率证据。",
+    "COS 完整与差量更新使用原样 v0.7.1 校验程序集及 v0.7.0 原版更新器；不是仅支持 GitHub 的 v0.7.0 原生界面直连 COS。",
+    "最终官网下载的原样安装向导已完成当前 Windows 的原生安装及正常卸载检查；本项关闭自动启动，服务启动证据另见便携包与实际 COS 更新记录。"
+  ],
+  "cachedRetry": {
+    "success": true,
+    "corruptCacheRejected": true,
+    "cacheRemovedForRetry": true,
+    "oldVersionKeptRunning": true,
+    "reopenedTargetVersion": true,
+    "preservedConfigFiles": 6,
+    "rerunAfterDeltaFix": true
+  },
+  "actualDelta": {
+    "success": true,
+    "downloadedDeltaPackages": 2,
+    "fullPackageFallback": false,
+    "reopenedTargetVersion": true,
+    "preservedConfigFiles": 6,
+    "protectedCacheSurvivesAppRestart": true,
+    "previousFailure": "重建 ZIP 的容器哈希与发布完整包不同，逐文件内容一致；修复后重新通过，历史失败现场保留。"
+  },
+  "checkedDateLocal": "2026-10-05",
+  "finalPackages": {
+    "version": "0.7.1",
+    "directory": "dist/releases",
+    "formalFormat": true,
+    "formallyPublished": false,
+    "completeApplicationManifestFiles": 1665,
+    "artifacts": [
+      {
+        "name": "AzusaHexPick-0.7.1-Setup.exe",
+        "bytes": 156847009,
+        "sha256": "e182bfecac61c5f22d36f764ad001813c549cd3d364cd84d746d34ce2087431f"
+      },
+      {
+        "name": "AzusaHexPickApp-win-Portable.zip",
+        "bytes": 151673430,
+        "sha256": "a4acdc497c84315e8cfb237c1d0c322784ae21414fd4bfd8753053e576913511"
+      },
+      {
+        "name": "AzusaHexPickApp-0.7.1-full.nupkg",
+        "bytes": 151954562,
+        "sha256": "96a29674572322d3fbea43332428725174fe8268a5649c84d6b7ac702509d57d"
+      },
+      {
+        "name": "AzusaHexPickApp-0.7.1-delta.nupkg",
+        "bytes": 2240631,
+        "sha256": "ccb9196fb1f5e2b32a2a36732072490a799baeea77c26eb17855ceedd596a0a9"
+      },
+      {
+        "name": "AzusaHexPickApp-win-Setup.exe",
+        "bytes": 159746178,
+        "sha256": "c2167e01902d180dbb72490be0d7a97f09ec20b4f78b3cd14af8202909ac8ca8"
+      }
+    ],
+    "installerPayloadScenariosPassed": 11,
+    "portablePositiveAndNegativeChecksPassed": 17
+  },
+  "finalPortableStartup": {
+    "version": "0.7.1",
+    "success": true,
+    "paidApiCalls": 0,
+    "selfContainedStart": true,
+    "desktopConnected": true,
+    "launcherBridgeConnected": true,
+    "repeatStartReused": true,
+    "modes": [
+      {
+        "mode": "hex",
+        "received": 17,
+        "valid": 14,
+        "locked": true
+      },
+      {
+        "mode": "equipment",
+        "received": 17,
+        "valid": 0,
+        "locked": true
+      },
+      {
+        "mode": "songs",
+        "received": 68,
+        "valid": 38,
+        "locked": true
+      }
+    ],
+    "serviceExited": true,
+    "developmentToolPathRemoved": true,
+    "independentCleanWindowsComputer": false
+  },
+  "realReleaseDeltaReconstruction": {
+    "success": true,
+    "fileCounts": [
+      1673,
+      1673
+    ],
+    "onlyOriginal": [],
+    "onlyRebuilt": [],
+    "contentDifferences": [],
+    "containerBytes": [
+      151954562,
+      151954289
+    ],
+    "containerSha256": [
+      "96a29674572322d3fbea43332428725174fe8268a5649c84d6b7ac702509d57d",
+      "73645e1b02cc5060160e54ab1fc12b1365527ba65fb1b607f182bbba6b5b82dc"
+    ],
+    "actualProductionBase": "0.7.0",
+    "target": "0.7.1",
+    "paidApiCalls": 0
+  },
+  "formalCosUpdates": {
+    "success": true,
+    "source": "https://azusa510.top/updates/",
+    "passed": 2,
+    "scenarios": [
+      {
+        "success": true,
+        "scenario": "full",
+        "source": "https://azusa510.top/updates/",
+        "fromVersion": "0.7.0",
+        "toVersion": "0.7.1",
+        "originalProductionPackages": true,
+        "harnessUsesUnmodified071Verifier": true,
+        "original070NativeUpdater": true,
+        "not070UiDirectCosUpgrade": true,
+        "reopened": true,
+        "desktopConnected": true,
+        "launcherBridgeConnected": true,
+        "preservedFiles": [
+          "deepseek.key",
+          "launcher.json",
+          "app-settings.json",
+          "appearance.json",
+          "song-blacklist.json",
+          "runtime/desktop-display-5178.json"
+        ],
+        "syntheticKeyDecryptable": true,
+        "paidApiCalls": 0,
+        "portReleased": true,
+        "launcherExited": true
+      },
+      {
+        "success": true,
+        "scenario": "delta",
+        "source": "https://azusa510.top/updates/",
+        "fromVersion": "0.7.0",
+        "toVersion": "0.7.1",
+        "originalProductionPackages": true,
+        "harnessUsesUnmodified071Verifier": true,
+        "original070NativeUpdater": true,
+        "not070UiDirectCosUpgrade": true,
+        "reopened": true,
+        "desktopConnected": true,
+        "launcherBridgeConnected": true,
+        "preservedFiles": [
+          "deepseek.key",
+          "launcher.json",
+          "app-settings.json",
+          "appearance.json",
+          "song-blacklist.json",
+          "runtime/desktop-display-5178.json"
+        ],
+        "syntheticKeyDecryptable": true,
+        "paidApiCalls": 0,
+        "portReleased": true,
+        "launcherExited": true
+      }
+    ],
+    "artifactDownloads": {
+      "full": {
+        "success": true,
+        "source": "https://azusa510.top/updates/",
+        "sourceKind": "actual-COS-production",
+        "verifier": "unmodified-official-v0.7.1-assembly",
+        "nativeUpdater": "unmodified-official-v0.7.0-Update.exe",
+        "fromVersion": "0.7.0",
+        "toVersion": "0.7.1",
+        "target": {
+          "FileName": "AzusaHexPickApp-0.7.1-full.nupkg",
+          "Size": 151954562,
+          "SHA256": "96A29674572322D3FBEA43332428725174FE8268A5649C84D6B7AC702509D57D"
+        },
+        "deltaDownloaded": false,
+        "fullDownloaded": true,
+        "downloads": [
+          {
+            "url": "https://azusa510.top/updates/AzusaHexPickApp-0.7.1-full.nupkg",
+            "bytes": 151954562,
+            "sha256": "96a29674572322d3fbea43332428725174fe8268a5649c84d6b7ac702509d57d"
+          }
+        ],
+        "cache": {
+          "bytes": 151954562,
+          "sha256": "96a29674572322d3fbea43332428725174fe8268a5649c84d6b7ac702509d57d",
+          "protectedReceipt": false
+        },
+        "paidApiCalls": 0
+      },
+      "delta": {
+        "success": true,
+        "source": "https://azusa510.top/updates/",
+        "sourceKind": "actual-COS-production",
+        "verifier": "unmodified-official-v0.7.1-assembly",
+        "nativeUpdater": "unmodified-official-v0.7.0-Update.exe",
+        "fromVersion": "0.7.0",
+        "toVersion": "0.7.1",
+        "target": {
+          "FileName": "AzusaHexPickApp-0.7.1-full.nupkg",
+          "Size": 151954562,
+          "SHA256": "96A29674572322D3FBEA43332428725174FE8268A5649C84D6B7AC702509D57D"
+        },
+        "deltaDownloaded": true,
+        "fullDownloaded": false,
+        "downloads": [
+          {
+            "url": "https://azusa510.top/updates/AzusaHexPickApp-0.7.1-delta.nupkg",
+            "bytes": 2240631,
+            "sha256": "ccb9196fb1f5e2b32a2a36732072490a799baeea77c26eb17855ceedd596a0a9"
+          }
+        ],
+        "cache": {
+          "bytes": 151954289,
+          "sha256": "73645e1b02cc5060160e54ab1fc12b1365527ba65fb1b607f182bbba6b5b82dc",
+          "protectedReceipt": true
+        },
+        "paidApiCalls": 0
+      }
+    },
+    "officialBaselineDownload": {
+      "success": true,
+      "source": "https://azusa510.top/updates/",
+      "version": "0.7.0",
+      "Size": 151025176,
+      "SHA256": "AE7DDEE5EFF4D553AC804D111E7EAB75F9C9B1E5F82D2629939561F8065CF946",
+      "downloads": [
+        {
+          "url": "https://azusa510.top/updates/AzusaHexPickApp-0.7.0-full.nupkg",
+          "bytes": 151025176,
+          "sha256": "ae7ddee5eff4d553ac804d111e7eab75f9c9b1e5f82d2629939561f8065cf946"
+        }
+      ],
+      "paidApiCalls": 0
+    },
+    "actualCurrentOfficialClient": {
+      "success": true,
+      "unmodifiedOfficialClient": true,
+      "version": "0.7.1",
+      "state": "current",
+      "message": "当前已是最新正式版本。",
+      "fromWebsite": true,
+      "fallbackUsed": false,
+      "source": "https://azusa510.top/updates/",
+      "paidApiCalls": 0,
+      "portReleased": true,
+      "launcherExited": true
+    },
+    "finalPortBindVerified": true,
+    "limitation": "v0.7.0 原生界面仅识别 GitHub，此项使用正式 v0.7.1 原样策略程序集与 v0.7.0 原版更新器验收 COS 正式包。",
+    "paidApiCalls": 0
+  },
+  "formalReleaseReadyScope": "发布前软件、官网公开下载、原生安装与正式 COS 更新验收完成；该状态不表示 GitHub 已发布，亦不包含仍需对应设备的现场验收。",
+  "publicationSnapshot": "before-GitHub-release",
+  "finalDownloadedInstaller": {
+    "success": true,
+    "version": "0.7.1",
+    "nativeWindowsTest": true,
+    "cleanPhysicalMachineTest": false,
+    "installerSource": "https://azusa510.top/downloads/AzusaHexPick-0.7.1-Setup.exe",
+    "installerSha256": "e182bfecac61c5f22d36f764ad001813c549cd3d364cd84d746d34ce2087431f",
+    "installerSize": 156847009,
+    "formalDownloadedInstallerUnmodified": true,
+    "customChineseSpacePathVerified": true,
+    "desktopShortcutTargetType": "root-execution-stub",
+    "startMenuShortcutTargetType": "velopack-managed-current-launcher",
+    "installedManifestFilesVerified": 1665,
+    "applicationServiceStarted": false,
+    "paidApiCalls": 0,
+    "syntheticPersonalSettingsPreserved": true,
+    "personalDataPreservationMethod": "四份合成设置逐字节内容一致，合成密钥经当前用户 DPAPI 解密后内容一致。",
+    "existingUserInstallationModified": false,
+    "uninstallCommandExitCode": 0,
+    "deferredUninstallCleanupObserved": true,
+    "checks": {
+      "installationWasSuccessful": true,
+      "allManifestFilesVerified": true,
+      "desktopAndManagedStartMenuVerified": true,
+      "installationDirectoryRemoved": true,
+      "uninstallRegistryRemoved": true,
+      "noSecondUninstallRegistry": true,
+      "desktopShortcutRemoved": true,
+      "startMenuShortcutRemoved": true,
+      "launcherSettingsPreserved": true,
+      "themeSettingsPreserved": true,
+      "blacklistPreserved": true,
+      "personalSentinelPreserved": true,
+      "syntheticUserEncryptedKeyDecryptsAndMatches": true
+    },
+    "firstAttemptEvidence": "first-attempt-result.json",
+    "secondAttemptEvidence": "result.json",
+    "firstAttemptLimitation": "首轮断言过严，要求 Velopack 管理的开始菜单目标也指向根目录；原始结果保留。",
+    "secondAttemptLimitation": "卸载器返回后立即检查根入口，未等延迟清理；后续只读检查确认安装目录、登记与快捷方式已删除，原始结果保留。",
+    "desktopShortcutWorkingDirectoryType": "application-root",
+    "startMenuShortcutWorkingDirectoryType": "velopack-managed-current"
+  }
+}

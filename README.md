@@ -1,16 +1,24 @@
 # 梓有妙选 · Azusa HexPick
 
-海克斯选几、下一件出什么、下一首唱什么？梓有妙选把弹幕里的建议数好，放到副屏上，方便阿梓边直播边看。想选哪项、想唱哪首，还是由阿梓自己决定。
+海斗选哪个技能？下一首唱什么？梓有妙选把弹幕里的建议数好，放到副屏上，方便阿梓边直播边看。想选哪项、想唱哪首，还是由阿梓自己决定。
 
-项目发起与维护：溣符雨（B 站）。当前版本为 v0.7.0，面向 Windows 10／11 的 x64 电脑。
+项目发起与维护：溣符雨（B 站）。当前版本为 v0.7.1，面向 Windows 10／11 的 x64 电脑。
 
-[观看 54 秒回放演示](https://github.com/Pardorfelis/AzusaHexPick/releases/download/v0.7.0/AzusaHexPick-v0.7.0-demo.mp4) · [下载 Windows 便携包](https://github.com/Pardorfelis/AzusaHexPick/releases/download/v0.7.0/AzusaHexPickApp-win-Portable.zip)
+[观看回放演示](https://github.com/Pardorfelis/AzusaHexPick/releases/download/v0.7.1/AzusaHexPick-v0.7.1-demo.mp4) · [下载 Windows 安装版](https://github.com/Pardorfelis/AzusaHexPick/releases/download/v0.7.1/AzusaHexPick-0.7.1-Setup.exe) · [下载 Windows 便携包](https://github.com/Pardorfelis/AzusaHexPick/releases/download/v0.7.1/AzusaHexPickApp-win-Portable.zip)
 
-![海克斯、点歌和出装的实际回放结果](https://github.com/Pardorfelis/AzusaHexPick/releases/download/v0.7.0/cover.png)
+![海克斯、点歌和出装的实际回放结果](https://github.com/Pardorfelis/AzusaHexPick/releases/download/v0.7.1/cover.png)
 
 ## 下载与上手
 
-到 [正式版本下载页](https://github.com/Pardorfelis/AzusaHexPick/releases/latest) 下载 Windows 便携包，完整解压后双击「梓有妙选.exe」。Node、Python 和 .NET 运行环境都在包里，不用另装。
+试用官网的域名实名审核与腾讯云配置正在准备，候选域名为 `azusa510.top`。配置及访问验证完成后再上线，目前不把未部署的地址作为下载入口。
+
+两种版本功能相同，选一种即可。Node、Python 和 .NET 运行环境都在包里，不用另装。
+
+**安装版，推荐。** 下载「AzusaHexPick-0.7.1-Setup.exe」，按向导选择安装位置，保留「创建桌面快捷方式」的勾选。安装完成后双击桌面的「梓有妙选」。默认使用当前用户目录，无需管理员权限。
+
+**便携版。** 下载「AzusaHexPickApp-win-Portable.zip」，完整解压到固定文件夹，找到根目录的「梓有妙选.exe」。右键选择「发送到 → 桌面快捷方式」；Windows 11 先点「显示更多选项」。以后从桌面快捷方式打开，保留解压后的完整目录，不要只把 EXE 移到桌面。
+
+[正式版本下载页](https://github.com/Pardorfelis/AzusaHexPick/releases/latest) 同时保留这两种软件包。源码 ZIP、更新包和 `windows-stage` 不是日常使用入口。
 
 点击「开始使用」，控制台和桌面副屏会一起打开。启动器随后收进右下角托盘；找不到窗口时，从托盘重新打开即可。详细步骤可在启动器或控制台中点击「使用教程」查看，教程离线也能打开。
 
@@ -25,9 +33,11 @@
 
 **海克斯选择。** 汇总选择 1／2／3、刷新一项、同时刷新两项和全部刷新。支持长串重复数字、明确的数字建议，每条弹幕最多统计一个完整动作。按有效弹幕条数计票时，同一人继续发弹幕也会增加票数。
 
-**出装建议。** 归并正式装备名和常见昵称，把当前首选、反对、后续计划分开。可选 AI 辅助理解部分复杂表达；无法确认的内容保留为待确认，不混进确定推荐。
+**出装建议，测试中。** 归并正式装备名和常见昵称，把当前首选、反对、后续计划分开。部分非官方别称可能尚未收录，AI 也可能漏读或误读，暂时不能保证较高的准确率。无法确认的内容保留为待确认，不混进确定推荐。
 
 **弹幕点歌。** 同一观众多次发点歌弹幕逐条计入。同一条弹幕反复写同一歌名算一次；至少两次进入主列表，明确的单次点歌另列候选。歌曲旁点「略过」，本场后续轮次便不再展示。长期不想唱的歌可加入限期黑名单。
+
+目前较成熟的是海克斯技能选择和弹幕点歌统计，首次试用可以优先体验这两项。
 
 ## 游戏中操作
 
@@ -52,15 +62,17 @@
 
 交付包将主题、背景、字号、长期黑名单及加密密钥保存到 `%LocalAppData%\AzusaHexPick\UserData`。应用内更新保留这份目录；启动器提供「导入旧版设置」，用于迁移旧脚本版的外观、背景、显示尺寸和黑名单。旧版 `.env.local` 密钥不会自动导入。
 
-遇到问题，可在控制台展开「问题反馈」，或从启动器打开 [反馈问卷](https://wj.qq.com/s2/28082013/eqvo/)。问题描述必填，类别和诊断信息选填，不要求手机号或邮箱。诊断不会自动提交，也不包含密钥、完整弹幕、昵称或私人路径。以问卷显示提交成功为准。
+遇到问题，可以在控制台展开「问题反馈」告诉我，或从启动器打开 [反馈问卷](https://wj.qq.com/s2/28082013/eqvo/)。提交后我会收到提醒。问题描述必填，类别和诊断信息选填，不要求手机号或邮箱。诊断不会自动提交，也不包含密钥、完整弹幕、昵称或私人路径。以问卷显示提交成功为准。
 
 ## 给开发者
 
-网页采用原生 HTML、CSS 和 JavaScript；服务使用 Node；桌面副屏使用 Tkinter；启动器使用 WPF 和 Velopack。仓库历史从 v0.3.0 开始，v0.7.0 归入 main，旧分支及标签继续保留。
+网页采用原生 HTML、CSS 和 JavaScript；服务使用 Node；桌面副屏使用 Tkinter；启动器使用 WPF 和 Velopack，安装向导使用 Inno Setup。仓库历史从 v0.3.0 开始，v0.7.0 起归入 main，旧分支及标签继续保留。
 
 源码直接运行需要 Node.js 22 或更高版本，以及带 Tkinter 的 Python 3.10 或更高版本。运行 `node server.mjs` 可打开网页；旧启动脚本保留供开发使用。开发模式仍从本机 `.env.local` 读取密钥，并默认关闭 AI。
 
 `scripts/check.ps1` 执行自动检查；`scripts/package.py` 和 `scripts/verify-package.py` 用于源码包及独立解压验证。Windows 完整交付包使用 `scripts/build-windows.ps1` 构建，所需 SDK 和打包工具见 [发布说明](docs/releasing.md)。源码 ZIP 不等同于自带运行环境的 Windows 便携包。
+
+`dist/releases` 存放正式软件及更新文件；`dist/delivery` 存放演示视频、封面和字幕；`dist/windows-stage` 是本机构建与预览目录，不直接分发给使用者。维护者发布时只展示安装版和便携版，内部更新文件留给客户端读取。
 
 ## 当前边界与素材
 

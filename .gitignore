@@ -17,6 +17,9 @@ GEMINI.md
 .codex/
 .claude/
 /docs/plan.md
+/public/temp/
+/site/backgrounds/local/
+/site/config.local.json
 
 # 运行数据与已脱敏回放。
 /data/*
@@ -81,3 +84,6 @@ GEMINI.md
 !/validation/package-0.6.0-smoke-result.json
 !/validation/windows-v07-check-result.json
 !/validation/package-0.7.0-smoke-result.json
+!/validation/windows-v071-check-result.json
+!/validation/site-v071-check-result.json
+!/validation/package-0.7.1-smoke-result.json

@@ -1,7 +1,7 @@
 {
   "name": "azusa-hexpick",
   "description": "梓有妙选 · Azusa HexPick，为阿梓整理海克斯、出装建议与弹幕点歌。",
-  "version": "0.7.0",
+  "version": "0.7.1",
   "private": true,
   "repository": {
     "type": "git",

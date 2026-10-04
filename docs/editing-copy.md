@@ -14,6 +14,7 @@
 | 控制台计票、名单、连接状态等动态提示 | `public/app.js` | 中文字符串、`textContent`、模板字符串 |
 | 控制台启动器、更新、反馈等动态提示 | `public/application.js` | 中文字符串、`textContent`、确认提示 |
 | 外观设置中的提示 | `public/appearance.js` | 中文字符串 |
+| 官网的功能介绍、下载说明与常见问题 | `site/index.html` | HTML 标签之间的正文 |
 
 文件名不需要记全。用 VS Code 打开整个项目文件夹，按 Ctrl＋Shift＋F 搜索屏幕上的一句话，就能看到它来自哪里。用记事本也可以，打开对应文件后按 Ctrl＋F 搜索。
 
@@ -21,12 +22,12 @@
 
 ## 例一：修改启动器的反馈说明
 
-在 `launcher/MainWindow.xaml` 搜索「点右边填写反馈」。只改 `Text` 引号内的文字。
+在 `launcher/MainWindow.xaml` 搜索「右边填写反馈」。只改 `Text` 引号内的文字。
 
 修改前：
 
 ```xml
-<TextBlock Text="点右边填写反馈，溣符雨会收到提醒。" Style="{StaticResource Muted}"/>
+<TextBlock Text="右边填写反馈，我会尽快修复。" Style="{StaticResource Muted}"/>
 ```
 
 可以改为：
@@ -79,7 +80,7 @@ show('已结束使用。下次双击梓有妙选.exe 即可。');
 
 **网页控制台和教程。** 在源码目录运行服务时，保存 `public` 中的文件后刷新页面即可，通常不用重启服务。浏览器仍显示旧内容时，用 Ctrl＋F5 刷新。教程可以直接重新打开 `public/guide.html`，它不依赖联网。
 
-**Windows 便携包。** 正在用 EXE 启动的服务读取的是包内 `app/public`，而不是另一份源码目录里的 `public`。临时预览可修改包内对应文件再刷新，但下次应用内更新会替换它；最终文案一定要同步到源码，重新打包后才会长期保留。
+**Windows 安装版和便携包。** 正在用 EXE 启动的服务读取的是软件目录内的 `current/app/public`，而不是另一份源码目录里的 `public`。临时预览可修改包内对应文件再刷新，但下次应用内更新会替换它；最终文案一定要同步到源码，重新打包后才会长期保留。
 
 **启动器。** XAML 和 C# 会编译进 EXE，保存源文件不会立刻改变已打开的启动器。需要重新构建。在本项目已经配置好打包工具的电脑上，先选择「退出全部」，然后在项目目录打开 PowerShell，运行：
 
@@ -87,7 +88,7 @@ show('已结束使用。下次双击梓有妙选.exe 即可。');
 ./scripts/build-windows.ps1 -SkipPack
 ```
 
-构建完成后，到 `dist/windows-stage` 打开「梓有妙选.exe」查看。这个目录用于本地预览，不是正式自更新包；给阿梓的新版本仍要按 [发布说明](releasing.md) 构建更新包并发布。
+构建完成后，到 `dist/windows-stage` 打开「梓有妙选.exe」查看。这个目录用于本地预览，不是正式自更新包；给阿梓的新版本仍要按 [发布说明](releasing.md) 构建更新包并发布。日常交付选择 `dist/releases` 中的安装向导或便携 ZIP；`dist/delivery` 保存视频、封面和字幕。
 
 不要编辑 EXE 的二进制内容，也不用改 JSON 配置来替换启动器文字。
 
@@ -98,3 +99,23 @@ show('已结束使用。下次双击梓有妙选.exe 即可。');
 目前文案分布在这些界面文件中，少量修改按上面的办法就够用。如果以后经常改整套措辞，可以再把文案集中到一份外部文件；当前版本尚未采用这种方式，不需要先做额外配置。
 
 演示视频的字幕与画面说明在 `scripts/make-demo.py` 的 `SCENES` 中，修改 `title`、`body`、`caption`、`details` 后重新运行脚本即可。制作流程见 [分享素材](share.md)。
+
+## 修改官网文字和背景
+
+官网正文在 `site/index.html`，下载状态等动态文字在 `site/site.js`。修改文字时保留 `data-download`、`data-version` 等属性，下载链接由构建时的正式文件信息生成，不要手工填入本地路径。官网上的教程来自 `public/guide.html`，不需要另外维护一份正文。
+
+背景图库由你在本地管理，访客没有上传或换背景的入口。默认配置在 `site/config.json`。只给自己使用的背景配置，可以复制成 `site/config.local.json`，它会覆盖默认配置，留在本机。
+
+把自定义图片放进 `site/backgrounds/local/`，在本地配置的 `backgrounds` 数组里添加图片的 `id`、`file`、`name` 和 `position`。例如 `file` 可以填写 `backgrounds/local/my-background.jpg`，`position` 可以先用 `center`。再把 `background` 改为该图片的 `id`。不要把绝对电脑路径或网络账号密钥写进配置。
+
+`parallax` 设为 `false` 可关闭官网的鼠标视差；要完全关闭图片背景，将 `background` 设为 `none`。替换图片时仍需保留足够遮罩，确认文字、按钮和下载说明不被背景干扰。
+
+保存后运行 `node scripts/build-site.mjs` 重新生成官网，再预览和部署生成的文件。它不会直接改线上网站；只保存源文件或本地配置，访客看到的版本不会自动改变。第一次上线前还需完成域名、香港 COS 与 HTTPS 配置。域名没有上线时，不要把本机预览地址发给梓神。
+
+## 文案的称呼与口吻
+
+维护者介绍反馈时使用「告诉我」「我会收到提醒」，不要把自己写成第三人称。署名「溣符雨 · 维护」和公共 README 中的项目发起者信息仍保留。
+
+给梓神的教程开头自然称呼一次，之后用「你」指导操作即可。README 等公共文档称「阿梓」，回放和素材名称保持事实准确。不要因文字润色删掉装备「测试中」、密钥隐私、更新会结束灰名单等会影响使用决定的说明。
+
+`public/temp` 是你本地存放的副本，不是正在显示的页面，也不随软件或官网发布。要改最终文案，编辑正式的 `public/guide.html`、`public/index.html` 和 `launcher/MainWindow.xaml`。

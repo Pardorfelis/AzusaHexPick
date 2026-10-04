@@ -22,7 +22,7 @@ async function emptyPort() {
   return port === 5178 ? emptyPort() : port;
 }
 
-function request(port, path, { hostname = '127.0.0.1', method = 'GET', headers = {}, body } = {}) {
+function request(port, path, { hostname = '127.0.0.1', method = 'GET', headers = {}, body, timeout = 3000 } = {}) {
   return new Promise((resolveResponse, reject) => {
     const req = http.request({ hostname, port, path, method,
       headers: { Connection: 'close', ...headers } }, response => {
@@ -33,7 +33,7 @@ function request(port, path, { hostname = '127.0.0.1', method = 'GET', headers =
       response.on('error', () => reject(new Error('测试响应读取失败。')));
     });
     req.on('error', () => reject(new Error('测试连接失败。')));
-    req.setTimeout(3000, () => req.destroy());
+    req.setTimeout(timeout, () => req.destroy());
     req.end(body);
   });
 }
@@ -92,6 +92,19 @@ test('实际 HTTP 服务、回放与局域网只读权限集成', { timeout: 450
     assert.equal(health.app, 'azusa-validation');
     assert.equal(health.lanEnabled, true);
     assert.equal(typeof health.aiConfigured, 'boolean');
+
+    await t.test('手机地址刷新只推荐一个真实网络，未知状态不冒充可用且不泄露网卡私密信息', async () => {
+      health = parsed(await request(port, '/api/health?network=refresh', {timeout: 12000}));
+      assert.ok(health.viewerUrls.length <= 1);
+      assert.ok(['ready', 'no-network', 'unavailable'].includes(health.phoneNetwork.status));
+      if (health.phoneNetwork.recommended) {
+        assert.equal(health.viewerUrls[0], health.phoneNetwork.recommended.url);
+        assert.ok(['Wi-Fi', '有线网络', '局域网'].includes(health.phoneNetwork.recommended.kind));
+      } else assert.deepEqual(health.viewerUrls, []);
+      assert.equal(/"(?:mac|macAddress|ssid|dns|password|secret)"\s*:/i.test(JSON.stringify(health.phoneNetwork)), false);
+      assert.equal((await request(port, '/api/health?network=refresh', {headers: {Host: 'evil.example'}})).status, 403);
+      assert.equal((await request(port, '/api/health?network=refresh', {headers: {Origin: 'https://evil.example'}})).status, 403);
+    });
 
     await t.test('静态文件白名单不暴露源码、回放原文或配置', async () => {
       for (const path of ['/', '/panel', '/app.js', '/style.css']) {

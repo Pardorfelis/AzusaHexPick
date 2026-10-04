@@ -3,7 +3,6 @@ import { readFile, mkdir, writeFile, unlink } from 'node:fs/promises';
 import { dirname, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { randomBytes, timingSafeEqual } from 'node:crypto';
-import { networkInterfaces } from 'node:os';
 import { PanelEngine } from './src/engine.mjs';
 import { LiveSource } from './src/live-source.mjs';
 import { ReplaySource } from './src/replay-source.mjs';
@@ -12,6 +11,7 @@ import { allowedEquipment } from './src/equipment.mjs';
 import { SongLists } from './src/song-lists.mjs';
 import { AppearanceStore, AppearanceError, MAX_IMAGE_BYTES } from './src/appearance.mjs';
 import { LauncherBridge, atomicJson, readSettings, diagnostic, feedbackUrl } from './src/application.mjs';
+import { PhoneNetwork, localIpv4Addresses } from './src/network.mjs';
 
 const root = dirname(fileURLToPath(import.meta.url));
 const userDirectory = process.env.AZUSA_USER_DATA || resolve(root, 'data');
@@ -29,10 +29,11 @@ if (!Number.isInteger(port) || port < 1024 || port > 65535) throw new Error('端
 const origin = 'http://127.0.0.1:' + port;
 const lanEnabled = process.argv.includes('--lan');
 const viewerToken = randomBytes(24).toString('hex');
-const lanAddresses = Object.values(networkInterfaces()).flat()
-  .filter(address => address && address.family === 'IPv4' && !address.internal)
-  .map(address => address.address);
-const allowedHosts = ['127.0.0.1:' + port, 'localhost:' + port, ...lanAddresses.map(address => address + ':' + port)];
+const phoneNetwork = new PhoneNetwork();
+if (lanEnabled) void phoneNetwork.refresh();
+// 动态读取，换网后不保留已离线 IP；地址选择与 Host 校验相互独立。
+const hostAllowed = host => ['127.0.0.1:' + port, 'localhost:' + port,
+  ...localIpv4Addresses().map(address => address + ':' + port)].includes(host);
 const isLocal = request => ['127.0.0.1', '::1', '::ffff:127.0.0.1'].includes(request.socket.remoteAddress);
 function validViewerToken(value) {
   if (typeof value !== 'string' || !/^[a-f0-9]{48}$/.test(value)) return false;
@@ -293,7 +294,7 @@ const server = http.createServer(async (request, response) => {
   response.setHeader('X-Content-Type-Options', 'nosniff');
   response.setHeader('Referrer-Policy', 'no-referrer');
   response.setHeader('Content-Security-Policy', "default-src 'self'; script-src 'self'; style-src 'self'; connect-src 'self'; img-src 'self' data:; frame-src https://wj.qq.com; frame-ancestors 'none'");
-  if (!allowedHosts.includes(request.headers.host)) return json(response, 403, {error: '仅允许本机访问。'});
+  if (!hostAllowed(request.headers.host)) return json(response, 403, {error: '仅允许本机访问。'});
   if (request.headers.origin && request.headers.origin !== 'http://' + request.headers.host)
     return json(response, 403, {error: '跨站请求已拒绝。'});
   const url = new URL(request.url, origin);
@@ -351,12 +352,21 @@ const server = http.createServer(async (request, response) => {
       response.writeHead(200, {'Content-Type': image.type, 'Cache-Control': 'private, no-store'});
       return response.end(image.content);
     }
-    if (request.method === 'GET' && url.pathname === '/api/health')
+    if (request.method === 'GET' && url.pathname === '/api/health') {
+      if (lanEnabled && url.searchParams.get('network') === 'refresh') await phoneNetwork.refresh({force: true});
+      else if (lanEnabled) void phoneNetwork.refresh();
+      const network = phoneNetwork.read();
+      const viewer = candidate => candidate ? { ...candidate,
+        url: 'http://' + candidate.address + ':' + port + '/panel?token=' + viewerToken } : null;
+      const recommended = lanEnabled ? viewer(network.recommended) : null;
       return json(response, 200, {
         app: 'azusa-validation', version: appVersion, aiConfigured: Boolean(ai.key),
         lanEnabled,
-        viewerUrls: lanEnabled ? lanAddresses.map(address => 'http://' + address + ':' + port + '/panel?token=' + viewerToken) : [],
+        viewerUrls: recommended ? [recommended.url] : [],
+        phoneNetwork: lanEnabled ? { ...network, recommended,
+          others: network.others.map(viewer), advanced: network.advanced.map(viewer) } : null,
       });
+    }
     if (request.method === 'GET' && url.pathname === '/api/state') return json(response, 200, snapshot());
     if (request.method === 'GET' && url.pathname === '/api/hex-audit') return json(response, 200, engine.hexAudit());
     if (request.method === 'GET' && url.pathname === '/api/equipment-audit') return json(response, 200, engine.equipmentAudit());
@@ -428,6 +438,7 @@ async function shutdown() {
   shuttingDown = true;
   clearInterval(updateTimer);
   clearInterval(aiTimer);
+  phoneNetwork.stop();
   ai.stop();
   live.stop();
   replay.stop();

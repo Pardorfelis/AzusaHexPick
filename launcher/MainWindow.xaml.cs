@@ -19,13 +19,14 @@ public partial class MainWindow : Window
     private readonly ProcessManager processes = new();
     private readonly LocalBridge bridge = new();
     private readonly Forms.NotifyIcon tray;
-    private readonly UpdateManager updates = UpdatePolicy.CreateManager();
+    private UpdateManager updates = UpdatePolicy.CreateManager();
     private CancellationTokenSource? downloadCancellation;
     private UpdateInfo? pending;
     private bool downloaded, exiting, busy, updating, checking;
+    private bool pendingFromWebsite, preferFallback;
     private string updateState = "idle", updateText = "尚未检查更新。", nextVersion = "", notes = "";
     private int progress;
-    private readonly string version = typeof(MainWindow).Assembly.GetName().Version?.ToString(3) ?? "0.7.0";
+    private readonly string version = typeof(MainWindow).Assembly.GetName().Version?.ToString(3) ?? "0.7.1";
     private readonly string[] arguments;
 
     public MainWindow(string[] args)
@@ -251,12 +252,16 @@ public partial class MainWindow : Window
         try
         {
             if (!updates.IsInstalled) { UpdateUi("development", "当前为开发目录；便携发布包支持应用内更新。"); return; }
-            pending = await updates.CheckForUpdatesAsync();
+            var checkedRelease = await UpdatePolicy.CheckForUpdatesAsync(UpdatePolicy.CreateManager(), preferFallback);
+            updates = checkedRelease.Manager;
+            pending = checkedRelease.Release;
+            pendingFromWebsite = checkedRelease.FromWebsite;
             downloaded = false;
             nextVersion = pending?.TargetFullRelease.Version.ToString() ?? "";
             notes = pending?.TargetFullRelease.NotesMarkdown ?? "";
             if (notes.Length > 1200) notes = notes[..1200];
-            UpdateUi(pending == null ? "current" : "available", pending == null ? "当前已是最新正式版本。" : "发现 v" + nextVersion + "，方便时点一下即可更新。");
+            string fallbackNote = checkedRelease.UsedFallback ? "官网更新暂不可用，已通过备用来源检查。" : "";
+            UpdateUi(pending == null ? "current" : "available", fallbackNote + (pending == null ? "当前已是最新正式版本。" : "发现 v" + nextVersion + "，方便时点一下即可更新。"));
         }
         catch { UpdateUi("error", "暂时无法连接更新源。当前版本仍可使用，稍后可以重新检查。"); }
         finally { checking = false; InstallButton.IsEnabled = CanInstall; }
@@ -272,6 +277,7 @@ public partial class MainWindow : Window
         // Dispatcher 中先占用操作状态，再等待服务，避免重复点击同时进入升级。
         updating = true;
         var target = pending;
+        var targetManager = updates;
         bool wasRunning = processes.Running;
         StartButton.IsEnabled = false;
         UpdateUi("preparing", "正在检查本轮是否已经结束……");
@@ -282,7 +288,8 @@ public partial class MainWindow : Window
             UpdatePolicy.CheckDiskSpace(target.TargetFullRelease.Size);
             downloadCancellation = new CancellationTokenSource(TimeSpan.FromMinutes(10));
             if (!downloaded)
-                await updates.DownloadUpdatesAsync(target, p => Dispatcher.BeginInvoke(() => { progress = p; UpdateProgress.Value = p; }), downloadCancellation.Token);
+                await targetManager.DownloadUpdatesAsync(target, p => Dispatcher.BeginInvoke(() => { progress = p; UpdateProgress.Value = p; }), downloadCancellation.Token);
+            await UpdatePolicy.VerifyDownloadedAsync(targetManager, target.TargetFullRelease);
             downloaded = true;
             if (await processes.Collecting()) { UpdateUi("ready", "更新已准备好。本轮收集结束后，再点击更新即可。"); return; }
             if (processes.Running) await processes.Control("prepare-update");
@@ -291,20 +298,30 @@ public partial class MainWindow : Window
             UpdateUi("applying", "正在关闭服务并更新，稍后自动重新打开……");
             await processes.Stop();
 #if UPDATE_TESTING
-            updates.ApplyUpdatesAndRestart(target, restartArgs: arguments.Contains("--smoke-update") ? ["--smoke-complete"] : ["--resume"]);
+            targetManager.ApplyUpdatesAndRestart(target, restartArgs: arguments.Contains("--smoke-update") ? ["--smoke-complete"] : ["--resume"]);
 #else
-            updates.ApplyUpdatesAndRestart(target, restartArgs: ["--resume"]);
+            targetManager.ApplyUpdatesAndRestart(target, restartArgs: ["--resume"]);
 #endif
         }
-        catch (OperationCanceledException)
+        catch (OperationCanceledException error) when (downloadCancellation?.IsCancellationRequested == true || !UpdatePolicy.IsNetworkFailure(error))
         {
             await RestoreAfterUpdate(wasRunning);
             UpdateUi("available", "下载已取消，当前版本继续可用。需要时可以重试。");
         }
-        catch
+        catch (Exception error)
         {
+#if UPDATE_TESTING
+            File.WriteAllText(Path.Combine(UserSettings.DirectoryPath, "smoke-update-error.json"), JsonSerializer.Serialize(new { error = error.ToString() }));
+#endif
+            if (error is Velopack.Exceptions.ChecksumFailedException) downloaded = false;
             await RestoreAfterUpdate(wasRunning);
-            UpdateUi("error", "更新未完成，已保留当前程序和个人设置。请检查网络、空间或文件占用后重试。");
+            if (pendingFromWebsite && !downloaded && UpdatePolicy.IsNetworkFailure(error))
+            {
+                preferFallback = true;
+                pending = null;
+                UpdateUi("error", "当前下载源连接失败，旧版仍可使用。点击“检查更新”，可以通过备用来源重试。");
+            }
+            else UpdateUi("error", "更新未完成，已保留当前程序和个人设置。请检查网络、空间或文件占用后重试。");
         }
         finally { downloadCancellation?.Dispose(); downloadCancellation = null; updating = false; StartButton.IsEnabled = true; InstallButton.IsEnabled = CanInstall; CancelDownload.Visibility = Visibility.Collapsed; UpdateProgress.Visibility = Visibility.Collapsed; }
     }

@@ -1,0 +1,562 @@
+{
+  "version": "0.7.1",
+  "formalPublished": false,
+  "domain": "azusa510.top",
+  "viewports": [
+    1440,
+    1280,
+    390
+  ],
+  "initialBrowserChecks": {
+    "horizontalOverflow": false,
+    "imagesLoaded": 7,
+    "realPreviewDownloads": true,
+    "videoReady": true
+  },
+  "finalFinishReview": {
+    "disposition": "ship",
+    "scope": "两项实质修正均 resolved；三种尺寸修正未发现回归。",
+    "formalPublished": false
+  },
+  "musicVideo": {
+    "success": true,
+    "durationSeconds": 54.0,
+    "video": {
+      "codec_name": "h264",
+      "codec_type": "video",
+      "width": 1920,
+      "height": 1080,
+      "pix_fmt": "yuv420p",
+      "r_frame_rate": "30/1"
+    },
+    "version": "0.7.1",
+    "audioTracks": 1,
+    "audio": {
+      "codec_name": "aac",
+      "codec_type": "audio",
+      "sample_rate": "48000",
+      "channels": 2,
+      "r_frame_rate": "0/0"
+    },
+    "audioPeakDbfs": -25.6,
+    "music": {
+      "title": "Canon in D Major",
+      "artist": "Kevin MacLeod",
+      "isrc": "USUAN1100301",
+      "source": "https://incompetech.com/music/royalty-free/index.html?isrc=USUAN1100301",
+      "download": "https://incompetech.com/music/royalty-free/mp3-royaltyfree/Canon%20in%20D%20Major.mp3",
+      "license": "CC BY 4.0",
+      "licenseUrl": "https://creativecommons.org/licenses/by/4.0/",
+      "sha256": "9377b058b8c132d87e977f6c1a7686b18c59e5f3a0ae457cd39005680363fadc",
+      "startSeconds": 0,
+      "durationSeconds": 54,
+      "volume": 0.18,
+      "fadeInSeconds": 1.2,
+      "fadeOutSeconds": 2,
+      "modifications": "节选开头 54 秒，降低音量，加入淡入与淡出；未作其他编曲修改。"
+    },
+    "sizeBytes": 2202580,
+    "sha256": "394a9fd5cc2c76691330f59da75e28256884cf76613e40a795f760eefadcf46c",
+    "type": "真实截图字幕演示，非鼠标录屏",
+    "visualEvidence": "keyframes/"
+  },
+  "privacy": {
+    "keysIncluded": false,
+    "userDataIncluded": false,
+    "localAssistantFilesIncluded": false
+  },
+  "pending": [],
+  "paidApiCalls": 0,
+  "hostingPreparation": {
+    "bucket": "azusa510-1500305922",
+    "region": "ap-hongkong",
+    "readPolicyAndStaticWebsiteConfirmedSaved": true,
+    "domainAdded": true,
+    "cname": "azusa510-1500305922.cos-website.ap-hongkong.myqcloud.com",
+    "dnsResolutionVerified": true,
+    "anonymousBucketListingHttpStatus": 403,
+    "certificateIssuanceConfirmed": true,
+    "certificateBindingConfirmed": true,
+    "certificateExpiryLocal": "2027-01-02 18:59:59",
+    "validDirectTlsSampleObserved": true,
+    "httpsVerified": true,
+    "websiteUploaded": true,
+    "strictTlsCertificateValidationPassed": true,
+    "httpsEmptyIndexHeadHttpStatus": 404,
+    "httpsEmptyIndexGetHttpStatus": 404,
+    "forceHttpsConfirmedEnabled": true,
+    "httpToHttpsRedirectObserved": true,
+    "httpEmptyIndexHeadHttpStatus": 404,
+    "httpEmptyIndexGetHttpStatus": 404,
+    "httpsIndexHeadHttpStatus": 200,
+    "httpsIndexGetHttpStatus": 200,
+    "anonymousObjectReadVerified": true,
+    "httpIndexHttpStatus": 301,
+    "domainForceHttpsConfirmedEnabled": true,
+    "staticWebsiteForceHttpsConfirmedEnabled": true,
+    "httpIndexRedirectLocation": "https://azusa510.top/",
+    "httpIndexHistoricalObservations": [
+      {
+        "phase": "empty-bucket",
+        "headStatus": 404,
+        "getStatus": 404,
+        "redirectObserved": false
+      },
+      {
+        "phase": "uploaded-before-static-website-force-https",
+        "getStatus": 200,
+        "redirectObserved": false
+      },
+      {
+        "phase": "both-force-https-settings-confirmed",
+        "getStatus": 301,
+        "location": "https://azusa510.top/",
+        "redirectObserved": true
+      }
+    ]
+  },
+  "localHttpChecks": [
+    {
+      "type": "installer",
+      "sizeMatches": true,
+      "hashMatches": true,
+      "bytes": 156298977,
+      "preview": true
+    },
+    {
+      "type": "portable",
+      "sizeMatches": true,
+      "hashMatches": true,
+      "bytes": 151128670,
+      "preview": true
+    },
+    {
+      "type": "video-range",
+      "partialResponseVerified": true
+    }
+  ],
+  "checkedDateLocal": "2026-10-05",
+  "finalLocalBuild": {
+    "version": "0.7.1",
+    "formal": true,
+    "baseUrl": "https://azusa510.top",
+    "files": 36,
+    "bytes": 625986234,
+    "manifestContainsFileSizeAndSha256": true,
+    "softwareDownloads": [
+      {
+        "path": "downloads/AzusaHexPick-0.7.1-Portable.zip",
+        "bytes": 151673430,
+        "sha256": "a4acdc497c84315e8cfb237c1d0c322784ae21414fd4bfd8753053e576913511"
+      },
+      {
+        "path": "downloads/AzusaHexPick-0.7.1-Setup.exe",
+        "bytes": 156847009,
+        "sha256": "e182bfecac61c5f22d36f764ad001813c549cd3d364cd84d746d34ce2087431f"
+      }
+    ],
+    "updateSourceFiles": [
+      {
+        "path": "updates/AzusaHexPickApp-0.7.0-full.nupkg",
+        "bytes": 151025176,
+        "sha256": "ae7ddee5eff4d553ac804d111e7eab75f9c9b1e5f82d2629939561f8065cf946"
+      },
+      {
+        "path": "updates/AzusaHexPickApp-0.7.1-delta.nupkg",
+        "bytes": 2240631,
+        "sha256": "ccb9196fb1f5e2b32a2a36732072490a799baeea77c26eb17855ceedd596a0a9"
+      },
+      {
+        "path": "updates/AzusaHexPickApp-0.7.1-full.nupkg",
+        "bytes": 151954562,
+        "sha256": "96a29674572322d3fbea43332428725174fe8268a5649c84d6b7ac702509d57d"
+      },
+      {
+        "path": "updates/releases.win.json",
+        "bytes": 21965,
+        "sha256": "0d8b7f156c04682abb5015e21693b99a2dc1d6957cf557e913c79f9624171b55"
+      }
+    ],
+    "uploaded": true
+  },
+  "notes": [
+    "官网已上传并通过公开资源读取、最终原生安装与实际 COS 更新验收；本记录冻结于 GitHub 正式发布前，后续正式状态以发布页为准。",
+    "localHttpChecks 保留早期预览产物的实际下载记录，最终远端软件包的核验另见 publicHttpsChecks。",
+    "域名与静态网站两处强制 HTTPS 均由用户确认开启，最终 HTTP GET 返回 301，Location 为 https://azusa510.top/；早期 404 与 200 的观察记录保留。",
+    "COS 更新验收使用原样 v0.7.1 策略与 v0.7.0 原版更新器，不代表 v0.7.0 原生界面直连 COS。"
+  ],
+  "finalLocalHttpChecks": [
+    {
+      "type": "installer",
+      "httpStatus": 200,
+      "bytes": 156847009,
+      "sizeMatches": true,
+      "hashMatches": true,
+      "preview": false
+    },
+    {
+      "type": "portable",
+      "httpStatus": 200,
+      "bytes": 151673430,
+      "sizeMatches": true,
+      "hashMatches": true,
+      "preview": false
+    },
+    {
+      "type": "video-range",
+      "httpStatus": 206,
+      "partialResponseVerified": true
+    },
+    {
+      "type": "guide",
+      "httpStatus": 200
+    }
+  ],
+  "deploymentWrapperCompatibility": {
+    "windowsPowerShellVersion": "5.1.26100.9444",
+    "utf8Bom": true,
+    "nativeParserPassed": true,
+    "formalDryRunPassed": true,
+    "initialEncodingFailureCorrected": true
+  },
+  "websitePublished": true,
+  "githubReleasePublished": false,
+  "publicHttpsChecks": {
+    "source": "https://azusa510.top/",
+    "requestsBypassedSystemProxy": true,
+    "downloadedStaticResources": 32,
+    "allSizesAndSha256MatchLocalManifest": true,
+    "resources": [
+      {
+        "path": "release.json",
+        "httpStatus": 200,
+        "bytes": 606,
+        "sha256": "14d073e4897b028a79fa400b934999883d4cab2adebe13daa18441ff8cf6fb7c",
+        "matchesLocalManifest": true,
+        "contentType": "application/json; charset=utf-8"
+      },
+      {
+        "path": "credits/launcher-assets.md",
+        "httpStatus": 200,
+        "bytes": 847,
+        "sha256": "3f1a3ee276622d7904a5ee106219e12e3d266111d3985e27710057eeea52a475",
+        "matchesLocalManifest": true,
+        "contentType": "application/octet-stream; charset=utf-8"
+      },
+      {
+        "path": "media/demo.vtt",
+        "httpStatus": 200,
+        "bytes": 1246,
+        "sha256": "3b2ab7d023f4b2929ac529a9e55bdf1b04f7c09d885a73a1870e58be88cc2ee0",
+        "matchesLocalManifest": true,
+        "contentType": "text/vtt; charset=utf-8"
+      },
+      {
+        "path": "credits.html",
+        "httpStatus": 200,
+        "bytes": 1596,
+        "sha256": "4cc332a38429d4290bf9901fb177a131419d01a3a66997b3cd7db920020ee079",
+        "matchesLocalManifest": true,
+        "contentType": "text/html; charset=utf-8"
+      },
+      {
+        "path": "guide.css",
+        "httpStatus": 200,
+        "bytes": 1796,
+        "sha256": "7c36e1fc45db8acf917dc7e30cbc971599cc309d87ba092b41496594f18bcec0",
+        "matchesLocalManifest": true,
+        "contentType": "text/css; charset=utf-8"
+      },
+      {
+        "path": "credits/web-assets.md",
+        "httpStatus": 200,
+        "bytes": 1908,
+        "sha256": "47eff992b361d063a0b91d1c8838a6c26b9853173f4d457658e9a51af4bf8c91",
+        "matchesLocalManifest": true,
+        "contentType": "application/octet-stream; charset=utf-8"
+      },
+      {
+        "path": "assets/OFL.txt",
+        "httpStatus": 200,
+        "bytes": 4386,
+        "sha256": "d6a309fcfb963d329a93baf9df66fa5f3c23a4be2b5f67edf24d6cafecde12ac",
+        "matchesLocalManifest": true,
+        "contentType": "text/plain; charset=utf-8"
+      },
+      {
+        "path": "site.js",
+        "httpStatus": 200,
+        "bytes": 5260,
+        "sha256": "3f5d03337f74ddce1c2b28856623d78ecb5854aa3c493762c90ebb22bfec786c",
+        "matchesLocalManifest": true,
+        "contentType": "application/javascript; charset=utf-8"
+      },
+      {
+        "path": "guide.html",
+        "httpStatus": 200,
+        "bytes": 11119,
+        "sha256": "caee2f955769fa60e630b9a358552c63572968fad7ce7715faebb9cef9ccefda",
+        "matchesLocalManifest": true,
+        "contentType": "text/html; charset=utf-8"
+      },
+      {
+        "path": "index.html",
+        "httpStatus": 200,
+        "bytes": 11501,
+        "sha256": "de7d020675f3651dc91a8a70d8d2227986dbac43458cb5423a308e4e65e8b294",
+        "matchesLocalManifest": true,
+        "contentType": "text/html; charset=utf-8"
+      },
+      {
+        "path": "site.css",
+        "httpStatus": 200,
+        "bytes": 16358,
+        "sha256": "5f1fb5863beb222c9cdcab59364d10440299e60f0ba9f5859df2da95948d914d",
+        "matchesLocalManifest": true,
+        "contentType": "text/css; charset=utf-8"
+      },
+      {
+        "path": "assets/help.jpg",
+        "httpStatus": 200,
+        "bytes": 27764,
+        "sha256": "d17b0b6c7e7cd55c26cf90c0de0b77aaea525965b96be6341eeb32a2f3d228f3",
+        "matchesLocalManifest": true,
+        "contentType": "image/jpeg"
+      },
+      {
+        "path": "guide-assets/hex.png",
+        "httpStatus": 200,
+        "bytes": 33088,
+        "sha256": "3ec374ffbb551a40455aae556dc1cc8002504dc4cb37b1becf1399fce41fb056",
+        "matchesLocalManifest": true,
+        "contentType": "image/png"
+      },
+      {
+        "path": "media/hex.png",
+        "httpStatus": 200,
+        "bytes": 33088,
+        "sha256": "3ec374ffbb551a40455aae556dc1cc8002504dc4cb37b1becf1399fce41fb056",
+        "matchesLocalManifest": true,
+        "contentType": "image/png"
+      },
+      {
+        "path": "assets/avatar.jpg",
+        "httpStatus": 200,
+        "bytes": 42181,
+        "sha256": "24b8268ec0de0638d5b34b32f858e63ab2a4a7606edf3cb49e78fec2c6f3b1b9",
+        "matchesLocalManifest": true,
+        "contentType": "image/jpeg"
+      },
+      {
+        "path": "guide-assets/panel.png",
+        "httpStatus": 200,
+        "bytes": 44626,
+        "sha256": "38181b3d549b3df06394cbc95c480d5b2efbd8720e96b4ac744c8c6bf57c8c5e",
+        "matchesLocalManifest": true,
+        "contentType": "image/png"
+      },
+      {
+        "path": "guide-assets/equipment.png",
+        "httpStatus": 200,
+        "bytes": 145604,
+        "sha256": "75c68fd6567fc887fe1a10f1739828974deea3ce174a8926b08a60879cdd0669",
+        "matchesLocalManifest": true,
+        "contentType": "image/png"
+      },
+      {
+        "path": "media/equipment.png",
+        "httpStatus": 200,
+        "bytes": 145604,
+        "sha256": "75c68fd6567fc887fe1a10f1739828974deea3ce174a8926b08a60879cdd0669",
+        "matchesLocalManifest": true,
+        "contentType": "image/png"
+      },
+      {
+        "path": "assets/Manrope.ttf",
+        "httpStatus": 200,
+        "bytes": 164700,
+        "sha256": "3ae11c49db0455a3cc33e37d380f20fdb8c7f8b41dc07625c177e3d87a9d6ae6",
+        "matchesLocalManifest": true,
+        "contentType": "application/octet-stream"
+      },
+      {
+        "path": "guide-assets/songs.png",
+        "httpStatus": 200,
+        "bytes": 187989,
+        "sha256": "bf8a5a2ad956e85fe42b2bfc3f66157e2ef3c5de5ce6a63364b23578e6098fa9",
+        "matchesLocalManifest": true,
+        "contentType": "image/png"
+      },
+      {
+        "path": "media/songs.png",
+        "httpStatus": 200,
+        "bytes": 187989,
+        "sha256": "bf8a5a2ad956e85fe42b2bfc3f66157e2ef3c5de5ce6a63364b23578e6098fa9",
+        "matchesLocalManifest": true,
+        "contentType": "image/png"
+      },
+      {
+        "path": "assets/launcher.png",
+        "httpStatus": 200,
+        "bytes": 203357,
+        "sha256": "4de7cac36725c06c1cc5cc7680c27020a61ab8c00eb66822ca3e5bda80b121c9",
+        "matchesLocalManifest": true,
+        "contentType": "image/png"
+      },
+      {
+        "path": "guide-assets/launcher.png",
+        "httpStatus": 200,
+        "bytes": 203357,
+        "sha256": "4de7cac36725c06c1cc5cc7680c27020a61ab8c00eb66822ca3e5bda80b121c9",
+        "matchesLocalManifest": true,
+        "contentType": "image/png"
+      },
+      {
+        "path": "assets/computer.png",
+        "httpStatus": 200,
+        "bytes": 243379,
+        "sha256": "7070f16a5629b937c503f372d14200d0b0db85f4e260f9010714f0ae7d7f722d",
+        "matchesLocalManifest": true,
+        "contentType": "image/png"
+      },
+      {
+        "path": "assets/brand.png",
+        "httpStatus": 200,
+        "bytes": 271666,
+        "sha256": "63e82a13f152f705afbe568baa087805d0bfa362ad315d33b6d91500b56192f5",
+        "matchesLocalManifest": true,
+        "contentType": "image/png"
+      },
+      {
+        "path": "media/cover.png",
+        "httpStatus": 200,
+        "bytes": 310652,
+        "sha256": "95c592665e7a5320511880277d9e283871350ebccfae864389951991e83c3771",
+        "matchesLocalManifest": true,
+        "contentType": "image/png"
+      },
+      {
+        "path": "guide-assets/console.png",
+        "httpStatus": 200,
+        "bytes": 671903,
+        "sha256": "d2a89c88968ebd55ec91bef669947f673cdd77e725222a52e54b319958fbb402",
+        "matchesLocalManifest": true,
+        "contentType": "image/png"
+      },
+      {
+        "path": "assets/hero.png",
+        "httpStatus": 200,
+        "bytes": 710187,
+        "sha256": "a14f56e55b189bc03d907c8114b24f3269e167290150b45a5e7e77198c5872d6",
+        "matchesLocalManifest": true,
+        "contentType": "image/png"
+      },
+      {
+        "path": "media/demo.mp4",
+        "httpStatus": 200,
+        "bytes": 2202580,
+        "sha256": "394a9fd5cc2c76691330f59da75e28256884cf76613e40a795f760eefadcf46c",
+        "matchesLocalManifest": true,
+        "contentType": "video/mp4"
+      },
+      {
+        "path": "backgrounds/4677f528989073dd.jpg",
+        "httpStatus": 200,
+        "bytes": 6337124,
+        "sha256": "4677f528989073dd8f3748dadb186a7999612ea7b7bd7b1ab26ba143a781d861",
+        "matchesLocalManifest": true,
+        "contentType": "image/jpeg"
+      },
+      {
+        "path": "downloads/AzusaHexPick-0.7.1-Portable.zip",
+        "httpStatus": 200,
+        "bytes": 151673430,
+        "sha256": "a4acdc497c84315e8cfb237c1d0c322784ae21414fd4bfd8753053e576913511",
+        "matchesLocalManifest": true,
+        "contentType": "application/x-zip-compressed"
+      },
+      {
+        "path": "downloads/AzusaHexPick-0.7.1-Setup.exe",
+        "httpStatus": 200,
+        "bytes": 156847009,
+        "sha256": "e182bfecac61c5f22d36f764ad001813c549cd3d364cd84d746d34ce2087431f",
+        "matchesLocalManifest": true,
+        "contentType": "application/x-msdownload"
+      }
+    ],
+    "softwareDownloads": [
+      {
+        "path": "downloads/AzusaHexPick-0.7.1-Portable.zip",
+        "httpStatus": 200,
+        "bytes": 151673430,
+        "sha256": "a4acdc497c84315e8cfb237c1d0c322784ae21414fd4bfd8753053e576913511",
+        "matchesLocalManifest": true,
+        "contentType": "application/x-zip-compressed"
+      },
+      {
+        "path": "downloads/AzusaHexPick-0.7.1-Setup.exe",
+        "httpStatus": 200,
+        "bytes": 156847009,
+        "sha256": "e182bfecac61c5f22d36f764ad001813c549cd3d364cd84d746d34ce2087431f",
+        "matchesLocalManifest": true,
+        "contentType": "application/x-msdownload"
+      }
+    ],
+    "videoRangeHttpStatus": 206,
+    "anonymousBucketListingHttpStatus": 403
+  },
+  "publicBrowserChecks": {
+    "browser": "Chrome",
+    "imagesLoaded": 7,
+    "softwareDownloadButtonsEnabled": true,
+    "pauseAndResumeMotionClickVerified": true,
+    "videoPlayback": {
+      "readyState": 4,
+      "durationSeconds": 54,
+      "observedTimeSeconds": 42.4,
+      "error": null
+    }
+  },
+  "formalCosUpdateChecks": {
+    "success": true,
+    "source": "https://azusa510.top/updates/",
+    "passed": 2,
+    "scenarioNames": [
+      "full",
+      "delta"
+    ],
+    "deltaBytes": 2240631,
+    "deltaFullPackageFallback": false,
+    "settingsAndSyntheticKeyPreserved": true,
+    "actualCurrentOfficialClient": {
+      "success": true,
+      "unmodifiedOfficialClient": true,
+      "version": "0.7.1",
+      "state": "current",
+      "message": "当前已是最新正式版本。",
+      "fromWebsite": true,
+      "fallbackUsed": false,
+      "source": "https://azusa510.top/updates/",
+      "paidApiCalls": 0,
+      "portReleased": true,
+      "launcherExited": true
+    },
+    "limitation": "v0.7.0 原生界面仅识别 GitHub，此项使用正式 v0.7.1 原样策略程序集与 v0.7.0 原版更新器验收 COS 正式包。"
+  },
+  "publicationSnapshot": "before-GitHub-release",
+  "publicationStatusMeaning": "formalPublished 记录 GitHub 正式发布前的状态快照；官网已实际部署且通过 HTTPS 访问、下载与更新验收，正式发布状态以 GitHub 发布页为准。",
+  "formalReleaseReadyScope": "发布前官网、公开下载、原生安装、实际更新与 HTTP 到 HTTPS 跳转验收完成。",
+  "finalPublicInstallerNativeValidation": {
+    "success": true,
+    "source": "https://azusa510.top/downloads/AzusaHexPick-0.7.1-Setup.exe",
+    "sha256": "e182bfecac61c5f22d36f764ad001813c549cd3d364cd84d746d34ce2087431f",
+    "bytes": 156847009,
+    "unmodifiedDownloadedInstaller": true,
+    "installedManifestFilesVerified": 1665,
+    "customChineseSpacePathVerified": true,
+    "deferredUninstallCleanupObserved": true,
+    "syntheticPersonalSettingsPreserved": true,
+    "cleanPhysicalMachineTest": false,
+    "applicationServiceStartedInThisScenario": false
+  }
+}

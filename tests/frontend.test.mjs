@@ -123,7 +123,8 @@ function documentFixture() {
 }
 
 async function harness({ pathname = '/', token = '', state = snapshot(), onControl, windows, audit, onSongLists,
-  songLists = { sessionId: 'synthetic-song-session', gray: [], black: [] }, confirm = true } = {}) {
+  songLists = { sessionId: 'synthetic-song-session', gray: [], black: [] }, confirm = true,
+  health = {lanEnabled: false, viewerUrls: []}, onHealth, onCopy } = {}) {
   const document = documentFixture();
   const fetches = [];
   const events = [];
@@ -171,7 +172,7 @@ async function harness({ pathname = '/', token = '', state = snapshot(), onContr
     setTimeout: () => ++timer, clearTimeout() {},
     setInterval: () => { const id = ++timer; clockTimers.add(id); return id; },
     clearInterval: id => { clockTimers.delete(id); },
-    navigator: { clipboard: { writeText: async () => {} } },
+    navigator: { clipboard: { writeText: async value => { if (onCopy) await onCopy(value); } } },
     window: { confirm: () => confirm, addEventListener: (name, handler, options = {}) => {
       const records = pageHandlers.get(name) || [];
       records.push({ handler, once: Boolean(options.once) });
@@ -186,7 +187,7 @@ async function harness({ pathname = '/', token = '', state = snapshot(), onContr
       let value;
       if (method === 'GET' && path === '/api/state') value = active;
       else if (method === 'GET' && path === '/api/replays') value = [dataset];
-      else if (method === 'GET' && path === '/api/health') value = { lanEnabled: false, viewerUrls: [] };
+      else if (method === 'GET' && path === '/api/health') value = onHealth ? await onHealth(instance) : health;
       else if (method === 'GET' && ['/api/hex-audit', '/api/equipment-audit', '/api/song-audit'].includes(path)) value = audit;
       else if (method === 'GET' && path === '/api/song-lists') value = onSongLists ? await onSongLists(instance) : songLists;
       else if (method === 'POST' && path === '/api/control') {
@@ -203,6 +204,74 @@ async function harness({ pathname = '/', token = '', state = snapshot(), onContr
   await instance.evaluate('initialize()');
   return instance;
 }
+
+const phoneUrl = address => 'http://' + address + ':5178/panel?token=' + 'f'.repeat(48);
+
+test('手机区默认只有一个推荐地址，其他真实网卡折叠，并能复制完整配对链接', async () => {
+  const copied = [];
+  const health = {lanEnabled: true, viewerUrls: [phoneUrl('10.0.0.2')], phoneNetwork: {
+    status: 'ready', message: '手机和电脑要连同一个网络。',
+    recommended: {url: phoneUrl('10.0.0.2'), label: 'Wi-Fi · WLAN'},
+    others: [{url: phoneUrl('192.168.1.2'), label: '有线网络 · Ethernet'}], advanced: [],
+  }};
+  const app = await harness({health, onCopy: value => { copied.push(value); }});
+  try {
+    const area = app.get('phone-links');
+    const mainRows = area.children.filter(node => node.classList.contains('phone-link-row'));
+    assert.equal(mainRows.length, 1);
+    assert.ok(mainRows[0].textContent.includes('10.0.0.2'));
+    const alternatives = area.children.filter(node => node.tagName === 'DETAILS');
+    assert.equal(alternatives.length, 1);
+    assert.notEqual(alternatives[0].open, true);
+    assert.ok(alternatives[0].children[0].textContent.includes('其他网络地址'));
+    await mainRows[0].children[1].fire('click');
+    assert.equal(copied[0], phoneUrl('10.0.0.2'));
+    assert.equal(app.get('phone-note').hidden, false);
+  } finally { app.dispose(); }
+});
+
+test('手机换网刷新只更新配对地址，不开始新轮或改动现有统计', async () => {
+  let calls = 0;
+  const app = await harness({state: snapshot({roundId: 6, validMessages: 12}), onHealth: () => {
+    const address = calls++ ? '192.168.2.3' : '192.168.1.2';
+    return {lanEnabled: true, viewerUrls: [phoneUrl(address)], phoneNetwork: {status: 'ready', message: '手机和电脑需在同一网络。',
+      recommended: {url: phoneUrl(address), label: 'Wi-Fi · 家里的网络'}, others: [], advanced: []}};
+  }});
+  try {
+    const refresh = app.get('phone-links').children.at(-1).children[0];
+    await refresh.fire('click');
+    assert.ok(app.get('phone-links').children[0].textContent.includes('192.168.2.3'));
+    assert.equal(app.evaluate('current.roundId'), 6);
+    assert.equal(app.evaluate('current.validMessages'), 12);
+    assert.equal(app.fetches.some(item => item.method === 'POST'), false);
+    assert.equal(app.fetches.filter(item => new URL(item.url).pathname === '/api/health').length, 2);
+  } finally { app.dispose(); }
+});
+
+test('网卡发现失败时不摆出未验证地址，保留明确状态及可用刷新入口', async () => {
+  const app = await harness({health: {lanEnabled: true, viewerUrls: [], phoneNetwork: {
+    status: 'unavailable', message: '暂时读不到网卡信息，请刷新地址。', recommended: null, others: [], advanced: [],
+  }}});
+  try {
+    assert.ok(app.get('phone-status').textContent.includes('读不到网卡信息'));
+    assert.equal(app.get('phone-links').children.some(node => node.classList.contains('phone-link-row')), false);
+    assert.equal(app.get('phone-links').children.at(-1).children[0].disabled, false);
+    assert.equal(app.get('phone-note').hidden, true);
+  } finally { app.dispose(); }
+});
+
+test('手机网络名称按文本显示，含凭据或非 HTTP 的配对地址不生成链接', async () => {
+  const app = await harness({health: {lanEnabled: true, viewerUrls: [], phoneNetwork: {
+    status: 'ready', message: '手机和电脑需在同一网络。',
+    recommended: {url: phoneUrl('10.0.0.2'), label: '<img src=x onerror=alert(1)>'},
+    others: [{url: 'http://user:pass@10.0.0.3:5178/panel?token=test', label: '不安全地址'},
+      {url: 'javascript:alert(1)', label: '脚本'}], advanced: [],
+  }}});
+  try {
+    assert.ok(app.get('phone-links').children[0].textContent.includes('<img src=x onerror=alert(1)>'));
+    assert.equal(app.get('phone-links').children.some(node => node.tagName === 'DETAILS'), false);
+  } finally { app.dispose(); }
+});
 
 test('收到、累计计入与未决分别展示，不用匿名票数替代消息总量', async () => {
   const app = await harness({ state: snapshot({ connection: 'connected', receivedMessages: 94, validMessages: 64,

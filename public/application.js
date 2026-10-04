@@ -33,7 +33,7 @@
       $('application-progress').value = launcher.progress || 0;
       $('feedback-open').disabled = !application.feedbackUrl;
       $('feedback-state').textContent = application.feedbackUrl
-        ? '遇到问题可以在这里告诉溣符雨，提交后他会收到提醒。诊断信息可以按需附上。'
+        ? '遇到问题可以在这里告诉我。提交后我会收到提醒，诊断信息可以按需附上。'
         : '反馈问卷还未设置。请在启动器设置中填入问卷链接。';
     } catch { $('application-update-state').textContent = '暂时连不上服务，请从托盘打开启动器，检查是否已开始使用。'; }
   }

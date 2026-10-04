@@ -12,7 +12,7 @@ TOP_FILES = (
     "README.md", "package.json", "server.mjs", "delivery.json", ".env.example", ".gitignore", ".gitattributes", "CHANGELOG.md",
     "启动.cmd", "启动手机模式.cmd", "停止.cmd", "验证.cmd",
 )
-APP_DIRS = ("src", "public", "scripts", "docs", "tests", "launcher")
+APP_DIRS = ("src", "public", "scripts", "docs", "tests", "launcher", "site")
 DATA_FILES = ("data/equipment-aliases.json", "data/riot-equipment-names.json", "data/song-catalog.json",
               "data/replays/azusa-p3.json", "data/replays/azusa-p4.json",
               "data/replays/azusa-singing-p1.json", "data/replays/azusa-singing-p2.json")
@@ -33,28 +33,71 @@ REPORT_FILES = ("validation/replay-inspection.json",
                 "validation/automated-v03-check-result.json", "validation/song-catalog-sources.md",
                 "validation/song-replay-inspection.json", "validation/song-replay-review.mjs",
                 "validation/song-replay-review-result.json", "validation/song-v04-check-result.json", "validation/frontend-v05-check-result.json",
-                "validation/desktop-v051-check-result.json", "validation/appearance-v06-check-result.json")
+                "validation/desktop-v051-check-result.json", "validation/appearance-v06-check-result.json",
+                "validation/windows-v071-check-result.json", "validation/site-v071-check-result.json")
 ASSET_FILES = ("public/assets/azusa-wallpaper.jpg", "public/assets/azusa-snack.jpg", "public/assets/azusa-brand.png",
                "public/assets/azusa-computer.png", "public/assets/azusa-panel-brand.png",
                "public/assets/azusa-cheer.gif", "public/assets/azusa-sing.gif",
                "public/assets/fonts/Manrope.ttf", "public/assets/fonts/OFL.txt",
                "launcher/Assets/avatar.jpg", "launcher/Assets/signature.png", "launcher/Assets/help.jpg", "launcher/Assets/hero.png", "launcher/Assets/app.ico",
-               "public/guide-assets/launcher.png", "public/guide-assets/console.png", "public/guide-assets/panel.png")
-EXTENSIONS = {".mjs", ".js", ".css", ".html", ".py", ".ps1", ".md", ".json", ".cs", ".xaml", ".csproj"}
+               "public/guide-assets/launcher.png", "public/guide-assets/console.png", "public/guide-assets/panel.png",
+               "public/guide-assets/hex.png", "public/guide-assets/songs.png", "public/guide-assets/equipment.png")
+EXTENSIONS = {".mjs", ".js", ".css", ".html", ".py", ".ps1", ".md", ".json", ".cs", ".xaml", ".csproj", ".iss"}
 LOCAL_DOCUMENTS = {"docs/plan.md"}
 LOCAL_NAMES = {"AGENTS.md", "CLAUDE.md", "GEMINI.md"}
+LOCAL_PARTS = {".agents", ".codex", ".claude", ".impeccable", "bin", "obj", "temp", "local", "__pycache__"}
+
+
+def is_local_file(path, root=ROOT):
+    relative = path.relative_to(root)
+    return (path.name in LOCAL_NAMES or bool(LOCAL_PARTS.intersection(relative.parts))
+            or path.name == "config.local.json" or relative.as_posix() in LOCAL_DOCUMENTS)
+
+
+def safe_release_file(path, root=ROOT):
+    """拒绝父目录链接和 Windows 重解析点，检查最终源文件仍在项目内。"""
+    current = root
+    for part in path.relative_to(root).parts:
+        current = current / part
+        information = current.lstat()
+        if current.is_symlink() or getattr(information, "st_file_attributes", 0) & 0x400:
+            raise ValueError("发布范围不接受符号链接或重解析点。")
+    if not path.resolve().is_relative_to(root.resolve()) or not path.is_file():
+        raise ValueError("发布源文件越出项目目录或不存在。")
+    return path
+
+
+def release_files(directory, root=ROOT):
+    """显式遍历，进入目录前拒绝链接，避免跟随 junction 递归。"""
+    if not directory.exists():
+        return
+    information = directory.lstat()
+    if directory.is_symlink() or getattr(information, "st_file_attributes", 0) & 0x400:
+        raise ValueError("发布目录不接受符号链接或重解析点。")
+    for path in directory.iterdir():
+        if is_local_file(path, root):
+            continue
+        information = path.lstat()
+        if path.is_symlink() or getattr(information, "st_file_attributes", 0) & 0x400:
+            raise ValueError("发布目录不接受符号链接或重解析点。")
+        if path.is_dir():
+            yield from release_files(path, root)
+        elif path.is_file():
+            yield path
 
 
 def package_files(root=ROOT):
     files = {root / name for name in TOP_FILES + REPORT_FILES + DATA_FILES + ASSET_FILES}
     for directory in APP_DIRS:
-        for path in (root / directory).rglob("*"):
+        for path in release_files(root / directory, root):
             if (path.is_file() and path.suffix in EXTENSIONS and "__pycache__" not in path.parts
                     and path.name not in LOCAL_NAMES
-                    and not {".agents", ".codex", ".claude", ".impeccable", "bin", "obj"}.intersection(path.parts)
+                    and not {".agents", ".codex", ".claude", ".impeccable", "bin", "obj", "temp", "local"}.intersection(path.parts)
+                    and path.name != "config.local.json"
                     and path.relative_to(root).as_posix() not in LOCAL_DOCUMENTS):
                 files.add(path)
     for path in files:
+        safe_release_file(path, root)
         relative = path.relative_to(root)
         if path.is_symlink() or not path.is_file():
             raise ValueError("打包文件不存在。")

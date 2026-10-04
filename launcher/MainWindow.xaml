@@ -32,7 +32,7 @@
       <StackPanel>
         <Border Background="#FFFFFF" CornerRadius="12" Padding="24,22" Margin="0,0,0,18">
           <Grid><Grid.ColumnDefinitions><ColumnDefinition Width="*"/><ColumnDefinition Width="100"/></Grid.ColumnDefinitions>
-            <StackPanel><TextBlock Text="海克斯选几？下一首唱什么？" FontSize="22" FontWeight="SemiBold"/>
+            <StackPanel><TextBlock Text="海斗选哪个技能？下一首唱什么？" FontSize="22" FontWeight="SemiBold"/>
               <TextBlock Text="弹幕里的海克斯、出装和点歌建议，帮你数好。&#10;打开副屏，就能看见大家想选什么。" Style="{StaticResource Muted}" Margin="0,12,0,18"/>
               <WrapPanel><Button x:Name="StartButton" Content="开始使用" Style="{StaticResource Primary}" Click="Start_Click" MinWidth="140"/>
                 <Button Content="使用教程" Click="Guide_Click"/></WrapPanel>
@@ -69,11 +69,11 @@
           </StackPanel>
         </Border>
         <DockPanel><Image Source="Assets/help.jpg" Width="46" Height="46" Stretch="UniformToFill" Margin="0,0,12,0"/>
-          <StackPanel><TextBlock Text="遇到问题了？" FontWeight="SemiBold"/><TextBlock Text="点右边填写反馈，溣符雨会收到提醒。" Style="{StaticResource Muted}"/></StackPanel>
+          <StackPanel><TextBlock Text="遇到问题了？" FontWeight="SemiBold"/><TextBlock Text="右边填写反馈，我会尽快修复。" Style="{StaticResource Muted}"/></StackPanel>
           <Button Content="问题反馈" Click="Feedback_Click" HorizontalAlignment="Right" Margin="12,0,0,0"/></DockPanel>
       </StackPanel>
     </ScrollViewer>
-    <Grid Grid.Row="2" Margin="0,18,0,0"><TextBlock x:Name="VersionLabel" Text="v0.7.0" Foreground="#536077" FontSize="12"/>
+    <Grid Grid.Row="2" Margin="0,18,0,0"><TextBlock x:Name="VersionLabel" Text="v0.7.1" Foreground="#536077" FontSize="12"/>
       <TextBlock Text="溣符雨 · 维护" Foreground="#994269" FontWeight="SemiBold" HorizontalAlignment="Right"/></Grid>
   </Grid>
 </Window>
