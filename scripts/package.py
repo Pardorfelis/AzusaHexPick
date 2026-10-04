@@ -41,7 +41,8 @@ ASSET_FILES = ("public/assets/azusa-wallpaper.jpg", "public/assets/azusa-snack.j
                "public/assets/fonts/Manrope.ttf", "public/assets/fonts/OFL.txt",
                "launcher/Assets/avatar.jpg", "launcher/Assets/signature.png", "launcher/Assets/help.jpg", "launcher/Assets/hero.png", "launcher/Assets/app.ico",
                "public/guide-assets/launcher.png", "public/guide-assets/console.png", "public/guide-assets/panel.png",
-               "public/guide-assets/hex.png", "public/guide-assets/songs.png", "public/guide-assets/equipment.png")
+               "public/guide-assets/hex.png", "public/guide-assets/songs.png", "public/guide-assets/equipment.png",
+               "site/backgrounds/azusa-moonlit-lotus.png")
 EXTENSIONS = {".mjs", ".js", ".css", ".html", ".py", ".ps1", ".md", ".json", ".cs", ".xaml", ".csproj", ".iss"}
 LOCAL_DOCUMENTS = {"docs/plan.md"}
 LOCAL_NAMES = {"AGENTS.md", "CLAUDE.md", "GEMINI.md"}

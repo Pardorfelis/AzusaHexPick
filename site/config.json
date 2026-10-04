@@ -1,8 +1,8 @@
 {
   "baseUrl": "https://azusa510.top",
-  "background": "azusa",
+  "background": "moonlit-lotus",
   "backgrounds": [
-    { "id": "azusa", "file": "../public/assets/azusa-wallpaper.jpg", "name": "默认插画", "position": "center 42%" },
+    { "id": "moonlit-lotus", "file": "backgrounds/azusa-moonlit-lotus.png", "name": "月夜荷塘", "position": "center" },
     { "id": "none", "file": "", "name": "无背景", "position": "center" }
   ],
   "parallax": true,
